@@ -1,0 +1,342 @@
+[
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_flo.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\flo.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_add_circle_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_add_circle_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_fragment_home.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_highapet.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\highapet.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_egg_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_egg_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_shim_status_container.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\shim_status_container.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_show.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\show.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\font_poppins_medium.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\font\\poppins_medium.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_depressed.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\depressed.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\font_poppins.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\font\\poppins.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_activity_log_symptoms.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_log_symptoms.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_activity_create_account.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_create_account.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-xxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_arrow_forward_ios_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_arrow_forward_ios_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-mdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_estimated_period_day.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\estimated_period_day.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_oval_shape.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\oval_shape.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_track1.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\track1.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_nervous.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\nervous.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_logo.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\logo.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\xml_data_extraction_rules.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_medium.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\medium.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_collect_pregnancy_initial_data.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\collect_pregnancy_initial_data.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_high.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\high.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\font_poppins_bold.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\font\\poppins_bold.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_sleep.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\sleep.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_corner_radius_nocorner.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\corner_radius_nocorner.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_circular_pinch.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\circular_pinch.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_circular_gradient.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\circular_gradient.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_mood.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\mood.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-hdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_bloat.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\bloat.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_corner_radius.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\corner_radius.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_dialog_calender_view.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\dialog_calender_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_ic_home_black_24dp.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\ic_home_black_24dp.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_calendar_today_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_calendar_today_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_arrow_button_background.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\arrow_button_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_fragment_profile.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-hdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\font_poppins_semibold.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\font\\poppins_semibold.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_collect_period_initial_data.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\collect_period_initial_data.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_activity_login.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_gradient_mixture.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\gradient_mixture.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_corner_radius_pinch.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\corner_radius_pinch.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_sp_ic.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\sp_ic.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_headpain.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\headpain.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_custom_edit_text_background.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\custom_edit_text_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\menu_bottom_nav_menu.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\menu\\bottom_nav_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_filguilty.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\filguilty.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_anger.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\anger.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_grid_item_calendar.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\grid_item_calendar.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_calendar_month_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_calendar_month_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_calendar_cell.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\calendar_cell.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_account_circle_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_account_circle_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\menu_toolbar_menu.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\menu\\toolbar_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-xhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_corner_radiuspinch.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\corner_radiuspinch.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_dots.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\dots.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_low.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\low.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_button.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\button.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_fragment_test_calender.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_test_calender.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-mdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_loapet.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\loapet.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_fragment_cycles.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_cycles.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_lonch.jpg.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\lonch.jpg"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-xhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_track2.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\track2.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_tire.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\tire.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\mipmap-xxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_activity_user_intention.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_user_intention.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\xml_backup_rules.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "com.example.ovum.app-debug-32:/layout_fragment_profile.xml.flat",
+        "source": "com.example.ovum.app-main-34:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_content_search_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_content_search_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_corner_radius0.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\corner_radius0.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\layout_custom_spinner_item.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\custom_spinner_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_baseline_dialpad_24.xml.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\baseline_dialpad_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_apathetic.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\apathetic.png"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-debug-32:\\drawable_stomachpain.png.flat",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\drawable\\stomachpain.png"
+    }
+]
