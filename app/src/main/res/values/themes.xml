@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Ovum" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+<!--         <item name="colorPrimary">@color/deep_pink</item>-->
+    </style>
+
+    <style name="Theme.Ovum" parent="Base.Theme.Ovum" />
+    <style name="MyTextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:background">@drawable/custom_edit_text_background</item>
+        <item name="shapeAppearanceOverlay">@style/RoundedCorners</item>
+    </style>
+
+    <style name="RoundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">80dp</item>
+    </style>
+
+    <color name="pale_hint_color">#80FFFFFF</color>
+</resources>

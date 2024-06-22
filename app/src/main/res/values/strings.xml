@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Ovum</string>
+    <string name="current_month_date">Current Month + date</string>
+    <string name="hello_user">Hello Sharifah</string>
+    <string name="todo">TODO</string>
+    <string name="today">Today</string>
+    <string name="calender">Calender</string>
+    <string name="about_your_cylces">About Your Cylces</string>
+    <string name="add_your_symptoms_by_simply_clicking_on_the_corresponding_icon">Add your symptoms by simply clicking on the corresponding icon</string>
+    <string name="tell_us_about_how_u_feel">Tell us about how You feel</string>
+    <string name="Moods">About your Moods</string>
+    <string name="physical_symptoms">Physical Symptoms</string>
+    <string name="mood_swings">Mood Swings</string>
+    <string name="feeling_tired">Feeling Tired</string>
+    <string name="stomach_pain">Stomach Pain</string>
+    <string name="feeling_sleepy">Feeling Sleepy</string>
+    <string name="low_appetite">Low Appetite</string>
+    <string name="high_appetite">High Appetite</string>
+    <string name="headache">Headache</string>
+    <string name="bloating">Bloating</string>
+    <string name="nervous">Nervous</string>
+    <string name="apathetic">Apathetic!?</string>
+    <string name="feeling_guilty">Feeling Guilty</string>
+    <string name="angry">Angry</string>
+    <string name="stressed">Stressed</string>
+    <string name="confirm_your_symptoms">Confirm Your Symptoms</string>
+    <string name="about_today">About Today</string>
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="test_calender">Test Calender</string>
+    <string name="hint_placeholder">Please Dont forget to fill</string>
+    <string name="tell_the_app_what_you_want">Tell Us what you want the app to do</string>
+    <string name="since_cycles_can_change_over_time_this_helps_us_customize_the_app_for_you">Since cycles can change over time,this helps us customize the app for you</string>
+    <string name="track_my_period">Track your Period</string>
+    <string name="track_my_pregnancy">Track your Pregnancy</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+</resources>
