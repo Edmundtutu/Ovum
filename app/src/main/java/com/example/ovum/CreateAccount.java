@@ -2,6 +2,7 @@ package com.example.ovum;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
 
-public class CreateAccount extends AppCompatActivity { // implements DatePickerFragment.OnDateSelectedListener
+public class CreateAccount extends AppCompatActivity implements DatePickerFragment.OnDateSetListener { // implements DatePickerFragment.OnDateSelectedListener
 
     private ActivityCreateAccountBinding binding;
 
@@ -138,6 +139,20 @@ public class CreateAccount extends AppCompatActivity { // implements DatePickerF
 //        DatePickerFragment newFragment = DatePickerFragment.newInstance(editTextId);
 //        newFragment.show(getSupportFragmentManager(), "datePicker");
         // lets just do nothing only set the text of what has been entered
+
+        DatePickerFragment newFragment = new DatePickerFragment(editTextId, this);
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public void onDateSet(int textViewId, int year, int month, int day) {
+        month = month + 1; // Months are indexed from 0 in DatePicker
+        TextView tv = binding.DOB;
+        if (tv != null) {
+            tv.setText(new StringBuilder().append(day).append("-").append(month).append("-").append(year).toString());
+        } else {
+            Log.e("CreateAccount", "TextView with ID " + textViewId + " not found in dialog.");
+        }
     }
 
 //    @Override

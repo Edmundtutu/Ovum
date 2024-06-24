@@ -9,6 +9,7 @@ import static com.example.ovum.OvumContract.PatientEntry.COLUMN_LAST_PERIOD_DATE
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_LOCATION;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NAME;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_OVULATION;
+import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,6 +26,7 @@ import androidx.fragment.app.Fragment;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 
 public class HomeFragment extends Fragment{
@@ -57,29 +59,37 @@ public class HomeFragment extends Fragment{
         Log.v("HomeFragment", "User ID: " + userId);
         String userEmail = sharedPrefManager.getUserEmail();
         Log.v("HomeFragment", "User Email: " + userEmail);
-        //query the Db to  identify the patient with the corresponding id and email
 
-        extractRelevantInfoFromDb(userId, userEmail);
-        Patient thePatient = getPatient();
-//
+        // Call the extractRelevantInfoFromDb to query the Db to  identify the patient with the corresponding id and email
+
+        Patient thePatient = extractRelevantInfoFromDb(userId, userEmail);
 
         if (thePatient != null) {
             String nextPeriodDateStr = thePatient.getNextPeriodDate();
 
+            // Log the next period date for debugging
+            Log.v("HomeFragment", "Next Period Date: " + nextPeriodDateStr);
+
+            // if Null set the days left to 0
             if (nextPeriodDateStr == null || nextPeriodDateStr.isEmpty()) {
                 DaysLeft.setText("0 Days");
                 return view;
             }
 
+            // Calculate the number of days left by comparing the next period date with the current date
             try {
                 DateTimeFormatter formatter = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    formatter = new DateTimeFormatterBuilder()
+                            .appendPattern("[d-M-yyyy][dd-M-yyyy]")
+                            .toFormatter();
                 }
+
                 LocalDate nextPeriodDate = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     nextPeriodDate = LocalDate.parse(nextPeriodDateStr, formatter);
                 }
+
                 LocalDate currentDate = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     currentDate = LocalDate.now();
@@ -94,49 +104,19 @@ public class HomeFragment extends Fragment{
                 daysLeftCount = Math.max(daysLeftCount, 0);
 
                 // Set the number of days left
-                DaysLeft.setText(String.valueOf(daysLeftCount+ " Days"));
-                // store the number of days left in the shared preferences
+                DaysLeft.setText(String.valueOf(daysLeftCount) + " Days");
+
+                // Store the number of days left in the shared preferences
                 sharedPrefManager.storePatientInfo(String.valueOf(daysLeftCount));
-                // now log it out
+
+                // Log it out
                 Log.v("HomeFragmentTestPerStore", "Days Left: saved in log as days left " + sharedPrefManager.getDueDate());
             } catch (Exception e) {
                 e.printStackTrace();
                 DaysLeft.setText("Error");
             }
+
         }
-//        if(thePatient!=null){
-//            if(thePatient.getNextPeriodDate() == null){
-//                DaysLeft.setText("0");
-//                return view;
-//            }
-//            String nextProbableDateOfOvulation = thePatient.getNextPeriodDate().toString();
-//            Log.v("Homefrag" ,"Next Probable Date of Ovulation: " + nextProbableDateOfOvulation);
-//            String[] dateParts = nextProbableDateOfOvulation.split("-");
-//            int year = Integer.parseInt(dateParts[0]);
-//            int month = Integer.parseInt(dateParts[1]);
-//            int day = Integer.parseInt(dateParts[2]);
-//            // Get the current date
-//            java.util.Calendar calendar = java.util.Calendar.getInstance();
-//            int currentYear = calendar.get(java.util.Calendar.YEAR);
-//            int currentMonth = calendar.get(java.util.Calendar.MONTH) + 1;
-//            int currentDay = calendar.get(java.util.Calendar.DAY_OF_MONTH);
-//
-//            // Calculate the number of days left
-//            int daysLeft = 0;
-//            if (year == currentYear) {
-//                if (month == currentMonth) {
-//                    daysLeft = day - currentDay;
-//                } else if (month > currentMonth) {
-//                    daysLeft = (month - currentMonth) * 30 + (day - currentDay);
-//                }
-//            } else if (year > currentYear) {
-//                daysLeft = (year - currentYear) * 365 + (month - currentMonth) * 30 + (day - currentDay);
-//            }
-//
-//            // Set the number of days left
-//            DaysLeft.setText(String.valueOf(daysLeft));
-
-
 
         SymptomsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,7 +135,8 @@ public class HomeFragment extends Fragment{
         return view;
     }
 
-    private void extractRelevantInfoFromDb(int id, String email){
+    // Extract the relevant information from the database Method. Takes the id and email of the patient as arguments and returns the patient object
+    private Patient extractRelevantInfoFromDb(int id, String email){
         Cursor cursor = db.getPatient(id,email);
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -163,12 +144,17 @@ public class HomeFragment extends Fragment{
             String patientName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
             String patientLocation = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION));
             String patientEmail = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL));
-            String patientNextPeriodDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NEXT_PROBABLE_DATE_OF_OVULATION));
+            String patientNextPeriodDate = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD));
             String patientCycleLength = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CYCLE_LENGTH));
             String patientLatestPeriod = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LAST_PERIOD_DATE));
             String patientAverageCylceLength = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AVERAGE_CYCLE_LENGTH));
             String patientAveragePeriodLength = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AVERAGE_PERIOD_LENGTH));
             String patientDob = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DOB));
+
+            // Log the patient's information for debugging
+            for (int i = 0; i < cursor.getColumnCount(); i++) {
+                Log.v("HomeFragment", cursor.getColumnName(i) + ": " + cursor.getString(i));
+            }
 
             // add these results to the patient's profile
             patient = new Patient(patientName, patientLocation, patientEmail, patientNextPeriodDate, patientCycleLength, patientLatestPeriod, patientAverageCylceLength, patientAveragePeriodLength, patientDob);
@@ -178,8 +164,12 @@ public class HomeFragment extends Fragment{
         } else {
             Toast.makeText(getContext(), "No patient data found", Toast.LENGTH_LONG).show();
         }
+        // return the Patient Object Obtained from the database with all the Desired attributes
+        return patient;
     }
-    // return the Patient Obtained from the database
+
+    // this is a getter method that returns the object of the Patient got from this class
+    // This same patient object returned can now be used in other classes (works indirectly as a sharedPref)
     public Patient getPatient(){
         return patient;
     }

@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Ovum"
         tools:targetApi="31">
         <activity
+            android:name=".WelcomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateAccount"
+            android:exported="false" />
+        <activity
             android:name=".LogSymptoms"
             android:exported="false" />
         <activity
@@ -27,7 +33,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateAccount"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

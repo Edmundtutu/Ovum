@@ -18,6 +18,7 @@ import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
-public class UserIntention extends AppCompatActivity {
+public class UserIntention extends AppCompatActivity  implements DatePickerFragment.OnDateSetListener{
     //delcaration of the useful variables for the pop in and info colloection
 
     // the database helper
@@ -65,8 +66,20 @@ public class UserIntention extends AppCompatActivity {
         editTextPeriodLength = popupDialogforPeriodOpt.findViewById(R.id.periodLength);
 
         // set onclick listener for the date picker of all the input fields
-//        editTextPeriodStarted.setOnClickListener(this::showDatePickerDialog());
-//        editTextPeriodEnded.setOnClickListener(this::showDatePickerDialog);
+        editTextPeriodStarted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = v.getId();
+                showDatePickerDialog(id);
+            }
+        });
+        editTextPeriodEnded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = v.getId();
+                showDatePickerDialog(id);
+            }
+        });
 
         // initialize the dbHelper
         dbHelper = new OvumDbHelper(this);
@@ -74,9 +87,9 @@ public class UserIntention extends AppCompatActivity {
     }
 
     // method to show the date picker dialog
-    private void showDatePickerDialog() {
-        // just do nothing for now lets just convert the text entered into date format
-        editTextPeriodStarted.getText().toString();
+    private void showDatePickerDialog(int editTextId) {
+        DatePickerFragment newFragment = new DatePickerFragment(editTextId, this);
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     // have failed to make this class dynamic for the now but will work on it lets first make progress
@@ -162,6 +175,11 @@ public class UserIntention extends AppCompatActivity {
         Log.d("input from create account", "Username: " + username + ", Email: " + email + ", Phone Number: " + phoneNumber + ", DOB: " + DOB + ", Password: " + password);
         Log.d("input from the Pop", "Cycle Length: " + cycleLength + ", Period Length: " + periodLength + ", Last Period Start Date: " + lastPeriodStartDate + ", Last Period End Date: " + lastPeriodEndDate);
 
+        // calculate the next probable date of ovulation
+        String nextProbableDateOfPeriod = calculateNextProbableDateOfPeriod(lastPeriodStartDate, cycleLength);
+        // log the next probable date of period for debuging
+        Log.d("Next Probable Date of Period", nextProbableDateOfPeriod);
+
         progressDialog.setMessage("Registering user...");
         progressDialog.show();
 
@@ -182,7 +200,7 @@ public class UserIntention extends AppCompatActivity {
         values.put(OvumContract.PatientEntry.COLUMN_AVERAGE_CYCLE_LENGTH, ""); // Add appropriate value
         values.put(OvumContract.PatientEntry.COLUMN_AVERAGE_PERIOD_LENGTH, ""); // Add appropriate value
         values.put(OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_OVULATION, ""); // Add appropriate value
-        values.put(OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD, ""); // Add appropriate value
+        values.put(OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD, nextProbableDateOfPeriod); // Add appropriate value
 
         long newRowId = db.insert(OvumContract.PatientEntry.TABLE_NAME, null, values);
 
@@ -204,6 +222,40 @@ public class UserIntention extends AppCompatActivity {
 
     public void goToPregnancyFillUpPop(View view) {
         showPopup(popupDialogforPregnacyOpt, pregnancyOkBtnId);
+    }
+
+    // implementation of the date picker interface for this particular fragment
+    @Override
+    public void onDateSet(int textViewId, int year, int month, int day) {
+        month = month + 1; // Months are indexed from 0 in DatePicker
+        TextView tv = popupDialogforPeriodOpt.findViewById(textViewId);
+        if (tv != null) {
+            tv.setText(new StringBuilder().append(day).append("-").append(month).append("-").append(year).toString());
+        } else {
+            Log.e("UserActivity", "TextView with ID " + textViewId + " not found in dialog.");
+        }
+    }
+
+    // method to calculate the next probable date of ovulation basing on the last period date and the cycle length
+    private String calculateNextProbableDateOfPeriod(String lastPeriodDate, String cycleLength) {
+        // Split the date string into day, month, and year
+        String[] dateParts = lastPeriodDate.split("-");
+        int day = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+
+        // Add the cycle length to the last period date
+        day += Integer.parseInt(cycleLength);
+        if (day > 30) {
+            day -= 30;
+            month++;
+            if (month > 12) {
+                month -= 12;
+                year++;
+            }
+        }
+
+        return day + "-" + month + "-" + year;
     }
 
 }
