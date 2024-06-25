@@ -41,30 +41,9 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the toolbar
         setSupportActionBar(binding.toolBar);
 
-//        // seting the username to the textview
-//        String username = SharedPrefManager.getInstance(this).getUsername();
-//        binding.username.setText("Hi "+username);
-//        //setting the current date to the textview calenderIcon
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            LocalDate currentDate = LocalDate.now();
-//            binding.textHeader.setText(currentDate.getMonth()+"    "+currentDate.getDayOfMonth()+"  ");
-//
-//        }
-//
-//        binding.textHeader.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showCalendarPopup(new OnDateSelectedListener() {
-//                    @Override
-//                    public void onDateSelected(String date) {
-//                        // Handle the selected date here
-//                        binding.textHeader.setText(date);
-//                        // we shall implement more of the change of the interface to match the selected date
-//                    }
-//                });
-//
-//            }
-//        });
+        // seting the username to the textview
+        String username = SharedPrefManager.getInstance(this).getUsername();
+        binding.toolBar.setTitle("Hi "+username);
 
         // set the HomeFragmenLayout as the first frame
         replaceFragment(new HomeFragment());
@@ -119,6 +98,19 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.logout) {
             SharedPrefManager.getInstance(this).logout();
             finish();
+        }
+
+
+        // for the Calender option
+        if(id == R.id.calendericon){
+            // show the calender popup
+            showCalendarPopup(new OnDateSelectedListener() {
+                @Override
+                public void onDateSelected(String date) {
+                    // Handle the selected date by logging it or view symptoms of the selected date :: same like what is done by the calender days in the calender fragment
+                    // we shall implement more of the change of the interface to match the selected date
+                }
+            });
         }
         return true;
     }

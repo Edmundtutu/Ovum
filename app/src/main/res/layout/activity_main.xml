@@ -16,7 +16,7 @@
         android:background="@color/deep_pink"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
-        app:logo="@drawable/logo"
+        app:logo="@drawable/icon_ic"
         app:title="TBD"
         app:titleMarginStart="30dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>

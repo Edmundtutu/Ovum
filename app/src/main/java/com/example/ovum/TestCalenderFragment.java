@@ -178,11 +178,18 @@ public class TestCalenderFragment extends Fragment {
             String day = getItem(position);
             holder.textView.setText(day);
 
+           // Set onClick listener to the grid item
             // due date effect
             // the due date together with the preceding and former 2 days are set to different background colors
-
-
-            // Set onClick listener to the grid item
+//            if (day != null && !day.isEmpty() && day.equals(dueDate)) {
+//                convertView.setBackgroundColor(0xFFE57373);
+//            } else if (day != null && !day.isEmpty() && (Integer.parseInt(day) == Integer.parseInt(dueDate) - 1 || Integer.parseInt(day) == Integer.parseInt(dueDate) + 1)) {
+//                convertView.setBackgroundColor(0xFFEF9A9A);
+//            } else if (day != null && !day.isEmpty() && (Integer.parseInt(day) == Integer.parseInt(dueDate) - 2 || Integer.parseInt(day) == Integer.parseInt(dueDate) + 2)) {
+//                convertView.setBackgroundColor(0xFFF48FB1);
+//            } else {
+//                convertView.setBackgroundColor(0x0);
+//            }
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

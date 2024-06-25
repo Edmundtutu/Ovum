@@ -13,6 +13,6 @@
     <color name="logo_color">#fdc0e5</color>
     <color name="light_gray">#d9d9d9</color>
     <color name="blue">#0000FF</color>
-    <color name="transparent">#00000000</color>
+    <color name="transparent">#00FFC0CB</color>
     <color name="sky_blue">#87CEEB</color>
 </resources>

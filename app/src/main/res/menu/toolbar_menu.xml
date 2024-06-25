@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:title="@string/calender"
-        android:id="@+id/calicon"
+        android:id="@+id/calendericon"
         android:icon="@drawable/baseline_calendar_month_24"
         app:showAsAction="ifRoom"/>
     <item
