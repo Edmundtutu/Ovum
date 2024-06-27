@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
     private static final int MENU_TCALENDAR = R.id.navigation_Testcalendar;
 
     private Patient patient;
+
+    // for the profile details and views
+    private FrameLayout fragmentContainer;
+    private View dimOverlay;
+    private boolean isFragmentVisible = false;
+    String profileDob = null;
+    String profileDueDate = null;
+    String profileUsername = null;
+    String profileEmail = null;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -61,9 +73,13 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        // in case of the profile fragment
+        fragmentContainer = findViewById(R.id.fragmentContainer);
+        dimOverlay = findViewById(R.id.dimOverlay);
 
-
-
+        // Initially hide the fragment
+        fragmentContainer.setVisibility(View.GONE);
+        dimOverlay.setVisibility(View.GONE);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        String profileDob = null;
-        String profileDueDate = null;
-        String profileUsername = null;
-        String profileEmail = null;
         //for profile option
         if(id == R.id.accountProfile){
             patient = extractPatient();
@@ -91,8 +103,9 @@ public class MainActivity extends AppCompatActivity {
                  // for debuging lets first log these values and ensure they are not null
                 Log.v("Profile", "DOB: "+profileDob+" DueDate: "+profileDueDate+" Username: "+profileUsername+" Email: "+profileEmail);
             }
-            ProfileFragment fragment = ProfileFragment.newInstance(profileDob, profileDueDate, profileUsername, profileEmail);
-            replaceFragment(fragment);
+
+            // show the profile layout fragment
+            showFragment();
         }
         // for logout option
         if (id == R.id.logout) {
@@ -113,6 +126,41 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         return true;
+    }
+
+    private void hideFragment() {
+        if (isFragmentVisible) {
+            getSupportFragmentManager().beginTransaction().remove(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragmentContainer))).commit();
+            fragmentContainer.setVisibility(View.GONE);
+            dimOverlay.setVisibility(View.GONE);
+            isFragmentVisible = false;
+        }
+    }
+
+    private void showFragment() {
+        // create a new instance of a profile fragment and pass the profile details to it
+        ProfileFragment fragment = ProfileFragment.newInstance(profileDob, profileDueDate, profileUsername, profileEmail);
+
+        if (!isFragmentVisible) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .commit();
+            fragmentContainer.setVisibility(View.VISIBLE);
+            dimOverlay.setVisibility(View.VISIBLE);
+            // set an onclick listener for the transparent view
+            dimOverlay.setOnClickListener(v -> {hideFragment();});
+            // animating the fragment to slide in from the right
+            fragmentContainer.animate()
+                    .translationX(0)
+                    .setDuration(300)
+                    .withStartAction(() -> {
+                        ViewGroup.LayoutParams params = fragmentContainer.getLayoutParams();
+                        params.width = getResources().getDisplayMetrics().widthPixels;
+                        fragmentContainer.setLayoutParams(params);
+                    })
+                    .start();
+            isFragmentVisible = true;
+        }
     }
 
     public Patient extractPatient(){
@@ -163,6 +211,12 @@ public class MainActivity extends AppCompatActivity {
     interface OnDateSelectedListener {
         void onDateSelected(String date);
     }
-
+    public void onBackPressed() {
+        if (isFragmentVisible) {
+            hideFragment();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
 }

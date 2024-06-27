@@ -173,6 +173,63 @@ public class LogSymptoms extends AppCompatActivity {
             }
         });
 
+        // setting the onclick button for the confirm symptoms button
+        confirmChangesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // extract the true boolean values of each  toogle and update the database values in the symptoms table
+                if (FeelsHeavy||IsStressed||IsAngry||FeelsApathetic||IsNervous||IsBloating||HasHeadache||HasHighAppetite||HasLowAppetite||FeelsSleepy||FeelsTired||FeelsStomachPain){
+                    // update the database values
+//                    OvumDbHelper ovumDbHelper = new OvumDbHelper(getApplicationContext());
+                    // show a dialog for the user to confirm whether their symptoms should be saved
+
+
+                    // if the user confirms the symptoms should be saved
+//                    // loop through each true value and update the database for the patient accordingly
+//                    if (FeelsHeavy){
+//                        ovumDbHelper.updateSymptoms(1,1,"Heavy","Feels Heavy",null,null,1);
+//                    }
+//                    if (IsStressed){
+//                        ovumDbHelper.updateSymptoms(1,1,"Stressed","Is Stressed",null,null,1);
+//                    }
+//                    if (IsAngry){
+//                        ovumDbHelper.updateSymptoms(1,1,"Angry","Is Angry",null,null,1);
+//                    }
+//                    if (FeelsApathetic){
+//                        ovumDbHelper.updateSymptoms(1,1,"Apathetic","Feels Apathetic",null,null,1);
+//                    }
+//                    if (IsNervous){
+//                        ovumDbHelper.updateSymptoms(1,1,"Nervous","Is Nervous",null,null,1);
+//                    }
+//                    if (IsBloating){
+//                        ovumDbHelper.updateSymptoms(1,1,"Bloating","Is Bloating",null,null,1);
+//                    }
+//                    if (HasHeadache){
+//                        ovumDbHelper.updateSymptoms(1,1,"Headache","Has Headache",null,null,1);
+//                    }
+//                    if (HasHighAppetite){
+//                        ovumDbHelper.updateSymptoms(1,1,"High Appetite","Has High Appetite",null,null,1);
+//                    }
+//
+//                    if (HasLowAppetite){
+//                        ovumDbHelper.updateSymptoms(1,1,"Low Appetite","Has Low Appetite",null,null,1);
+//                    }
+//                    if (FeelsSleepy){
+//                        ovumDbHelper.updateSymptoms(1,1,"Sleepy","Feels Sleepy",null,null,1);
+//                    }
+//                    if (FeelsTired){
+//                        ovumDbHelper.updateSymptoms(1,1,"Tired","Feels Tired",null,null,1);
+//                    }
+//                    if (FeelsStomachPain){
+//                        ovumDbHelper.updateSymptoms(1,1,"Stomach Pain","Feels Stomach Pain",null,null,1);
+//                    }
+                    // show a toast message to the user that their symptoms have been saved
+                    // finish this activity and return to the previous activity
+                    finish();
+
+                }
+            }
+        });
     }
     // Method to toggle background of the RelativeLayout inside LinearLayout
 //    private Boolean toggleBackground(View v, int relativelayoutId) {

@@ -176,10 +176,21 @@ public class TestCalenderFragment extends Fragment {
 
             // Set data to views
             String day = getItem(position);
-            holder.textView.setText(day);
 
-           // Set onClick listener to the grid item
-            // due date effect
+
+            if (day != null){
+                // set the background resource to circular_background
+                holder.textView.setBackgroundResource(R.drawable.circle_background);
+                holder.textView.setText(day);
+
+                // get current date and set the current date to a background of circular_background_current_date
+                Calendar calendar = Calendar.getInstance();
+                if (day.equals(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)))) {
+                    holder.textView.setBackgroundResource(R.drawable.circle_background_current_day);
+                }
+            }
+
+
             // the due date together with the preceding and former 2 days are set to different background colors
 //            if (day != null && !day.isEmpty() && day.equals(dueDate)) {
 //                convertView.setBackgroundColor(0xFFE57373);
@@ -190,6 +201,7 @@ public class TestCalenderFragment extends Fragment {
 //            } else {
 //                convertView.setBackgroundColor(0x0);
 //            }
+
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -223,8 +235,7 @@ public class TestCalenderFragment extends Fragment {
                     }
                 }
             });
-
-//            // set hover effect on the grid item
+            //            // set hover effect on the grid item
 //            convertView.setOnHoverListener(new View.OnHoverListener() {
 //                @Override
 //                public boolean onHover(View v, MotionEvent event) {
