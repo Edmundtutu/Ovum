@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -176,82 +179,70 @@ public class TestCalenderFragment extends Fragment {
 
             // Set data to views
             String day = getItem(position);
-
-
-            if (day != null){
-                // set the background resource to circular_background
-                holder.textView.setBackgroundResource(R.drawable.circle_background);
+            if (day != null) {
                 holder.textView.setText(day);
 
-                // get current date and set the current date to a background of circular_background_current_date
+                // Set the background resource to circular_background
+                holder.textView.setBackgroundResource(R.drawable.circle_background);
+
+                // Get current date and set the current date to a background of circular_background_current_date
                 Calendar calendar = Calendar.getInstance();
                 if (day.equals(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)))) {
                     holder.textView.setBackgroundResource(R.drawable.circle_background_current_day);
                 }
-            }
 
+                // Set touch listener for the hover effect
+                convertView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                // Start expand animation
+                                Animation expandAnim = AnimationUtils.loadAnimation(getContext(), R.anim.expand);
+                                holder.textView.startAnimation(expandAnim);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                            case MotionEvent.ACTION_CANCEL:
+                                // Start shrink animation
+                                Animation shrinkAnim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink);
+                                holder.textView.startAnimation(shrinkAnim);
 
-            // the due date together with the preceding and former 2 days are set to different background colors
-//            if (day != null && !day.isEmpty() && day.equals(dueDate)) {
-//                convertView.setBackgroundColor(0xFFE57373);
-//            } else if (day != null && !day.isEmpty() && (Integer.parseInt(day) == Integer.parseInt(dueDate) - 1 || Integer.parseInt(day) == Integer.parseInt(dueDate) + 1)) {
-//                convertView.setBackgroundColor(0xFFEF9A9A);
-//            } else if (day != null && !day.isEmpty() && (Integer.parseInt(day) == Integer.parseInt(dueDate) - 2 || Integer.parseInt(day) == Integer.parseInt(dueDate) + 2)) {
-//                convertView.setBackgroundColor(0xFFF48FB1);
-//            } else {
-//                convertView.setBackgroundColor(0x0);
-//            }
-
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (day != null && !day.isEmpty()) {
-                        Log.d("CalendarGridAdapter", "Selected day: " + day);
-                        // Redirect to logSymptoms activity tagging the selected day along with the symptoms
-                        // if the day is not beyond the current date and set a timestamp event if selected date is beyond the current date
-                        if (Integer.parseInt(day) <= Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
-                            // Redirect to logSymptoms activity tagging the selected day along with the symptoms
-                            // if the day is not beyond the current date
-                            Log.d("CalendarGridAdapter", "Day is not beyond the current date");
-
-                            // Mark the day and set the logSymptoms activity for that selected date
-                            // Apparently lets just redirect to the LogSymptoms activity and pass the selected date as an extra
-                            MainActivity activity = (MainActivity) getContext();
-                            if (activity != null) {
-                                // Start the new activity
-                                activity.startActivity(new Intent(activity, LogSymptoms.class));
-                            }
-                        } else {
-                            // Set a timestamp event if selected date is beyond the current date
-                            Log.d("CalendarGridAdapter", "Day is beyond the current date");
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
-                            calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
-                            calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                            timeStamp = sdf.format(calendar.getTime());
-                            Log.d("CalendarGridAdapter", "Timestamp: " + timeStamp);
+                                // Handle the click event
+                                if (event.getAction() == MotionEvent.ACTION_UP) {
+                                    handleDayClick(day);
+                                }
+                                break;
                         }
+                        return true;
                     }
-                }
-            });
-            //            // set hover effect on the grid item
-//            convertView.setOnHoverListener(new View.OnHoverListener() {
-//                @Override
-//                public boolean onHover(View v, MotionEvent event) {
-//                    if (day != null && !day.isEmpty()) {
-//                        if (event.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
-//                            v.setBackgroundColor(Color.parseColor("#F0F0F0"));
-//                        } else if (event.getAction() == MotionEvent.ACTION_HOVER_EXIT) {
-//                            v.setBackgroundColor(0x0);
-//                        }
-//                    }
-//                    return true;
-//                }
-//            });
-
+                });
+            }
             return convertView;
         }
+
+        private void handleDayClick(String day) {
+            if (day != null && !day.isEmpty()) {
+                Log.d("CalendarGridAdapter", "Selected day: " + day);
+                if (Integer.parseInt(day) <= Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+                    Log.d("CalendarGridAdapter", "Day is not beyond the current date");
+                    MainActivity activity = (MainActivity) getContext();
+                    if (activity != null) {
+                        activity.startActivity(new Intent(activity, LogSymptoms.class));
+                    }
+                } else {
+                    Log.d("CalendarGridAdapter", "Day is beyond the current date");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+                    calendar.set(Calendar.MONTH, Calendar.getInstance().get(Calendar.MONTH));
+                    calendar.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    String timeStamp = sdf.format(calendar.getTime());
+                    Log.d("CalendarGridAdapter", "Timestamp: " + timeStamp);
+                }
+            }
+        }
+
+
 
         static class ViewHolder {
             TextView textView;
