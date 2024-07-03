@@ -35,7 +35,6 @@ public class HomeFragment extends Fragment{
 
     private Patient patient;
     private TextView DaysLeft;
-
     // db
     private OvumDbHelper db;
 
@@ -106,11 +105,12 @@ public class HomeFragment extends Fragment{
                 // Set the number of days left
                 DaysLeft.setText(String.valueOf(daysLeftCount) + " Days");
 
-                // Store the number of days left in the shared preferences
-                sharedPrefManager.storePatientInfo(String.valueOf(daysLeftCount));
+                // dueDate now should be the next period date!! so we store it in the shared preferences
+                String dueDateCalculated = String.valueOf(nextPeriodDate);
+                sharedPrefManager.storePatientInfo(dueDateCalculated);
 
                 // Log it out
-                Log.v("HomeFragmentTestPerStore", "Days Left: saved in log as days left " + sharedPrefManager.getDueDate());
+                Log.v("HomeFragmentTestPerStore", "Due date: saved in log is " + sharedPrefManager.getDueDate());
             } catch (Exception e) {
                 e.printStackTrace();
                 DaysLeft.setText("Error");
