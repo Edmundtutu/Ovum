@@ -11,6 +11,8 @@ import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NAME;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_OVULATION;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -18,7 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,25 +31,110 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 
-public class HomeFragment extends Fragment{
+import android.os.Build;
 
-    private Button SymptomsBtn;
+import androidx.annotation.RequiresApi;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
+public class HomeFragment extends Fragment{
 
     private Patient patient;
     private TextView DaysLeft;
     // db
     private OvumDbHelper db;
 
+    private ImageView centerImage;
+
+    private MainViewModel mainViewModel;
+    private HorizontalCalendarAdapter adapter;
+    private LinearLayoutManager layoutManager;
+    private TextView dayOfWeekTextView;
+    private TextView dateTextView;
+    private TextView dayTextView;
+    private CompositeDisposable disposable = new CompositeDisposable();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("CheckResult")
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        SymptomsBtn = view.findViewById(R.id.logSymptomsBtn);
+
+        // Initialize ViewModel
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        // Initialize the TextViews
+        dayOfWeekTextView = view.findViewById(R.id.day);
+        dateTextView = view.findViewById(R.id.date);
+        dayTextView = view.findViewById(R.id.dateNum);
+
+        // Observe currentDate LiveData
+        mainViewModel.getCurrentDate().observe(getViewLifecycleOwner(), currentDay -> { // changes from this->getViewLifecylceOwner
+            // Update the UI
+
+            String formattedDate = currentDay.getDate();
+            // first log the fomattedDate
+            Log.v("HomeFragment", "Formatted Date: " + formattedDate);
+            // Split the formatted date string into parts
+            String[] dateParts = formattedDate.split(" ");
+
+            // Extract the month, day, and year
+            String month = dateParts[0];  // "MMM"
+            String day = dateParts[1].replace(",", "");  // "dd"
+            String year = dateParts[2];  // "yyyy"
+
+            // Combine the day and year into a single string
+            String dayYear = day + ", " + year;
+            dayOfWeekTextView.setText(currentDay.getDayOfWeek());
+            dateTextView.setText(month);
+            dayTextView.setText(dayYear);
+        });
+
+        // Find the RecyclerView and set its layout manager
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+
+        adapter = new HorizontalCalendarAdapter(new HorizontalCalendarAdapter.DiffCallback());
+        recyclerView.setAdapter(adapter);
+
+        // Set the item click listener
+        adapter.setOnItemClickListener(date -> {
+            // Handle the item click here
+            Toast.makeText(getContext(), "Selected date: " + date.toString(), Toast.LENGTH_SHORT).show();
+            mainViewModel.setCurrentDate(date); // Update the current date in the ViewModel
+        });
+
+        // Observe the paging data
+        mainViewModel.getFlowablePagingData()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(pagingData -> {
+                    adapter.submitData(getLifecycle(), pagingData);
+                    recyclerView.post(() -> layoutManager.scrollToPosition(adapter.getItemCount() / 2));
+                });
+
+        // setting the center image
+        centerImage = view.findViewById(R.id.centerImage);
+        // Create ObjectAnimator to change opacity of the button itself
+        @SuppressLint("ObjectAnimatorBinding")
+        ObjectAnimator animator = ObjectAnimator.ofFloat(centerImage, "alpha", 0.2f, 1.0f, 0.2f);
+        animator.setDuration(1000); // Set duration to 1000 milliseconds (1 second)
+        animator.setRepeatCount(ObjectAnimator.INFINITE); // Repeat animation indefinitely
+        animator.setRepeatMode(ObjectAnimator.REVERSE); // Reverse animation for smooth pulsing
+        animator.start(); // Start the animation
+
         DaysLeft = view.findViewById(R.id.daysLeft);
         db = new OvumDbHelper(getContext());
 
@@ -71,7 +158,7 @@ public class HomeFragment extends Fragment{
 
             // if Null set the days left to 0
             if (nextPeriodDateStr == null || nextPeriodDateStr.isEmpty()) {
-                DaysLeft.setText("0 Days");
+                DaysLeft.setText("");
                 return view;
             }
 
@@ -118,7 +205,7 @@ public class HomeFragment extends Fragment{
 
         }
 
-        SymptomsBtn.setOnClickListener(new View.OnClickListener() {
+        centerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Get a reference to the activity
@@ -133,6 +220,12 @@ public class HomeFragment extends Fragment{
             }
         });
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 
     // Extract the relevant information from the database Method. Takes the id and email of the patient as arguments and returns the patient object

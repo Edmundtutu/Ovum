@@ -5,6 +5,10 @@
          <item name="colorPrimary">@color/deep_pink</item>
     </style>
 
+    <style name="Base.Widget.Material3.BottomNavigationView." parent="Theme.MaterialComponents">
+        <item name="colorPrimary">@color/deep_pink</item>
+    </style>
+
     <style name="Theme.Ovum" parent="Base.Theme.Ovum" />
     <style name="MyTextInputEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="android:background">@drawable/custom_edit_text_background</item>

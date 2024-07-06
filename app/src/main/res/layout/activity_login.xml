@@ -7,7 +7,7 @@
     tools:context=".Login">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/centerImage"
         android:layout_width="154dp"
         android:layout_height="184dp"
         app:layout_constraintBottom_toBottomOf="parent"
