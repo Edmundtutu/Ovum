@@ -148,7 +148,7 @@ public class HomeFragment extends Fragment{
 
         // Call the extractRelevantInfoFromDb to query the Db to  identify the patient with the corresponding id and email
 
-        Patient thePatient = extractRelevantInfoFromDb(userId, userEmail);
+        Patient thePatient = extractRelevantInfoFromDb(userId, userEmail, db);
 
         if (thePatient != null) {
             String nextPeriodDateStr = thePatient.getNextPeriodDate();
@@ -229,7 +229,7 @@ public class HomeFragment extends Fragment{
     }
 
     // Extract the relevant information from the database Method. Takes the id and email of the patient as arguments and returns the patient object
-    private Patient extractRelevantInfoFromDb(int id, String email){
+    private Patient extractRelevantInfoFromDb(int id, String email, OvumDbHelper db){
         Cursor cursor = db.getPatient(id,email);
 
         if (cursor != null && cursor.moveToFirst()) {
@@ -261,9 +261,4 @@ public class HomeFragment extends Fragment{
         return patient;
     }
 
-    // this is a getter method that returns the object of the Patient got from this class
-    // This same patient object returned can now be used in other classes (works indirectly as a sharedPref)
-    public Patient getPatient(){
-        return patient;
-    }
 }

@@ -21,4 +21,9 @@
     </style>
 
     <color name="pale_hint_color">#80FFFFFF</color>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
 </resources>
