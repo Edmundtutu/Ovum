@@ -108,20 +108,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileEmail = sharedPrefManager.getUserEmail();
 
         // initialise a new instance of the Database helper
+        // initialise a new data utils class
+        DateUtils dateUtils = new DateUtils();
         OvumDbHelper db = new OvumDbHelper(this);
         patient = extractRelevantInfoFromDb(userId,profileEmail,db);
         if (patient != null) {
+            // if due date is available in the shared prefs, use it
+            if (sharedPrefManager.getDueDate() != null) {
+                profileDueDate = dateUtils.formatDateToSpeech(sharedPrefManager.getDueDate());
+            }else{
+                // if not, use the one from the database
+//                profileDueDate = patient.getNextProbableDateOfPeriod();
+                profileDueDate = "Not Determined Yet";
+            }
             profileDob = patient.getDob();
-            profileDueDate = sharedPrefManager.getDueDate();
+//            profileDueDate = sharedPrefManager.getDueDate();
             profileUsername = sharedPrefManager.getUsername();
             Log.v("Profile", "DOB: " + profileDob + " DueDate: " + profileDueDate + " Username: " + profileUsername + " Email: " + profileEmail);
         }
         // instantiate the date utils class to make age and date conversions
-        DateUtils dateUtils = new DateUtils();
+
         String age = dateUtils.calculateAge(profileDob);
         setNavigationViewItemTitle(R.id.nav_username, profileEmail);
         setNavigationViewItemTitle(R.id.nav_age, "Aged: "+age);
-        setNavigationViewItemTitle(R.id.nav_duedate, "Due Date: "+dateUtils.formatDateToSpeech(profileDueDate));
+        setNavigationViewItemTitle(R.id.nav_duedate, "Due Date: "+profileDueDate);
 
         // set the HomeFragment as the first frame
         replaceFragment(new HomeFragment());

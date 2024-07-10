@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SetGynEvent">
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:maxHeight="@dimen/cardview_default_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/set_log_event_bg">
+
+        <TextView
+            android:id="@+id/txtCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="80dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Set an Event For Later Reference"
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/due_date"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="202dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins"
+            android:text="You are welcome to plan ahead for the sake of your cylce"
+            android:textAlignment="textStart"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="220dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        tools:layout_editor_absoluteX="16dp">
+
+
+        <GridLayout
+            android:id="@+id/gridLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:columnCount="4"
+            android:rowCount="14">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="3"
+                android:layout_margin="15dp"
+                android:layout_marginStart="22dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Plan for Your Next Cylces "
+                android:textAlignment="viewStart"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_margin="7dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forVisit"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:id="@+id/itheavy"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/poppins"
+                    android:text="Visit Doctor"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forTalkToDoc"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="Talk To Doc"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+
+                <RelativeLayout
+                    android:id="@+id/forstress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp"
+                    tools:ignore="DuplicateIds">
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="2"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forMakeLog"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:id="@+id/itlow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/caption_text_view3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/poppins"
+                    android:text="Log a Symptom"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forSexIntercource"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/caption_text_view5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/poppins"
+                    android:text="Involve in Sex"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forTakePill"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Take a pill"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="7"
+                android:layout_column="0"
+                android:layout_columnSpan="3"
+                android:layout_gravity="start"
+                android:layout_marginStart="15dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="View the what the Doctor says"
+                android:textAlignment="viewStart"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="8"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forMeetUp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text="Meet Doctor"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="8"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forcalling"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text="Call Doctor"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="8"
+                android:layout_column="2"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forPrescribed"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text="Prescription"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="8"
+                android:layout_column="3"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/caption_text_view10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text=" "
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="11"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forAnother1"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text=" "
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="11"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forAnother2"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:layout_marginBottom="50dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="bottom"
+                    android:text=" "
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="11"
+                android:layout_column="2"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forAnother3"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="bottom"
+                    android:text=" "
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/forAnother"
+                android:layout_width="55dp"
+                android:layout_height="53dp"
+                android:layout_row="8"
+                android:layout_column="3"
+                android:layout_margin="10dp"
+                android:background="@drawable/gradient_mixture"
+                android:elevation="5dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tint="@color/white" />
+            </RelativeLayout>
+
+        </GridLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottomSpace2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/confirmBtnForEvents"
+            style="@style/Base.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add events"
+            android:backgroundTint="@color/pale_pink"
+            android:textColor="@color/white"
+            android:enabled="false"/>
+    </RelativeLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,5 +15,10 @@
     <color name="blue">#0000FF</color>
     <color name="transparent">#0000</color>
     <color name="sky_blue">#87CEEB</color>
-    <color name="dim_background">#99000000</color>
+    <color name="due_date">#c13e32</color>
+    <color name="oneTo_due_date">#C2C13E32</color>
+    <color name="twoTo_due_date">#54FBC5C9</color>
+    <color name="oneFrom_due_date">#A3FF3131</color>
+    <color name="twoFrom_due_date">#6EFBC5C9</color>
+    <color name="dim_background">#80000000</color>
 </resources>

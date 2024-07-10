@@ -1,5 +1,6 @@
 package com.example.ovum;
 
+import static android.content.ContentValues.TAG;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_AVERAGE_CYCLE_LENGTH;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_AVERAGE_PERIOD_LENGTH;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_CYCLE_LENGTH;
@@ -30,6 +31,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.os.Build;
 
@@ -64,7 +67,7 @@ public class HomeFragment extends Fragment{
         super.onCreate(savedInstanceState);
     }
 
-    @SuppressLint("CheckResult")
+    @SuppressLint({"CheckResult", "NotifyDataSetChanged"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,29 +104,52 @@ public class HomeFragment extends Fragment{
             dayTextView.setText(dayYear);
         });
 
-        // Find the RecyclerView and set its layout manager
+        // Initialize RecyclerView and set its layout manager
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new HorizontalCalendarAdapter(new HorizontalCalendarAdapter.DiffCallback());
+// Initialize the adapter
+        HorizontalCalendarAdapter adapter = new HorizontalCalendarAdapter(new HorizontalCalendarAdapter.DiffCallback());
         recyclerView.setAdapter(adapter);
 
-        // Set the item click listener
+// Set the item click listener
         adapter.setOnItemClickListener(date -> {
-            // Handle the item click here
             Toast.makeText(getContext(), "Selected date: " + date.toString(), Toast.LENGTH_SHORT).show();
             mainViewModel.setCurrentDate(date); // Update the current date in the ViewModel
         });
 
-        // Observe the paging data
+// Observe the paging data
         mainViewModel.getFlowablePagingData()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(pagingData -> {
                     adapter.submitData(getLifecycle(), pagingData);
+                    Log.d(TAG, "Paging data received: " + pagingData);
                     recyclerView.post(() -> layoutManager.scrollToPosition(adapter.getItemCount() / 2));
                 });
+
+// Initialize and set due dates
+        Set<LocalDate> dueDates = new HashSet<>();
+        dueDates.add(LocalDate.of(2024, 7, 15));
+        mainViewModel.setDueDates(dueDates);
+
+        Set<LocalDate> oneFromDueDates = new HashSet<>();
+        oneFromDueDates.add(LocalDate.of(2024, 7, 16));
+        mainViewModel.setOneFromDueDates(oneFromDueDates);
+
+        Set<LocalDate> oneToDueDates = new HashSet<>();
+        oneToDueDates.add(LocalDate.of(2024, 7, 14));
+        mainViewModel.setOneToDueDates(oneToDueDates);
+
+        Set<LocalDate> twoFromDueDates = new HashSet<>();
+        twoFromDueDates.add(LocalDate.of(2024, 7, 17));
+        mainViewModel.setTwoFromDueDates(twoFromDueDates);
+
+        Set<LocalDate> twoToDueDates = new HashSet<>();
+        twoToDueDates.add(LocalDate.of(2024, 7, 13));
+        mainViewModel.setTwoToDueDates(twoToDueDates);
+
 
         // setting the center image
         centerImage = view.findViewById(R.id.centerImage);

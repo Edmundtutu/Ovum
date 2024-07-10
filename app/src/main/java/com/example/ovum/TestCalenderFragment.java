@@ -242,7 +242,27 @@ public class TestCalenderFragment extends Fragment {
                 }
 
                 if (isDateBeyondCurrent(day)) {
-                    convertView.setOnClickListener(null); // Disable clicking for future dates
+                    convertView.setOnTouchListener(new View.OnTouchListener(){
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            switch (event.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    Animation expandAnim = AnimationUtils.loadAnimation(getContext(), R.anim.expand);
+                                    holder.textView.startAnimation(expandAnim);
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                case MotionEvent.ACTION_CANCEL:
+                                    Animation shrinkAnim = AnimationUtils.loadAnimation(getContext(), R.anim.shrink);
+                                    holder.textView.startAnimation(shrinkAnim);
+
+                                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                                        handleDayClick(day);
+                                    }
+                                    break;
+                            }
+                            return true;
+                        }
+                    });
                     holder.textView.setBackgroundResource(R.drawable.circle_background_disabled);
                 } else {
                     convertView.setOnClickListener(null); // Enable clicking for valid dates
@@ -329,8 +349,12 @@ public class TestCalenderFragment extends Fragment {
                         activity.startActivity(new Intent(activity, LogSymptoms.class));
                     }
                 } else {
+                    // if day is beyond currentdate! then add an even on it by redirecting to the setGynEvent activity
                     Log.d("CalendarGridAdapter", "Day is beyond the current date");
-                    // Handle if needed
+                    MainActivity activity = (MainActivity) getContext();
+                    if (activity != null) {
+                        activity.startActivity(new Intent(activity, SetGynEvent.class));
+                    }
                 }
             }
         }
