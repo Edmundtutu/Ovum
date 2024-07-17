@@ -98,5 +98,20 @@ public class OvumDbHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    // Method to update the symptoms table
+    public void updateSymptoms(int patientId, String category, String name, String description, String dateRecorded, String dateOccurred, int severity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String SQL_INSERT_SYMPTOMS = "INSERT INTO " + OvumContract.SymptomEntry.TABLE_NAME + " (" +
+                OvumContract.SymptomEntry.COLUMN_PATIENT_ID + ", " +
+                OvumContract.SymptomEntry.COLUMN_CATEGORY + ", " +
+                OvumContract.SymptomEntry.COLUMN_NAME + ", " +
+                OvumContract.SymptomEntry.COLUMN_DESCRIPTION + ", " +
+                OvumContract.SymptomEntry.COLUMN_DATE_RECORDED + ", " +
+                OvumContract.SymptomEntry.COLUMN_DATE_OCCURRED + ", " +
+                OvumContract.SymptomEntry.COLUMN_SEVERITY + ") VALUES (" +
+                patientId + ", '" + category + "', '" + name + "', '" + description + "', '" + dateRecorded + "', '" + dateOccurred + "', " + severity + ")";
+        db.execSQL(SQL_INSERT_SYMPTOMS);
+    }
+
 
 }

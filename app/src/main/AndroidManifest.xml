@@ -21,9 +21,6 @@
             android:name=".CreateAccount"
             android:exported="false" />
         <activity
-            android:name=".LogSymptoms"
-            android:exported="false" />
-        <activity
             android:name=".UserIntention"
             android:exported="false" />
         <activity

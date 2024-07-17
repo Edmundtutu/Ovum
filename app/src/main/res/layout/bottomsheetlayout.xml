@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialogbkg"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_round_remove_24"
+        android:layout_gravity="center|top"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/createText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        android:text="Payment Method"
+        android:textColor="@color/hot_pink"
+        android:padding="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        android:textSize="25sp" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:id="@+id/paymentMethodRadioGroup">
+
+        <RadioButton
+            android:id="@+id/mtnMoMoRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Pay with MTN MoMo"
+            android:textSize="18sp"
+            android:drawableLeft="@drawable/mtn_logo"
+            android:drawablePadding="8dp" />
+
+        <RadioButton
+            android:id="@+id/airtelMoneyRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Pay with Airtel Money"
+            android:textSize="18sp"
+            android:drawableLeft="@drawable/airtel_logo"
+            android:drawablePadding="8dp" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/phoneNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Mobile Money Number"
+        android:inputType="phone"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:textSize="18sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@color/pale_pink"
+            android:clickable="true"
+            android:layout_marginEnd="90dp"
+            android:padding="8dp"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/confirmButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            android:textColor="@color/hot_pink"
+            android:clickable="true"
+            android:padding="8dp"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+</LinearLayout>
