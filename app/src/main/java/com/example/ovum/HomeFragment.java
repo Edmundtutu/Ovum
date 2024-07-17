@@ -1,6 +1,5 @@
 package com.example.ovum;
 
-import static android.content.ContentValues.TAG;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_AVERAGE_CYCLE_LENGTH;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_AVERAGE_PERIOD_LENGTH;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_CYCLE_LENGTH;
@@ -9,12 +8,10 @@ import static com.example.ovum.OvumContract.PatientEntry.COLUMN_EMAIL;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_LAST_PERIOD_DATE;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_LOCATION;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NAME;
-import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_OVULATION;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,12 +28,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.Set;
 
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,10 +53,10 @@ public class HomeFragment extends Fragment{
 
     private MainViewModel mainViewModel;
     private HorizontalCalendarAdapter adapter;
-    private LinearLayoutManager layoutManager;
     private TextView dayOfWeekTextView;
     private TextView dateTextView;
     private TextView dayTextView;
+    private String currentDate;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
@@ -67,7 +64,7 @@ public class HomeFragment extends Fragment{
         super.onCreate(savedInstanceState);
     }
 
-    @SuppressLint({"CheckResult", "NotifyDataSetChanged"})
+    @SuppressLint({"CheckResult", "NotifyDataSetChanged", "SetTextI18n"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +86,8 @@ public class HomeFragment extends Fragment{
             String formattedDate = currentDay.getDate();
             // first log the fomattedDate
             Log.v("HomeFragment", "Formatted Date: " + formattedDate);
+            //set the current date to the formatted date
+            currentDate = formattedDate;
             // Split the formatted date string into parts
             String[] dateParts = formattedDate.split(" ");
 
@@ -110,58 +109,44 @@ public class HomeFragment extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
 
-// Initialize the adapter
-        HorizontalCalendarAdapter adapter = new HorizontalCalendarAdapter(new HorizontalCalendarAdapter.DiffCallback());
+        // Initialize the adapter
+        adapter = new HorizontalCalendarAdapter();
+
+
+        // Set the item click listener
+        adapter.setOnDayClickListener(day -> {
+            Toast.makeText(getContext(), "Selected date: " + day.getDate().toString(), Toast.LENGTH_SHORT).show();
+            mainViewModel.setCurrentDate(day.getDate());
+        });
         recyclerView.setAdapter(adapter);
 
-// Set the item click listener
-        adapter.setOnItemClickListener(date -> {
-            Toast.makeText(getContext(), "Selected date: " + date.toString(), Toast.LENGTH_SHORT).show();
-            mainViewModel.setCurrentDate(date); // Update the current date in the ViewModel
-        });
-
-// Observe the paging data
-        mainViewModel.getFlowablePagingData()
+        disposable.add(mainViewModel.getFlowablePagingData()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(pagingData -> {
-                    adapter.submitData(getLifecycle(), pagingData);
-                    Log.d(TAG, "Paging data received: " + pagingData);
-                    recyclerView.post(() -> layoutManager.scrollToPosition(adapter.getItemCount() / 2));
-                });
+                    recyclerView.scrollToPosition(0); // Scroll to the start when new data is loaded
+                    adapter.submitData(getLifecycle(),pagingData); // Note: Changed to submitList
+                }, throwable -> {
+                    // Handle error if needed
+                }));
 
-// Initialize and set due dates
-        Set<LocalDate> dueDates = new HashSet<>();
-        dueDates.add(LocalDate.of(2024, 7, 15));
-        mainViewModel.setDueDates(dueDates);
+        mainViewModel.getCurrentDate().observe((LifecycleOwner) getContext(), (Observer<? super DayInfo>) dayInfo -> {
+            // Update UI with current date information if needed
+        });
 
-        Set<LocalDate> oneFromDueDates = new HashSet<>();
-        oneFromDueDates.add(LocalDate.of(2024, 7, 16));
-        mainViewModel.setOneFromDueDates(oneFromDueDates);
-
-        Set<LocalDate> oneToDueDates = new HashSet<>();
-        oneToDueDates.add(LocalDate.of(2024, 7, 14));
-        mainViewModel.setOneToDueDates(oneToDueDates);
-
-        Set<LocalDate> twoFromDueDates = new HashSet<>();
-        twoFromDueDates.add(LocalDate.of(2024, 7, 17));
-        mainViewModel.setTwoFromDueDates(twoFromDueDates);
-
-        Set<LocalDate> twoToDueDates = new HashSet<>();
-        twoToDueDates.add(LocalDate.of(2024, 7, 13));
-        mainViewModel.setTwoToDueDates(twoToDueDates);
-
-
+        // Observe the goToPosition LiveData to scroll to the specified position
+        mainViewModel.getGoToPosition().observe((LifecycleOwner) getContext(), (Observer<? super Integer>) position -> {
+            if (position != null && position >= 0) {
+                // Use CenterSmoothScroller to smoothly scroll to the specified position
+                CenterSmoothScroller scroller = new CenterSmoothScroller(getContext());
+                scroller.setTargetPosition(position);
+                layoutManager.startSmoothScroll(scroller);
+            }
+        });
         // setting the center image
-        centerImage = view.findViewById(R.id.centerImage);
-        // Create ObjectAnimator to change opacity of the button itself
-        @SuppressLint("ObjectAnimatorBinding")
-        ObjectAnimator animator = ObjectAnimator.ofFloat(centerImage, "alpha", 0.2f, 1.0f, 0.2f);
-        animator.setDuration(1000); // Set duration to 1000 milliseconds (1 second)
-        animator.setRepeatCount(ObjectAnimator.INFINITE); // Repeat animation indefinitely
-        animator.setRepeatMode(ObjectAnimator.REVERSE); // Reverse animation for smooth pulsing
-        animator.start(); // Start the animation
+        centerImage = view.findViewById(R.id.center_image);
 
-        DaysLeft = view.findViewById(R.id.daysLeft);
+
+        DaysLeft = view.findViewById(R.id.days_left);
         db = new OvumDbHelper(getContext());
 
         // Set the number of days left
@@ -215,8 +200,26 @@ public class HomeFragment extends Fragment{
                 // Ensure that daysLeftCount is non-negative
                 daysLeftCount = Math.max(daysLeftCount, 0);
 
-                // Set the number of days left
-                DaysLeft.setText(String.valueOf(daysLeftCount) + " Days");
+                // Set the number of days left with the proper count pronunciation
+                if(daysLeftCount<1){
+                    DaysLeft.setText("Your \nPeriod is Late");
+                }else {
+                    DaysLeft.setText(String.valueOf("Today\n"+daysLeftCount) + " days Left");
+                    // set the background animation of the center image
+                    if(daysLeftCount<=5){
+                        // set the background of the center image to redish gradient and add a pulsing effect
+                        centerImage.setBackgroundResource(R.drawable.shim_status_container);
+                        // Create ObjectAnimator to change opacity of the button itself
+                        @SuppressLint("ObjectAnimatorBinding")
+                        ObjectAnimator animator = ObjectAnimator.ofFloat(centerImage, "alpha", 0.2f, 1.0f, 0.2f);
+                        animator.setDuration(1000); // Set duration to 1000 milliseconds (1 second)
+                        animator.setRepeatCount(ObjectAnimator.INFINITE); // Repeat animation indefinitely
+                        animator.setRepeatMode(ObjectAnimator.REVERSE); // Reverse animation for smooth pulsing
+                        animator.start(); // Start the animation
+                        // if its one day left the the right pronunciation would be day left
+                        if(daysLeftCount==1){DaysLeft.setText(String.valueOf("Today\n"+daysLeftCount) + " day Left");}
+                    }
+                }
 
                 // dueDate now should be the next period date!! so we store it in the shared preferences
                 String dueDateCalculated = String.valueOf(nextPeriodDate);
@@ -234,15 +237,8 @@ public class HomeFragment extends Fragment{
         centerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get a reference to the activity
-                MainActivity activity = (MainActivity) getActivity();
-                if (activity != null) {
-                    // Start the new activity
-                    activity.startActivity(new Intent(activity, LogSymptoms.class));
-                }else {
-                    // Log an error
-                    Log.d("HomeFragment", "Activity is null");
-                }
+                LogSymptomsDialogFragment dialogFragment = new LogSymptomsDialogFragment(currentDate);
+                dialogFragment.show(getParentFragmentManager(), "CustomDialog");
             }
         });
         return view;

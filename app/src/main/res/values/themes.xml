@@ -26,4 +26,49 @@
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>
     </style>
+
+
+    <style name="CustomDialog" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">stateVisible|adjustResize</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="CustomDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
+
+
+    <style name="HorizontalCalendar" />
+
+    <style name="HorizontalCalendar.Text">
+        <item name="android:textSize">@dimen/horizontalCalendarTextSize</item>
+    </style>
+
+    <style name="HorizontalCalendar.Text.DeselectedDayOfWeek">
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+        <item name="android:textColor">@color/black_50</item>
+    </style>
+
+    <style name="HorizontalCalendar.Text.DeselectedDayOfMonth">
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+        <item name="android:textColor">@color/black_50</item>
+    </style>
+
+    <style name="HorizontalCalendar.Text.SelectedDayOfWeek">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="HorizontalCalendar.Text.SelectedDayOfMonth">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">@color/pale_pink</item>
+    </style>
 </resources>

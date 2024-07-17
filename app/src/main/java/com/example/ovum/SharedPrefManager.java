@@ -3,6 +3,8 @@ package com.example.ovum;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.text.ParseException;
+
 public class SharedPrefManager {
 
     // Singleton instance of SharedPrefManager
@@ -104,9 +106,22 @@ public class SharedPrefManager {
     }
 
     // Method to get the stored due date
-    public String getDueDate() {
+    public DueDate getDueDate() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_DUE_DATE, null);
+        String dueDateString = sharedPreferences.getString(KEY_DUE_DATE, null);
+
+        // how about returning the date in two fomarts i.e. in the format of 13-7-2024 and 13th July 2024 (reported and speech)
+
+        if (dueDateString == null) {
+            return null; // or handle the null case as needed
+        }
+
+        try {
+            return new DueDate(dueDateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null; // or handle the parse exception as needed
+        }
     }
 
     // Method to check if it's the first time the app is launched

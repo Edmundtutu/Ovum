@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#0e1111</color>
+    <color name="black_50">#232b2b</color>
     <color name="white">#FFFFFFFF</color>
     <color name="pale_pink">#e4c9e5</color>
     <color name="pinch">#e3dbfd</color>
@@ -21,4 +22,5 @@
     <color name="oneFrom_due_date">#A3FF3131</color>
     <color name="twoFrom_due_date">#6EFBC5C9</color>
     <color name="dim_background">#80000000</color>
+    <color name="pale_cream">#fce6e8</color>
 </resources>

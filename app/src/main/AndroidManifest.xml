@@ -15,16 +15,10 @@
         android:theme="@style/Theme.Ovum"
         tools:targetApi="31">
         <activity
-            android:name=".SetGynEvent"
-            android:exported="false" />
-        <activity
             android:name=".WelcomeActivity"
             android:exported="false" />
         <activity
             android:name=".CreateAccount"
-            android:exported="false" />
-        <activity
-            android:name=".LogSymptoms"
             android:exported="false" />
         <activity
             android:name=".UserIntention"

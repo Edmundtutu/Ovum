@@ -1,5 +1,4 @@
 package com.example.ovum;
-import static android.content.ContentValues.TAG;
 
 import android.os.Build;
 import android.util.Log;
@@ -12,29 +11,22 @@ import androidx.paging.Pager;
 import androidx.paging.PagingConfig;
 import androidx.paging.PagingData;
 import androidx.paging.rxjava3.PagingRx;
-
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
-
 import io.reactivex.rxjava3.core.Flowable;
 import kotlinx.coroutines.GlobalScope;
-
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class MainViewModel extends ViewModel {
-
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("LLL d, yyyy");
     private final MutableLiveData<DayInfo> currentDate = new MutableLiveData<>();
-    private final Flowable<PagingData<LocalDate>> flowablePagingData;
-
-    private final Set<LocalDate> dueDates = new HashSet<>();
-    private final Set<LocalDate> oneFromDueDates = new HashSet<>();
-    private final Set<LocalDate> oneToDueDates = new HashSet<>();
-    private final Set<LocalDate> twoFromDueDates = new HashSet<>();
-    private final Set<LocalDate> twoToDueDates = new HashSet<>();
+    private final Flowable<PagingData<Day>> flowablePagingData;
+    private MutableLiveData<Integer> _goToPosition = new MutableLiveData<>(-1);
+    private LiveData<Integer> goToPosition = _goToPosition;
+    private MutableLiveData<HorizontalCalendarPagingSource> horizontalCalendarSource = new MutableLiveData<>();
 
     public MainViewModel() {
         LocalDate today = LocalDate.now();
@@ -44,13 +36,16 @@ public class MainViewModel extends ViewModel {
         );
         currentDate.setValue(dayInfo);
 
-        Pager<Integer, LocalDate> pager = new Pager<>(
+        HorizontalCalendarPagingSource pagingSource = new HorizontalCalendarPagingSource(this::getCurrentInstant);
+        horizontalCalendarSource.setValue(pagingSource);
+
+        Pager<Long, Day> pager = new Pager<>(
                 new PagingConfig(
-                        31, // Page size
-                        31, // Prefetch distance
-                        false // Enable placeholders
+                        31,
+                        31,
+                        false
                 ),
-                () -> new HorizontalCalendarPagingSource()
+                () -> pagingSource
         );
 
         flowablePagingData = PagingRx.getFlowable(pager);
@@ -69,53 +64,35 @@ public class MainViewModel extends ViewModel {
         currentDate.setValue(dayInfo);
     }
 
-    public void setDueDates(Set<LocalDate> dates) {
-        dueDates.clear();
-        dueDates.addAll(dates);
-        Log.d(TAG, "Due dates set: " + dueDates);
+    public LiveData<Integer> getGoToPosition() {
+        return goToPosition;
     }
 
-    public void setOneFromDueDates(Set<LocalDate> dates) {
-        oneFromDueDates.clear();
-        oneFromDueDates.addAll(dates);
+    public LiveData<HorizontalCalendarPagingSource> getHorizontalCalendarSource() {
+        return horizontalCalendarSource;
     }
 
-    public void setOneToDueDates(Set<LocalDate> dates) {
-        oneToDueDates.clear();
-        oneToDueDates.addAll(dates);
+    public void resetCalendarPosition() {
+        HorizontalCalendarPagingSource source = horizontalCalendarSource.getValue();
+        if (source != null) {
+            LocalDate today = LocalDate.now(ZoneId.systemDefault());
+            int position = source.getPositionForDate(today);
+            Log.v("MainViewModel", "Resetting calendar position to " + position);
+            if (position != -1) {
+                _goToPosition.setValue(position);
+            } else {
+                Log.v("MainViewModel", "Date not found in HorizontalCalendarPagingSource");
+            }
+        } else {
+            Log.v("MainViewModel", "HorizontalCalendarPagingSource is null");
+        }
     }
 
-    public void setTwoFromDueDates(Set<LocalDate> dates) {
-        twoFromDueDates.clear();
-        twoFromDueDates.addAll(dates);
-    }
-
-    public void setTwoToDueDates(Set<LocalDate> dates) {
-        twoToDueDates.clear();
-        twoToDueDates.addAll(dates);
-    }
-
-    public Set<LocalDate> getDueDates() {
-        return dueDates;
-    }
-
-    public Set<LocalDate> getOneFromDueDates() {
-        return oneFromDueDates;
-    }
-
-    public Set<LocalDate> getOneToDueDates() {
-        return oneToDueDates;
-    }
-
-    public Set<LocalDate> getTwoFromDueDates() {
-        return twoFromDueDates;
-    }
-
-    public Set<LocalDate> getTwoToDueDates() {
-        return twoToDueDates;
-    }
-
-    public Flowable<PagingData<LocalDate>> getFlowablePagingData() {
+    public Flowable<PagingData<Day>> getFlowablePagingData() {
         return flowablePagingData;
+    }
+
+    private Instant getCurrentInstant() {
+        return Instant.now();
     }
 }

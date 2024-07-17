@@ -108,14 +108,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileEmail = sharedPrefManager.getUserEmail();
 
         // initialise a new instance of the Database helper
-        // initialise a new data utils class
+        // initialise a new DueDate
         DateUtils dateUtils = new DateUtils();
         OvumDbHelper db = new OvumDbHelper(this);
         patient = extractRelevantInfoFromDb(userId,profileEmail,db);
         if (patient != null) {
             // if due date is available in the shared prefs, use it
             if (sharedPrefManager.getDueDate() != null) {
-                profileDueDate = dateUtils.formatDateToSpeech(sharedPrefManager.getDueDate());
+                profileDueDate = sharedPrefManager.getDueDate().speechFormat();
             }else{
                 // if not, use the one from the database
 //                profileDueDate = patient.getNextProbableDateOfPeriod();

@@ -63,5 +63,17 @@ dependencies {
     implementation ("io.reactivex.rxjava3:rxjava:3.0.0")
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-
+    implementation("com.github.sundeepk:compact-calendar-view:3.0.0") {
+        exclude(group = "com.android.support")
+    }
 }
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.core:core:1.13.0")
+        force("androidx.appcompat:appcompat:1.3.0")
+        force("androidx.recyclerview:recyclerview:1.2.1")
+        // Add any other AndroidX versions you are using
+    }
+}
+

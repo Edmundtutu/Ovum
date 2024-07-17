@@ -1,14 +1,21 @@
 package com.example.ovum;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
-import com.example.ovum.databinding.ActivitySetGynEventBinding;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 
-public class SetGynEvent extends AppCompatActivity {
+public class SetGynEventFragment extends DialogFragment {
     // declaring the useful
     Button confirmChangesBtn;
     public Boolean MeetDoc = false;
@@ -29,22 +36,31 @@ public class SetGynEvent extends AppCompatActivity {
     public Boolean Prescribed = false;
     private int count = 0;
     private Set<RelativeLayout> selectedLayouts = new HashSet<RelativeLayout>();
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ActivitySetGynEventBinding binding = ActivitySetGynEventBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
-        // binding the button and relative layout
-        confirmChangesBtn = binding.confirmBtnForEvents;
-        RelativeLayout meetDoc = binding.forVisit;
-        RelativeLayout talkToDoc = binding.forTalkToDoc;
-        RelativeLayout logASymptom = binding.forMakeLog;
-        RelativeLayout involveInSex = binding.forSexIntercource;
-        RelativeLayout takeAPill = binding.forTakePill;
-        RelativeLayout meetYourDoc = binding.forMeetUp;
-        RelativeLayout callDoc = binding.forcalling;
-        RelativeLayout prescribed = binding.forPrescribed;
+    private String titleDate;
+
+    public SetGynEventFragment(String titleDate) {
+        this.titleDate = titleDate;
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View view = inflater.inflate(R.layout.set_gyn_event, container, false);
+
+        // initialize the title textview
+        TextView title = view.findViewById(R.id.heading_text_view);
+        title.setText(titleDate);
+        // getting the views from the layout
+        confirmChangesBtn =view.findViewById(R.id.confirmBtnForEvents);
+        RelativeLayout meetDoc =view.findViewById(R.id.forVisit);
+        RelativeLayout talkToDoc =view.findViewById(R.id.forTalkToDoc);
+        RelativeLayout logASymptom =view.findViewById(R.id.forMakeLog);
+        RelativeLayout involveInSex =view.findViewById(R.id.forSexIntercource);
+        RelativeLayout takeAPill =view.findViewById(R.id.forTakePill);
+        RelativeLayout meetYourDoc = view.findViewById(R.id.forMeetUp);
+        RelativeLayout callDoc =view.findViewById(R.id.forcalling);
+        RelativeLayout prescribed = view.findViewById(R.id.forPrescribed);
 
         // setting the listeners for the layouts
         meetDoc.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +119,9 @@ public class SetGynEvent extends AppCompatActivity {
                 addEvents();
             }
         });
+        return view;
     }
+
     private Boolean toggleBackgroundTry(RelativeLayout layout) {
         boolean isSelected = selectedLayouts.contains(layout);
 
@@ -176,10 +194,21 @@ public class SetGynEvent extends AppCompatActivity {
             // log to the logcat the events that have been added
             Log.v("Events",events.toString());
 
-            finish();
+            dismiss();
 
         }else {
             Log.v("Events", "Non of the Events are true  \nnon have been  saved");
         }
+    }
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = new Dialog(requireContext(), R.style.CustomDialog);
+        dialog.setContentView(R.layout.set_gyn_event);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        return dialog;
     }
 }
