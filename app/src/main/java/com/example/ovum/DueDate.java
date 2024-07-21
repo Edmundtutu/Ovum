@@ -1,6 +1,13 @@
 package com.example.ovum;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -18,8 +25,9 @@ public class DueDate {
 
     public String reportFormat() {
         // Define the desired output format
-        SimpleDateFormat reportDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        return reportDateFormat.format(dueDate);
+//        SimpleDateFormat reportDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+//        return reportDateFormat.format(dueDate);
+        return dueDateString;
     }
 
     public String speechFormat() {
@@ -28,4 +36,23 @@ public class DueDate {
         return dateUtils.formatDateToSpeech(dueDateString);
 
     }
+
+    // method that returns dates associated with the dueDate
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<LocalDate> getDatesList() {
+//        dueDateString = "8-8-2024";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dueDate = LocalDate.parse(dueDateString, formatter);
+
+        ArrayList<LocalDate> datesList = new ArrayList<>();
+        datesList.add(dueDate);
+        datesList.add(dueDate.minusDays(1));
+        datesList.add(dueDate.minusDays(2));
+        datesList.add(dueDate.plusDays(1));
+        datesList.add(dueDate.plusDays(2));
+
+        return datesList;
+    }
+
+
 }

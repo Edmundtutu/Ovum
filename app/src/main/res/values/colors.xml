@@ -23,4 +23,5 @@
     <color name="twoFrom_due_date">#6EFBC5C9</color>
     <color name="dim_background">#80000000</color>
     <color name="pale_cream">#fce6e8</color>
+    <color name="pale_cream_50">#80fce6e8</color>
 </resources>

@@ -58,17 +58,13 @@
     </style>
 
     <style name="HorizontalCalendar.Text.DeselectedDayOfMonth">
-        <item name="android:fontFamily">@font/poppins_semibold</item>
-        <item name="android:textColor">@color/black_50</item>
-    </style>
-
-    <style name="HorizontalCalendar.Text.SelectedDayOfWeek">
-        <item name="android:fontFamily">@font/poppins_bold</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/barlow_semi_condensed_bold</item>
+        <item name="android:textColor">@color/pale_pink</item>
     </style>
 
     <style name="HorizontalCalendar.Text.SelectedDayOfMonth">
-        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:fontFamily">@font/barlow_semi_condensed_black</item>
         <item name="android:textColor">@color/pale_pink</item>
     </style>
+
 </resources>

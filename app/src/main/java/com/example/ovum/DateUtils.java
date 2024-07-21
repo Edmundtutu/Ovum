@@ -60,5 +60,18 @@ public class DateUtils {
         }
     }
 
+    // method to convert date in millisecods
+    public long convertToMilliseconds(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        long milliseconds = 0;
+        try {
+            Date date = dateFormat.parse(dateString);
+            milliseconds = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return milliseconds;
+    }
+
 
 }
