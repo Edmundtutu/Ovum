@@ -1,0 +1,66 @@
+[
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\collect_pregnancy_initial_data.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\collect_pregnancy_initial_data.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\collect_period_initial_data.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\collect_period_initial_data.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\fragment_test_calender.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_test_calender.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\activity_login.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\fragment_profile.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\fragment_home.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\dialog_calender_view.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\dialog_calender_view.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\grid_item_calendar.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\grid_item_calendar.xml"
+    },
+    {
+        "merged": "com.example.ovum.app-mergeDebugResources-31:/layout/fragment_profile.xml",
+        "source": "com.example.ovum.app-main-34:/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\fragment_cycles.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\fragment_cycles.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\activity_log_symptoms.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_log_symptoms.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\activity_create_account.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_create_account.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\activity_user_intention.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\activity_user_intention.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\calendar_cell.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\calendar_cell.xml"
+    },
+    {
+        "merged": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-mergeDebugResources-31:\\layout\\custom_spinner_item.xml",
+        "source": "C:\\Users\\ADMIN\\.gradle\\daemon\\8.4\\com.example.ovum.app-main-34:\\layout\\custom_spinner_item.xml"
+    }
+]

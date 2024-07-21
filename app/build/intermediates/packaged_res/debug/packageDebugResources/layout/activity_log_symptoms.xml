@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LogSymptoms">
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        app:layout_constraintBottom_toTopOf="@id/scroll"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txtCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="45dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/tell_us_about_how_u_feel"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/poppins"
+            android:minHeight="48dp"
+            android:text="@string/add_your_symptoms_by_simply_clicking_on_the_corresponding_icon"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        android:layout_marginTop="190dp"
+        android:layout_marginBottom="50dp">
+
+
+        <GridLayout
+            android:id="@+id/gridLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:columnCount="4"
+            android:rowCount="14">
+
+            <TextView
+                android:layout_margin="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="3"
+                android:layout_marginStart="22dp"
+                android:text="Your Period Has Started"
+                android:textAlignment="viewStart"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/heavy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_margin="7dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forheavy"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp"
+                    >
+
+                    <ImageView
+                        android:id="@+id/itheavy"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/high" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Heavy"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/formedium"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        app:srcCompat="@drawable/medium" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Medium"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="2"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forlow"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:id="@+id/itlow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/low" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/caption_text_view3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="low"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/apathetic"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="5"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forapathetic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/apathetic"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Pathetic"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/nervous"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="5"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/fornervours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/nervous"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/caption_text_view6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nervous"
+                    android:textSize="100sp"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="7"
+                android:layout_column="0"
+                android:layout_columnSpan="3"
+                android:layout_gravity="start"
+                android:layout_marginStart="22dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="@string/physical_symptoms"
+                android:textAlignment="viewStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/bloating"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="8"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forbloating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/bloat"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/caption_text_view7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bloating"
+                    android:textSize="100sp"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/headache"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="8"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forheadache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/headpain"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/caption_text_view8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/headache"
+                    android:textSize="100sp"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/highAppetite"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="8"
+                android:layout_column="2"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forhighAppetite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/highapet"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/caption_text_view9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/high_appetite"
+                    android:textSize="100sp"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lowAppetite"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="11"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forlowAppetite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/loapet"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/caption_text_view10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/low_appetite"
+                    android:textSize="100sp"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/sleepy"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="11"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forsleepy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/sleep"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/caption_text_view11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feeling_sleepy"
+                    android:textSize="100sp"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/stomachPain"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="13"
+                android:layout_column="0"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forstomachPain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginBottom="50dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/stomachpain"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+                <TextView
+                    android:id="@+id/caption_text_view12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stomach_pain"
+                    android:textSize="100sp"
+                    android:layout_margin="8dp"
+                    android:textColor="@color/black"
+                    android:gravity="bottom"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/tiredness"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_row="13"
+                android:layout_column="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/forTiredness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginBottom="50dp"
+                    android:background="@drawable/gradient_mixture"
+                    android:elevation="5dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/tire"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/caption_text_view13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="bottom"
+                    android:text="@string/feeling_tired"
+                    android:textColor="@color/black"
+                    android:textSize="100sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="1"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Low"
+                    android:textColor="@color/black"
+                    android:textSize="19dp" />
+            </LinearLayout>
+
+
+
+
+        </GridLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottomSpace2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/confirmbtn"
+            style="@style/Base.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_your_symptoms"
+            android:backgroundTint="@color/pale_pink"
+            android:textColor="@color/white"
+            android:enabled="false"/>
+    </RelativeLayout>
+
+
+    
+
+</androidx.constraintlayout.widget.ConstraintLayout>
