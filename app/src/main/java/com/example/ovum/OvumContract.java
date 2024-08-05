@@ -37,4 +37,13 @@ public class OvumContract {
         public static final String COLUMN_DATE_OCCURRED = "date_occurred";
         public static final String COLUMN_SEVERITY = "severity";
     }
+    /*  Another inner class that defines the table contents of the Events table */
+    public static class EventEntry implements BaseColumns {
+        public static final String TABLE_NAME = "events";
+        public static final String COLUMN_PATIENT_ID = "patient_id";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_DESCRIPTION = "description";
+        public static final String COLUMN_DATE_RECORDED = "date_recorded";
+        public static final String COLUMN_DATE_OCCURRED = "date_occurred";
+    }
 }

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class SharedPrefManager {
 
@@ -112,12 +115,19 @@ public class SharedPrefManager {
 
         // how about returning the date in two fomarts i.e. in the format of 13-7-2024 and 13th July 2024 (reported and speech)
 
-        if (dueDateString == null) {
-            return null; // or handle the null case as needed
-        }
-
         try {
-            return new DueDate(dueDateString);
+            if (dueDateString == null) {
+                // get next month first date
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.MONTH, 1);
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                SimpleDateFormat storedDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                dueDateString = storedDateFormat.format(calendar.getTime());
+                return new DueDate(dueDateString); // or handle the null case as needed
+            }else{
+                return new DueDate(dueDateString);
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
             return null; // or handle the parse exception as needed

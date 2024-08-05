@@ -1,5 +1,6 @@
 package com.example.ovum;
 
+import static com.example.ovum.CalendarUtils.dueDateAssociates;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_AVERAGE_CYCLE_LENGTH;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_AVERAGE_PERIOD_LENGTH;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_CYCLE_LENGTH;
@@ -24,10 +25,15 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import static com.example.ovum.CalendarUtils.daysInWeekArray;
+import static com.example.ovum.CalendarUtils.selectedDate;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.os.Build;
 
@@ -35,11 +41,9 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class HomeFragment extends Fragment{
@@ -48,16 +52,17 @@ public class HomeFragment extends Fragment{
     private TextView DaysLeft;
     // db
     private OvumDbHelper db;
+    private SharedPrefManager sharedPrefManager;
 
     private ImageView centerImage;
 
     private MainViewModel mainViewModel;
-    private HorizontalCalendarAdapter adapter;
     private TextView dayOfWeekTextView;
     private TextView dateTextView;
     private TextView dayTextView;
     private String currentDate;
     private CompositeDisposable disposable = new CompositeDisposable();
+    private RecyclerView calendarRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +75,8 @@ public class HomeFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        // initialize the shared preferences
+        sharedPrefManager = SharedPrefManager.getInstance(getContext());
         // Initialize ViewModel
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
@@ -103,44 +109,20 @@ public class HomeFragment extends Fragment{
             dayTextView.setText(dayYear);
         });
 
-        // Initialize RecyclerView and set its layout manager
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-
-        // Initialize the adapter
-        adapter = new HorizontalCalendarAdapter();
-
-
-        // Set the item click listener
-        adapter.setOnDayClickListener(day -> {
-            Toast.makeText(getContext(), "Selected date: " + day.getDate().toString(), Toast.LENGTH_SHORT).show();
-            mainViewModel.setCurrentDate(day.getDate());
-        });
-        recyclerView.setAdapter(adapter);
-
-        disposable.add(mainViewModel.getFlowablePagingData()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pagingData -> {
-                    recyclerView.scrollToPosition(0); // Scroll to the start when new data is loaded
-                    adapter.submitData(getLifecycle(),pagingData); // Note: Changed to submitList
-                }, throwable -> {
-                    // Handle error if needed
-                }));
+        // initalize the recycler view for the Horizontal calendar
+        calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+        // set the selected date to today according to the time zone
+        selectedDate = LocalDate.now();
+        // set the dueDateAssociates to the dates from the DueDate class using the shared preferences
+        if(sharedPrefManager.getDueDate().getDatesList()!=null){
+            dueDateAssociates = sharedPrefManager.getDueDate().getDatesList();
+        }else{
+            dueDateAssociates = null;
+        }
+        setWeekView();
 
         mainViewModel.getCurrentDate().observe((LifecycleOwner) getContext(), (Observer<? super DayInfo>) dayInfo -> {
             // Update UI with current date information if needed
-        });
-
-        // Observe the goToPosition LiveData to scroll to the specified position
-        mainViewModel.getGoToPosition().observe((LifecycleOwner) getContext(), (Observer<? super Integer>) position -> {
-            if (position != null && position >= 0) {
-                // Use CenterSmoothScroller to smoothly scroll to the specified position
-                CenterSmoothScroller scroller = new CenterSmoothScroller(getContext());
-                scroller.setTargetPosition(position);
-                layoutManager.startSmoothScroll(scroller);
-            }
         });
         // setting the center image
         centerImage = view.findViewById(R.id.center_image);
@@ -151,7 +133,6 @@ public class HomeFragment extends Fragment{
 
         // Set the number of days left
         // check the databse for the patient's days according to their id from the shared preferences
-        SharedPrefManager sharedPrefManager = SharedPrefManager.getInstance(getContext());
         int userId = sharedPrefManager.getUserId();
         Log.v("HomeFragment", "User ID: " + userId);
         String userEmail = sharedPrefManager.getUserEmail();
@@ -172,16 +153,15 @@ public class HomeFragment extends Fragment{
                 DaysLeft.setText("");
                 return view;
             }
+            DateTimeFormatter formatter = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                formatter = new DateTimeFormatterBuilder()
+                        .appendPattern("[d-M-yyyy][dd-M-yyyy]")
+                        .toFormatter();
+            }
 
             // Calculate the number of days left by comparing the next period date with the current date
             try {
-                DateTimeFormatter formatter = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    formatter = new DateTimeFormatterBuilder()
-                            .appendPattern("[d-M-yyyy][dd-M-yyyy]")
-                            .toFormatter();
-                }
-
                 LocalDate nextPeriodDate = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     nextPeriodDate = LocalDate.parse(nextPeriodDateStr, formatter);
@@ -203,6 +183,27 @@ public class HomeFragment extends Fragment{
                 // Set the number of days left with the proper count pronunciation
                 if(daysLeftCount<1){
                     DaysLeft.setText("Your \nPeriod is Late");
+                    // clear the due date from the shared preferences
+//                    sharedPrefManager.storePatientInfo("");
+                    // set the background of the center image to redish gradient and add a pulsing effect with faster/stronger beat
+                    centerImage.setBackgroundResource(R.drawable.shim_status_container);
+                    // Create ObjectAnimator to change opacity of the button itself
+                    @SuppressLint("ObjectAnimatorBinding")
+                    ObjectAnimator animator = ObjectAnimator.ofFloat(centerImage, "alpha", 0.2f, 1.0f, 0.2f);
+                    animator.setDuration(500); // Set duration to 500 milliseconds (0.5 second)
+                    animator.setRepeatCount(ObjectAnimator.INFINITE); // Repeat animation indefinitely
+                    animator.setRepeatMode(ObjectAnimator.REVERSE); // Reverse animation for smooth pulsing
+                    animator.start(); // Start the animation
+
+                    // check from the database if the next probable period date is beyond the current date, if true then set the due date of the shared preferences to the next probable period date
+                    patient = extractRelevantInfoFromDb(userId, userEmail, db);
+                    String changedNextPeriodDate = patient.getNextPeriodDate();
+                    if(changedNextPeriodDate!=null){
+                        if(LocalDate.parse(changedNextPeriodDate,formatter).isAfter(currentDate)){
+                            String dueDateCalculated = String.valueOf(nextPeriodDate);
+                            sharedPrefManager.storePatientInfo(dueDateCalculated);
+                        }
+                    }
                 }else {
                     DaysLeft.setText(String.valueOf("Today\n"+daysLeftCount) + " days Left");
                     // set the background animation of the center image
@@ -219,8 +220,8 @@ public class HomeFragment extends Fragment{
                         // if its one day left the the right pronunciation would be day left
                         if(daysLeftCount==1){DaysLeft.setText(String.valueOf("Today\n"+daysLeftCount) + " day Left");}
                     }
-                }
 
+                }
                 // dueDate now should be the next period date!! so we store it in the shared preferences
                 String dueDateCalculated = String.valueOf(nextPeriodDate);
                 sharedPrefManager.storePatientInfo(dueDateCalculated);
@@ -243,7 +244,21 @@ public class HomeFragment extends Fragment{
         });
         return view;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setWeekView() {
+        ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
+        HorizontalCalendarAdapter horizontalCalendarAdapter = new HorizontalCalendarAdapter(days, (parent, view, position, id) -> {
+            CalendarUtils.selectedDate = days.get(position);
+            // toast the day selected
+            Toast.makeText(getContext(), "Selected date: " + CalendarUtils.selectedDate, Toast.LENGTH_SHORT).show();
+            setWeekView();
+        });
+        // Set the layout manager and adapter for the recycler view
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
+        calendarRecyclerView.setLayoutManager(layoutManager);
+        calendarRecyclerView.setAdapter(horizontalCalendarAdapter);
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

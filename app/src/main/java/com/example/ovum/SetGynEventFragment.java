@@ -3,6 +3,7 @@ package com.example.ovum;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,12 +15,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -114,6 +116,7 @@ public class SetGynEventFragment extends DialogFragment {
 
         // setting the onclick for the confrim button!
         confirmChangesBtn.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 addEvents();
@@ -154,45 +157,53 @@ public class SetGynEventFragment extends DialogFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void addEvents(){
         // if any of the values are true then add the event
         if(MeetDoc||TalkToDoc||LogASymptom||InvolveInSex||TakeAPill||MeetYourDoc||CallDoc||Prescribed){
-            // create an Arraylist to store the events selected for the particular day
-            List<String> events = new ArrayList<>();
-            if(MeetDoc){
-                // add the string Meet the Doctor to the list of events
-                events.add("Meet the Doctor");
+            if (CalendarUtils.eventsOfTheDay == null) {
+                CalendarUtils.eventsOfTheDay = new HashMap<>();
+            }
+            // set the map of the events of the day to store the events selected for the particular day
+            HashMap<LocalDate, String> eventsOfTheDay = CalendarUtils.eventsOfTheDay;
+
+            // extract the correct format of the tittle date required to be parsed
+            LocalDate dateOfEvent = new DateUtils().formatDateToLocalDate(titleDate);
+            Log.d("Date", dateOfEvent.toString());
+            if (MeetDoc) {
+                // add the string Meet the Doctor to the list of EventSource
+                eventsOfTheDay.put(dateOfEvent, "Meet the Doctor");
             }
             if(TalkToDoc){
                 // add the string Talk to the Doctor to the list of events
-                events.add("Talk to the Doctor");
+                eventsOfTheDay.put(dateOfEvent,"Talk to the Doctor");
             }
             if(LogASymptom){
                 // add the string Log a Symptom to the list of events
-                events.add("Log a Symptom");
+                eventsOfTheDay.put(dateOfEvent,"Log a Symptom");
             }
             if(InvolveInSex) {
-                // add the string will involve in sex to the list of events
-                events.add("Will involve in sex");
+                // add the string Involve in sex to the list of eventsSource
+                eventsOfTheDay.put(dateOfEvent, "Involve in sex");
             }
             if(TakeAPill){
-                // add the string Take a Pill to the list of events
-                events.add("Take a Pill");
+                // add the string Take a Pill to the list of eventsSource
+                eventsOfTheDay.put(dateOfEvent,"Take a Pill");
             }
             if(MeetYourDoc){
-                // add the string Meet your Doctor to the list of events
-                events.add("Meet your Doctor");
+                // add the string Meet your Doctor to the list of eventsSource
+                eventsOfTheDay.put(dateOfEvent,"Meet your Doctor");
             }
             if(CallDoc){
-                // add the string Call the Doctor to the list of events
-                events.add("Call the Doctor");
+                // add the string Call the Doctor to the list of eventsSource
+                eventsOfTheDay.put(dateOfEvent,"Call the Doctor");
             }
             if(Prescribed){
-                // add the string Prescribed to the list of events
-                events.add("Prescribed");
+                // add the string Prescribed to the list of EventsSource
+                eventsOfTheDay.put(dateOfEvent,"Prescribed");
             }
             // log to the logcat the events that have been added
-            Log.v("Events",events.toString());
+            Log.v("Events", eventsOfTheDay.toString());
 
             dismiss();
 

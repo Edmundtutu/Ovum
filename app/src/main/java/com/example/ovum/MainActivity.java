@@ -13,6 +13,7 @@ import static java.security.AccessController.getContext;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -26,6 +27,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,15 +44,29 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.ovum.databinding.ActivityMainBinding;
 import com.example.ovum.databinding.DialogCalenderViewBinding;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String profileDueDate = null;
     String profileUsername = null;
     String profileEmail = null;
+
+    private ProgressDialog progressDialog;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -152,11 +171,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         // the floatingButton
+        progressDialog = new ProgressDialog(this);
         binding.fab.setOnClickListener(view -> {
             // show Custom dialog
             ShowPayDialog dialog = new ShowPayDialog(this);
             dialog.show(getSupportFragmentManager(), "ShowPayDialog");
         });
+
     }
 
     @Override
@@ -245,15 +266,99 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottomsheetlayout);
+
         TextView confirmButton = dialog.findViewById(R.id.confirmButton);
         TextView cancelButton = dialog.findViewById(R.id.cancelButton);
-        confirmButton.setOnClickListener(v -> dialog.dismiss());
+        RadioGroup radioGroup = dialog.findViewById(R.id.paymentMethodRadioGroup);
+        EditText phoneNumberEditText = dialog.findViewById(R.id.phoneNumberEditText);
+
+        // Set an OnCheckedChangeListener for the RadioGroup
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            // You can handle instant changes here if needed
+        });
+
+        confirmButton.setOnClickListener(v -> {
+            int checkedId = radioGroup.getCheckedRadioButtonId();
+            String customerPhoneNumber = phoneNumberEditText.getText().toString();
+
+            if (checkedId == R.id.mtnMoMoRadioButton) {
+                dialog.dismiss();
+                lazilyRequestMtn(customerPhoneNumber);
+            } else if (checkedId == R.id.airtelMoneyRadioButton) {
+                Toast.makeText(this, "Airtel Money is yet to be contacted", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            } else {
+                Toast.makeText(this, "Please select a payment method", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         cancelButton.setOnClickListener(v -> dialog.dismiss());
+
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
+    }
+
+
+    // this method is provisional, a "get it to work" just for now
+    private void lazilyRequestMtn(String customerPhoneNumber) {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://192.168.137.1/SwiftMoMo/requestpay.php";
+        progressDialog.setMessage("Contacting MTN...");
+        progressDialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.hide();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            // log the response for debugging and display a toast message
+                            Log.d("Response", jsonObject.toString());
+                            Toast.makeText(getApplicationContext(), "payment went successfully", Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                progressDialog.hide();
+                if (volleyError instanceof com.android.volley.TimeoutError) {
+                    Toast.makeText(getApplicationContext(), "Request timed out, Try again later", Toast.LENGTH_LONG).show();
+                } else {
+                    Log.v("Volley Error", volleyError.toString());
+                    Toast.makeText(getApplicationContext(), "Opps! There was an issue, Try again later", Toast.LENGTH_LONG).show();
+                }
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("phone", customerPhoneNumber);
+                params.put("amount", "1000");
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+        };
+        // Set the retry policy
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000, // Timeout in milliseconds
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, // Number of retries
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT // Backoff multiplier
+        ));
+
+        queue.add(stringRequest);
+
     }
 
     public static class ShowPayDialog extends DialogFragment {

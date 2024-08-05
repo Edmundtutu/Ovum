@@ -3,7 +3,10 @@
     <color name="black">#0e1111</color>
     <color name="black_50">#232b2b</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green">#00FF00</color>
+    <color name="green_50">#9900FF00</color>
     <color name="pale_pink">#e4c9e5</color>
+    <color name="very_transparent_grey">#54fcfcfb</color>
     <color name="pinch">#e3dbfd</color>
     <color name="hot_pink">#FF69B4</color>
     <color name="deep_pink">#FF1493</color>
@@ -23,4 +26,5 @@
     <color name="twoFrom_due_date">#6EFBC5C9</color>
     <color name="dim_background">#80000000</color>
     <color name="pale_cream">#fce6e8</color>
+    <color name="pale_cream_50">#80fce6e8</color>
 </resources>

@@ -23,10 +23,6 @@ import kotlinx.coroutines.GlobalScope;
 public class MainViewModel extends ViewModel {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("LLL d, yyyy");
     private final MutableLiveData<DayInfo> currentDate = new MutableLiveData<>();
-    private final Flowable<PagingData<Day>> flowablePagingData;
-    private MutableLiveData<Integer> _goToPosition = new MutableLiveData<>(-1);
-    private LiveData<Integer> goToPosition = _goToPosition;
-    private MutableLiveData<HorizontalCalendarPagingSource> horizontalCalendarSource = new MutableLiveData<>();
 
     public MainViewModel() {
         LocalDate today = LocalDate.now();
@@ -35,21 +31,6 @@ public class MainViewModel extends ViewModel {
                 dateFormatter.format(today)
         );
         currentDate.setValue(dayInfo);
-
-        HorizontalCalendarPagingSource pagingSource = new HorizontalCalendarPagingSource(this::getCurrentInstant);
-        horizontalCalendarSource.setValue(pagingSource);
-
-        Pager<Long, Day> pager = new Pager<>(
-                new PagingConfig(
-                        31,
-                        31,
-                        false
-                ),
-                () -> pagingSource
-        );
-
-        flowablePagingData = PagingRx.getFlowable(pager);
-        PagingRx.cachedIn(flowablePagingData, GlobalScope.INSTANCE);
     }
 
     public LiveData<DayInfo> getCurrentDate() {
@@ -62,34 +43,6 @@ public class MainViewModel extends ViewModel {
                 dateFormatter.format(date)
         );
         currentDate.setValue(dayInfo);
-    }
-
-    public LiveData<Integer> getGoToPosition() {
-        return goToPosition;
-    }
-
-    public LiveData<HorizontalCalendarPagingSource> getHorizontalCalendarSource() {
-        return horizontalCalendarSource;
-    }
-
-    public void resetCalendarPosition() {
-        HorizontalCalendarPagingSource source = horizontalCalendarSource.getValue();
-        if (source != null) {
-            LocalDate today = LocalDate.now(ZoneId.systemDefault());
-            int position = source.getPositionForDate(today);
-            Log.v("MainViewModel", "Resetting calendar position to " + position);
-            if (position != -1) {
-                _goToPosition.setValue(position);
-            } else {
-                Log.v("MainViewModel", "Date not found in HorizontalCalendarPagingSource");
-            }
-        } else {
-            Log.v("MainViewModel", "HorizontalCalendarPagingSource is null");
-        }
-    }
-
-    public Flowable<PagingData<Day>> getFlowablePagingData() {
-        return flowablePagingData;
     }
 
     private Instant getCurrentInstant() {

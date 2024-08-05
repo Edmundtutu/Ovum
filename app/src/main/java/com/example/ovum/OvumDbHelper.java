@@ -1,5 +1,6 @@
 package com.example.ovum;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,8 +50,20 @@ public class OvumDbHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + OvumContract.SymptomEntry.COLUMN_PATIENT_ID + ") REFERENCES " +
                 OvumContract.PatientEntry.TABLE_NAME + "(" + OvumContract.PatientEntry._ID + "))";
 
+        // create the Events Table
+        String SQL_CREATE_EVENTS_TABLE = "CREATE TABLE " + OvumContract.EventEntry.TABLE_NAME + " (" +
+                OvumContract.EventEntry._ID + " INTEGER PRIMARY KEY," +
+                OvumContract.EventEntry.COLUMN_PATIENT_ID + " INTEGER," +
+                OvumContract.EventEntry.COLUMN_NAME + " TEXT," +
+                OvumContract.EventEntry.COLUMN_DESCRIPTION + " TEXT," +
+                OvumContract.EventEntry.COLUMN_DATE_RECORDED + " TEXT," +
+                OvumContract.EventEntry.COLUMN_DATE_OCCURRED + " TEXT," +
+                "FOREIGN KEY (" + OvumContract.EventEntry.COLUMN_PATIENT_ID + ") REFERENCES " +
+                OvumContract.PatientEntry.TABLE_NAME + "(" + OvumContract.PatientEntry._ID + "))";
+
         db.execSQL(SQL_CREATE_PATIENTS_TABLE);
         db.execSQL(SQL_CREATE_SYMPTOMS_TABLE);
+        db.execSQL(SQL_CREATE_EVENTS_TABLE);
     }
 
     @Override
@@ -59,6 +72,7 @@ public class OvumDbHelper extends SQLiteOpenHelper {
         // to simply to discard the data and start over
         db.execSQL("DROP TABLE IF EXISTS " + OvumContract.PatientEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + OvumContract.SymptomEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + OvumContract.EventEntry.TABLE_NAME);
         onCreate(db);
     }
 
@@ -98,6 +112,32 @@ public class OvumDbHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    // method to update the patient's data in the database
+    public void updatePatient(int id, String name, String phoneNumber, String location, String email, String password, String profilePicture, String dob, int cycleLength, int periodLength, String lastPeriodDate, String lastPeriodEndDate, int averageCycleLength, int averagePeriodLength, String nextProbableDateOfOvulation, String nextProbableDateOfPeriod) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        if (name != null) values.put(OvumContract.PatientEntry.COLUMN_NAME, name);
+        if (phoneNumber != null) values.put(OvumContract.PatientEntry.COLUMN_PHONE_NUMBER, phoneNumber);
+        if (location != null) values.put(OvumContract.PatientEntry.COLUMN_LOCATION, location);
+        if (email != null) values.put(OvumContract.PatientEntry.COLUMN_EMAIL, email);
+        if (password != null) values.put(OvumContract.PatientEntry.COLUMN_PASSWORD, password);
+        if (profilePicture != null) values.put(OvumContract.PatientEntry.COLUMN_PROFILE_PICTURE, profilePicture);
+        if (dob != null) values.put(OvumContract.PatientEntry.COLUMN_DOB, dob);
+        if (cycleLength != -1) values.put(OvumContract.PatientEntry.COLUMN_CYCLE_LENGTH, cycleLength); // Assuming -1 is a placeholder for not updating this field
+        if (periodLength != -1) values.put(OvumContract.PatientEntry.COLUMN_PERIOD_LENGTH, periodLength);
+        if (lastPeriodDate != null) values.put(OvumContract.PatientEntry.COLUMN_LAST_PERIOD_DATE, lastPeriodDate);
+        if (lastPeriodEndDate != null) values.put(OvumContract.PatientEntry.COLUMN_LAST_PERIOD_END_DATE, lastPeriodEndDate);
+        if (averageCycleLength != -1) values.put(OvumContract.PatientEntry.COLUMN_AVERAGE_CYCLE_LENGTH, averageCycleLength);
+        if (averagePeriodLength != -1) values.put(OvumContract.PatientEntry.COLUMN_AVERAGE_PERIOD_LENGTH, averagePeriodLength);
+        if (nextProbableDateOfOvulation != null) values.put(OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_OVULATION, nextProbableDateOfOvulation);
+        if (nextProbableDateOfPeriod != null) values.put(OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD, nextProbableDateOfPeriod);
+
+        db.update(OvumContract.PatientEntry.TABLE_NAME, values, OvumContract.PatientEntry._ID + " = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+
     // Method to update the symptoms table
     public void updateSymptoms(int patientId, String category, String name, String description, String dateRecorded, String dateOccurred, int severity) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -113,5 +153,41 @@ public class OvumDbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_INSERT_SYMPTOMS);
     }
 
+    // method to add events into the database
+    public void addEvent(int patientId, String name, String description, String dateRecorded, String dateOccurred) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String SQL_INSERT_EVENTS = "INSERT INTO " + OvumContract.EventEntry.TABLE_NAME + " (" +
+                OvumContract.EventEntry.COLUMN_PATIENT_ID + ", " +
+                OvumContract.EventEntry.COLUMN_NAME + ", " +
+                OvumContract.EventEntry.COLUMN_DESCRIPTION + ", " +
+                OvumContract.EventEntry.COLUMN_DATE_RECORDED + ", " +
+                OvumContract.EventEntry.COLUMN_DATE_OCCURRED + ") VALUES (" +
+                patientId + ", '" + name + "', '" + description + "', '" + dateRecorded + "', '" + dateOccurred + "')";
+        db.execSQL(SQL_INSERT_EVENTS);
+    }
+    // meth to get and event from the database
+    public Cursor getEvent(int patientId, String name, String dateOccurred) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] projection = {
+                OvumContract.EventEntry._ID,
+                OvumContract.EventEntry.COLUMN_PATIENT_ID,
+                OvumContract.EventEntry.COLUMN_NAME,
+                OvumContract.EventEntry.COLUMN_DESCRIPTION,
+                OvumContract.EventEntry.COLUMN_DATE_RECORDED,
+                OvumContract.EventEntry.COLUMN_DATE_OCCURRED
+        };
+        String selection = OvumContract.EventEntry.COLUMN_PATIENT_ID + " = ? AND " + OvumContract.EventEntry.COLUMN_NAME + " = ? AND " + OvumContract.EventEntry.COLUMN_DATE_OCCURRED + " = ?";
+        String[] selectionArgs = {String.valueOf(patientId), name, dateOccurred};
+        Cursor cursor = db.query(
+                OvumContract.EventEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
 
+        return cursor;
+    }
 }

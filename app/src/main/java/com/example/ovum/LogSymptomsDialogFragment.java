@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,14 +17,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 public class LogSymptomsDialogFragment extends DialogFragment {
     // declaring the useful
+    private SharedPrefManager sharedPrefs;
     Button confirmChangesBtn;
 
     public Boolean Heavy = false;
@@ -47,9 +51,9 @@ public class LogSymptomsDialogFragment extends DialogFragment {
     public Boolean FeelsSleepy = false;
     public Boolean FeelsTired = false;
     public Boolean FeelsStomachPain = false;
-    public Boolean test1  = false;
+    public Boolean testpatientId  = false;
     public Boolean test2 = false;
-    RelativeLayout RelativeLayoutTest1;
+    RelativeLayout RelativeLayoutTestpatientId;
 
     private int count = 0;
     private Set<RelativeLayout> selectedLayouts = new HashSet<>();
@@ -66,6 +70,7 @@ public class LogSymptomsDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the activity layout
         View view = inflater.inflate(R.layout.log_symptoms, container, false);
+        sharedPrefs = SharedPrefManager.getInstance(getContext());
         // initialise all views in the fragment
         // initialise for the Title of the fragment the date
         TextView title = view.findViewById(R.id.heading_log_text_view);
@@ -73,7 +78,7 @@ public class LogSymptomsDialogFragment extends DialogFragment {
         // initialize the confirm symptoms Activity
         confirmChangesBtn = view.findViewById(R.id.confirmbtn);
         // Find all the RelativeLayouts containing the icons
-        RelativeLayout RelativeLayoutItem1 = view.findViewById(R.id.forheavy);
+        RelativeLayout RelativeLayoutItempatientId = view.findViewById(R.id.forheavy);
         RelativeLayout RelativeLayoutItem2 = view.findViewById(R.id.formedium);
         RelativeLayout RelativeLayoutItem3 = view.findViewById(R.id.forlow);
         RelativeLayout RelativeLayoutItem4 = view.findViewById(R.id.forVerylight);
@@ -83,22 +88,22 @@ public class LogSymptomsDialogFragment extends DialogFragment {
         RelativeLayout RelativeLayoutItem8 = view.findViewById(R.id.forMood);
         //RelativeLayout RelativeLayoutItem5 = view.findViewById(R.id.guilt);
         RelativeLayout RelativeLayoutItem9 = view.findViewById(R.id.fornervours);
-        RelativeLayout RelativeLayoutItem10 = view.findViewById(R.id.forAnger);
-        RelativeLayout RelativeLayoutItem11 = view.findViewById(R.id.forStressed);
-        RelativeLayout RelativeLayoutItem12 = view.findViewById(R.id.forbloating);
-        RelativeLayout RelativeLayoutItem13 = view.findViewById(R.id.forheadache);
-        RelativeLayout RelativeLayoutItem14 = view.findViewById(R.id.forhighAppetite);
-        RelativeLayout RelativeLayoutItem15 = view.findViewById(R.id.forlowAppetite);
-        RelativeLayout RelativeLayoutItem16 = view.findViewById(R.id.forsleepy);
-        RelativeLayout RelativeLayoutItem17 = view.findViewById(R.id.forstomachPain);
-        RelativeLayout RelativeLayoutItem18 = view.findViewById(R.id.forTiredness);
-        RelativeLayout RelativeLayoutTest1 = view.findViewById(R.id.test1);
+        RelativeLayout RelativeLayoutItempatientId0 = view.findViewById(R.id.forAnger);
+        RelativeLayout RelativeLayoutItempatientIdpatientId = view.findViewById(R.id.forStressed);
+        RelativeLayout RelativeLayoutItempatientId2 = view.findViewById(R.id.forbloating);
+        RelativeLayout RelativeLayoutItempatientId3 = view.findViewById(R.id.forheadache);
+        RelativeLayout RelativeLayoutItempatientId4 = view.findViewById(R.id.forhighAppetite);
+        RelativeLayout RelativeLayoutItempatientId5 = view.findViewById(R.id.forlowAppetite);
+        RelativeLayout RelativeLayoutItempatientId6 = view.findViewById(R.id.forsleepy);
+        RelativeLayout RelativeLayoutItempatientId7 = view.findViewById(R.id.forstomachPain);
+        RelativeLayout RelativeLayoutItempatientId8 = view.findViewById(R.id.forTiredness);
+        RelativeLayout RelativeLayoutTestpatientId = view.findViewById(R.id.test1);
         RelativeLayout RelativeLayoutTest2 = view.findViewById(R.id.test2);
         // Set click listeners for each RelativeLayout
-        RelativeLayoutItem1.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Heavy = toggleBackgroundTry(RelativeLayoutItem1);
+                Heavy = toggleBackgroundTry(RelativeLayoutItempatientId);
             }
         });
 
@@ -158,68 +163,68 @@ public class LogSymptomsDialogFragment extends DialogFragment {
             }
         });
 
-        RelativeLayoutItem10.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IsAngry = toggleBackgroundTry(RelativeLayoutItem10);
+                IsAngry = toggleBackgroundTry(RelativeLayoutItempatientId0);
             }
         });
 
-        RelativeLayoutItem11.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientIdpatientId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IsStressed = toggleBackgroundTry(RelativeLayoutItem11);
+                IsStressed = toggleBackgroundTry(RelativeLayoutItempatientIdpatientId);
             }
         });
 
-        RelativeLayoutItem12.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IsBloating = toggleBackgroundTry(RelativeLayoutItem12);
+                IsBloating = toggleBackgroundTry(RelativeLayoutItempatientId2);
             }
         });
 
-        RelativeLayoutItem13.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HasHeadache = toggleBackgroundTry(RelativeLayoutItem13);
+                HasHeadache = toggleBackgroundTry(RelativeLayoutItempatientId3);
             }
         });
 
-        RelativeLayoutItem14.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HasHighAppetite = toggleBackgroundTry(RelativeLayoutItem14);
+                HasHighAppetite = toggleBackgroundTry(RelativeLayoutItempatientId4);
             }
         });
-        RelativeLayoutItem15.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HasLowAppetite = toggleBackgroundTry(RelativeLayoutItem15);
+                HasLowAppetite = toggleBackgroundTry(RelativeLayoutItempatientId5);
             }
         });
-        RelativeLayoutItem16.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FeelsSleepy= toggleBackgroundTry(RelativeLayoutItem16);
+                FeelsSleepy= toggleBackgroundTry(RelativeLayoutItempatientId6);
             }
         });
-        RelativeLayoutItem17.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FeelsStomachPain = toggleBackgroundTry(RelativeLayoutItem17);
+                FeelsStomachPain = toggleBackgroundTry(RelativeLayoutItempatientId7);
             }
         });
-        RelativeLayoutItem18.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutItempatientId8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FeelsTired = toggleBackgroundTry(RelativeLayoutItem18);
+                FeelsTired = toggleBackgroundTry(RelativeLayoutItempatientId8);
             }
         });
-        RelativeLayoutTest1.setOnClickListener(new View.OnClickListener() {
+        RelativeLayoutTestpatientId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                test1 = toggleBackgroundTry(RelativeLayoutTest1);
+                testpatientId = toggleBackgroundTry(RelativeLayoutTestpatientId);
             }
         });
 
@@ -277,65 +282,76 @@ public class LogSymptomsDialogFragment extends DialogFragment {
     }
 
     // method for logging the symptopms
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void logSymptoms() {
+        // get the patient id and date the symptoms  are being logged
+        // get the patient id
+        int patientId = sharedPrefs.getUserId();
+        // get the date the symptoms are being logged
+        LocalDate fromTitleDate = new DateUtils().formatDateToLocalDate(titleDate);
+        String dateRecorded = String.valueOf(fromTitleDate);
         // extract the true boolean values of each  toogle and update the database values in the symptoms table
         if (Heavy||MidLight||Light||VeryLight||RedSpot||BrownSpot||LightBrownSpot||IsStressed||IsAngry||MoodSwings||IsNervous||IsBloating||HasHeadache||HasHighAppetite||HasLowAppetite||FeelsSleepy||FeelsTired||FeelsStomachPain){
             // update the database values
             try (OvumDbHelper ovumDbHelper = new OvumDbHelper(getContext())) {
                 if (Heavy) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Period", "Heavy Flo", null, null, 5);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Period", "Heavy Flo", dateRecorded, null, 5);
+                    updateNextPeriodDate(ovumDbHelper,patientId,dateRecorded, fromTitleDate);
                 }
                 if (MidLight) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Period", "Mid Flo", null, null, 5);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Period", "Mid Flo", dateRecorded, null, 5);
+                    updateNextPeriodDate(ovumDbHelper,patientId,dateRecorded, fromTitleDate);
                 }
                 if (Light) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Period", "Light Flo", null, null, 5);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Period", "Light Flo", dateRecorded, null, 5);
+                    updateNextPeriodDate(ovumDbHelper,patientId,dateRecorded, fromTitleDate);
                 }
                 if (VeryLight) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Period", "Very Light Flo", null, null, 5);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Period", "Very Light Flo", dateRecorded, null, 5);
+                    updateNextPeriodDate(ovumDbHelper,patientId,dateRecorded, fromTitleDate);
                 }
                 if (RedSpot) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Spotting", "Red Color", null, null, 5);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Spotting", "Red Color", dateRecorded, null, 5);
                 }
                 if (BrownSpot) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Spotting", "Brown Color", null, null, 5);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Spotting", "Brown Color", dateRecorded, null, 5);
                 }
                 if (LightBrownSpot) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Spotting", "Light Brown Color", null, null, 5);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Spotting", "Light Brown Color", dateRecorded, null, 5);
                 }
                 if (IsStressed) {
-                    ovumDbHelper.updateSymptoms(1, "NonPhysical", "Mood", "Is Stressed", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "NonPhysical", "Mood", "Is Stressed", dateRecorded, null, 1);
                 }
                 if (IsAngry) {
-                    ovumDbHelper.updateSymptoms(1, "NonPhysical", "Mood", "Is Angry", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "NonPhysical", "Mood", "Is Angry", dateRecorded, null, 1);
                 }
                 if (MoodSwings) {
-                    ovumDbHelper.updateSymptoms(1, "NonPhysical", "Mood", "Feels Apathetic", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "NonPhysical", "Mood", "Feels Apathetic", dateRecorded, null, 1);
                 }
                 if (IsNervous) {
-                    ovumDbHelper.updateSymptoms(1, "NonPhysical", "Mood", "Is Nervous", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "NonPhysical", "Mood", "Is Nervous", dateRecorded, null, 1);
                 }
                 if (IsBloating) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Feeling", "Is Bloating", null, null, 3);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Feeling", "Is Bloating", dateRecorded, null, 3);
                 }
                 if (HasHeadache) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Feeling", "Has Headache", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Feeling", "Has Headache", dateRecorded, null, 1);
                 }
                 if (HasHighAppetite) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Feeling", "Has High Appetite", null, null, 3);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Feeling", "Has High Appetite", dateRecorded, null, 3);
                 }
 
                 if (HasLowAppetite) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Feeling", "Has Low Appetite", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Feeling", "Has Low Appetite", dateRecorded, null, 1);
                 }
                 if (FeelsSleepy) {
-                    ovumDbHelper.updateSymptoms(1, "NonPhysical", "Mood", "Feels Sleepy", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "NonPhysical", "Mood", "Feels Sleepy", dateRecorded, null, 1);
                 }
                 if (FeelsTired) {
-                    ovumDbHelper.updateSymptoms(1, "NonPhysical", "Mood", "Feels Tired", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "NonPhysical", "Mood", "Feels Tired", dateRecorded, null, 1);
                 }
                 if (FeelsStomachPain) {
-                    ovumDbHelper.updateSymptoms(1, "Physical", "Feeling", "Feels Stomach Pain", null, null, 1);
+                    ovumDbHelper.updateSymptoms(patientId, "Physical", "Feeling", "Feels Stomach Pain", dateRecorded, null, patientId);
                 }
             }catch (Exception e){
                 Log.e("LogSymptoms", "Error updating the symptoms table", e);
@@ -364,6 +380,22 @@ public class LogSymptomsDialogFragment extends DialogFragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateNextPeriodDate(OvumDbHelper ovumDbHelper, int patientId, String dateOfRecording, LocalDate dateRecorded) {
+        // the current cycleLength and period length according to the logic of the prediction TBD
+        int currentCycleLength = 28;
+        int periodLength = 5;
+        // set the PeriodSupposed to end Date
+        LocalDate periodSupposedToEnd = dateRecorded.plusDays(periodLength);
+        // get the next period date
+        LocalDate nextPeriodDate = dateRecorded.plusDays(currentCycleLength);
+        // set the next ovulation date
+        LocalDate nextOvulationDate = dateRecorded.plusDays(currentCycleLength - 14);
+        ovumDbHelper.updatePatient(patientId,null,null,null,null,null,null,null,currentCycleLength,periodLength,dateOfRecording, String.valueOf(periodSupposedToEnd),-1,-1,String.valueOf(nextOvulationDate),String.valueOf(nextPeriodDate));
+        // update the shared Prefs as well
+        sharedPrefs.storePatientInfo(String.valueOf(nextPeriodDate));
+    }
+
 
     @NonNull
     @Override
@@ -385,6 +417,7 @@ public class LogSymptomsDialogFragment extends DialogFragment {
             builder.setTitle("Confirm Symptoms");
             builder.setMessage("Are you sure you want to save these symptoms?");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // Save the symptoms to the database
