@@ -31,7 +31,7 @@ public class CalendarUtils {
         LocalDate oneWeekAgo = current.minusWeeks(1);
 
         while (current.isAfter(oneWeekAgo)) {
-            if (current.getDayOfWeek() == DayOfWeek.SUNDAY)
+            if (current.getDayOfWeek() == current.minusDays(7).getDayOfWeek())
                 return current;
 
             current = current.minusDays(1);

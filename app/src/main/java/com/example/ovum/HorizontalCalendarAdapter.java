@@ -13,8 +13,10 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCalendarAdapter.HorizontalCalendarViewHolder> {
 
@@ -42,6 +44,7 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     public void onBindViewHolder(@NonNull HorizontalCalendarViewHolder holder, int position) {
         final LocalDate date =datesList.get(position);
         if(date != null){
+            holder.dayTextView.setText(date.getDayOfWeek().getDisplayName(TextStyle.NARROW, Locale.getDefault()));
             holder.dateTextView.setText(String.valueOf(date.getDayOfMonth()));
             holder.dateTextView.setOnClickListener(v -> {
                 listener.onItemClick(null, v, position, 0);
@@ -99,9 +102,11 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     // ViewHolder class for each date item
     static class HorizontalCalendarViewHolder extends RecyclerView.ViewHolder {
         TextView dateTextView;
+        TextView dayTextView;  // day of the week
 
         public HorizontalCalendarViewHolder(@NonNull View itemView) {
             super(itemView);
+            dayTextView = itemView.findViewById(R.id.day_text);
             dateTextView = itemView.findViewById(R.id.date_text);
         }
     }

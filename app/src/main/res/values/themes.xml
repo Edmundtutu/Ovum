@@ -67,6 +67,11 @@
         <item name="android:textColor">@color/pale_pink</item>
     </style>
 
+    <style name="HorizontalCalendar.Text.SelectedDayOfWeek">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="PinkRatingBar" parent="@android:style/Widget.Material.Light.RatingBar.Indicator">
     <item name="colorControlNormal">@color/hot_pink</item> <!-- Unselected star color -->
     <item name="colorControlActivated">@color/hot_pink</item> <!-- Selected star color -->

@@ -42,6 +42,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -111,6 +112,7 @@ public class HomeFragment extends Fragment{
 
         // initalize the recycler view for the Horizontal calendar
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+        calendarRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         // set the selected date to today according to the time zone
         selectedDate = LocalDate.now();
         // set the dueDateAssociates to the dates from the DueDate class using the shared preferences
@@ -184,7 +186,7 @@ public class HomeFragment extends Fragment{
                 if(daysLeftCount<1){
                     DaysLeft.setText("Your \nPeriod is Late");
                     // clear the due date from the shared preferences
-//                    sharedPrefManager.storePatientInfo("");
+                    sharedPrefManager.storePatientInfo("");
                     // set the background of the center image to redish gradient and add a pulsing effect with faster/stronger beat
                     centerImage.setBackgroundResource(R.drawable.shim_status_container);
                     // Create ObjectAnimator to change opacity of the button itself
