@@ -112,7 +112,6 @@ public class HomeFragment extends Fragment{
 
         // initalize the recycler view for the Horizontal calendar
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
-        calendarRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         // set the selected date to today according to the time zone
         selectedDate = LocalDate.now();
         // set the dueDateAssociates to the dates from the DueDate class using the shared preferences
@@ -254,11 +253,12 @@ public class HomeFragment extends Fragment{
             CalendarUtils.selectedDate = days.get(position);
             // toast the day selected
             Toast.makeText(getContext(), "Selected date: " + CalendarUtils.selectedDate, Toast.LENGTH_SHORT).show();
-            setWeekView();
+//            setWeekView();
         });
         // Set the layout manager and adapter for the recycler view
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7); // using the date_item.xml as the layout for the recycler view
         calendarRecyclerView.setLayoutManager(layoutManager);
+//        calendarRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)); // using the item_local_cal.xml as the layout for the recycler view
         calendarRecyclerView.setAdapter(horizontalCalendarAdapter);
     }
     @Override

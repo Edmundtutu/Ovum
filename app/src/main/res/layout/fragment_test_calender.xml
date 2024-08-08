@@ -16,39 +16,43 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
                     android:background="@drawable/corner_radius_grayish"
-                    android:elevation="5dp">
+                    android:elevation="5dp"
+                    android:padding="12dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
                     <LinearLayout
                         android:id="@+id/estimated_period_layout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/due_date_layout"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:layout_marginTop="5dp"
                             android:fontFamily="@font/poppins_bold"
                             android:gravity="start"
                             android:text="Estimated period is due next"
@@ -60,7 +64,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
-                            android:layout_marginTop="0dp"
                             android:fontFamily="@font/poppins"
                             android:gravity="start"
                             android:text="Not determined yet"
@@ -73,25 +76,29 @@
                         android:id="@+id/due_date_layout"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginBottom="20dp"
                         android:gravity="center"
-                        android:background="@drawable/estimated_period_day">
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/estimated_period_day"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent">
 
                         <TextView
                             android:id="@+id/due_date_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text=""
                             android:textColor="@color/white"
-                            android:textSize="20sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:textSize="20sp" />
                     </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <LinearLayout
+                android:id="@+id/calendar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -140,6 +147,17 @@
                     app:compactCalendarTextColor="#000000"
                     app:compactCalendarTextSize="14sp" />
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/events_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/calendar_layout" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

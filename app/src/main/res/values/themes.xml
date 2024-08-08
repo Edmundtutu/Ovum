@@ -73,8 +73,19 @@
     </style>
 
     <style name="PinkRatingBar" parent="@android:style/Widget.Material.Light.RatingBar.Indicator">
-    <item name="colorControlNormal">@color/hot_pink</item> <!-- Unselected star color -->
-    <item name="colorControlActivated">@color/hot_pink</item> <!-- Selected star color -->
-</style>
+        <item name="colorControlNormal">@color/hot_pink</item>
+        <item name="colorControlActivated">@color/hot_pink</item>
+    </style>
 
+    <style name="Event"/>
+    <style name="Event.CardDeselected" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardBackgroundColor">@color/green_50</item>
+        <item name="cardElevation">0.5dp</item>
+    </style>
+    <style name="Event.CardSelected" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardBackgroundColor">@color/green</item>
+        <item name="cardElevation">0.5dp</item>
+    </style>
 </resources>

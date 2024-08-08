@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dialog.show(getSupportFragmentManager(), "ShowPayDialog");
         });
 
-    }
+}
 
     @Override
     @SuppressLint("NonConstantResourceId")

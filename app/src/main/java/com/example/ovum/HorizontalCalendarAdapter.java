@@ -50,6 +50,7 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
                 listener.onItemClick(null, v, position, 0);
             });
             if(date.equals(CalendarUtils.selectedDate)){
+                holder.dayTextView.setTextAppearance(R.style.HorizontalCalendar_Text_SelectedDayOfWeek);
                 holder.dateTextView.setBackground(holder.dateTextView.getContext().getDrawable(R.drawable.circle_background_horizontal_cal));
                 holder.dateTextView.setTextAppearance(R.style.HorizontalCalendar_Text_SelectedDayOfMonth);
             }

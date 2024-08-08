@@ -74,7 +74,14 @@ public class LogSymptomsDialogFragment extends DialogFragment {
         // initialise all views in the fragment
         // initialise for the Title of the fragment the date
         TextView title = view.findViewById(R.id.heading_log_text_view);
+        TextView tagStateDesccription = view.findViewById(R.id.tag_state_description);
         title.setText(titleDate);
+        // set the tag state description
+        if(titleDate.equals("Today")){
+            tagStateDesccription.setText("How are you feeling today?");
+        }else {
+            tagStateDesccription.setText("How did you feel on " + titleDate + "?");
+        }
         // initialize the confirm symptoms Activity
         confirmChangesBtn = view.findViewById(R.id.confirmbtn);
         // Find all the RelativeLayouts containing the icons
