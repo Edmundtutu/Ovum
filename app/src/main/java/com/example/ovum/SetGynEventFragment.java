@@ -167,40 +167,68 @@ public class SetGynEventFragment extends DialogFragment {
             // set the map of the events of the day to store the events selected for the particular day
             HashMap<LocalDate, String> eventsOfTheDay = CalendarUtils.eventsOfTheDay;
 
+            // Improve for better understanging and performance
+            // Add the event to the database instead of adding it in the hashmap
+            // then use liveData to be observered by each ui component that references the event added
+
             // extract the correct format of the tittle date required to be parsed
             LocalDate dateOfEvent = new DateUtils().formatDateToLocalDate(titleDate);
             Log.d("Date", dateOfEvent.toString());
             if (MeetDoc) {
                 // add the string Meet the Doctor to the list of EventSource
                 eventsOfTheDay.put(dateOfEvent, "Meet the Doctor");
+
+                //  not changing the apparent code but making improvement
+                storeEvent(dateOfEvent,"Meet the Doctor");
             }
             if(TalkToDoc){
                 // add the string Talk to the Doctor to the list of events
                 eventsOfTheDay.put(dateOfEvent,"Talk to the Doctor");
+
+                storeEvent(dateOfEvent,"Talk to the Doctor");
+
             }
             if(LogASymptom){
                 // add the string Log a Symptom to the list of events
                 eventsOfTheDay.put(dateOfEvent,"Log a Symptom");
+
+                storeEvent(dateOfEvent,"Log a Symptom");
+
             }
             if(InvolveInSex) {
                 // add the string Involve in sex to the list of eventsSource
                 eventsOfTheDay.put(dateOfEvent, "Involve in sex");
+
+                storeEvent(dateOfEvent,"Involve in sex");
+
             }
             if(TakeAPill){
                 // add the string Take a Pill to the list of eventsSource
                 eventsOfTheDay.put(dateOfEvent,"Take a Pill");
+
+                storeEvent(dateOfEvent,"Take a Pill");
+
             }
             if(MeetYourDoc){
                 // add the string Meet your Doctor to the list of eventsSource
                 eventsOfTheDay.put(dateOfEvent,"Meet your Doctor");
+
+                storeEvent(dateOfEvent,"Meet your Doctor");
+
             }
             if(CallDoc){
                 // add the string Call the Doctor to the list of eventsSource
                 eventsOfTheDay.put(dateOfEvent,"Call the Doctor");
+
+                storeEvent(dateOfEvent,"Call the Doctor");
+
             }
             if(Prescribed){
                 // add the string Prescribed to the list of EventsSource
                 eventsOfTheDay.put(dateOfEvent,"Prescribed");
+
+                storeEvent(dateOfEvent,"Prescribed");
+
             }
             // log to the logcat the events that have been added
             Log.v("Events", eventsOfTheDay.toString());
@@ -210,6 +238,17 @@ public class SetGynEventFragment extends DialogFragment {
         }else {
             Log.v("Events", "Non of the Events are true  \nnon have been  saved");
         }
+    }
+
+    // private method that will add the event to the database
+    private void storeEvent(LocalDate eventDate, String event){
+        // create  the database object
+        OvumDbHelper dbHelper = new OvumDbHelper(getContext());
+        // extract the user id from the sesion of the sharedpref
+        SharedPrefManager sharedPrefs = SharedPrefManager.getInstance(getContext());
+        String userId = String.valueOf(sharedPrefs.getUserId());
+
+        dbHelper.addEvent(Integer.parseInt(userId),"Gyn Event", event,eventDate.toString(), eventDate.toString());
     }
     @NonNull
     @Override

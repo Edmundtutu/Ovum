@@ -190,4 +190,48 @@ public class OvumDbHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
+
+    // method to add a symptom to the database
+    public void addSymptom(int patientId, String category, String name, String description, String dateRecorded, String dateOccurred, int severity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(OvumContract.SymptomEntry.COLUMN_PATIENT_ID, patientId);
+        values.put(OvumContract.SymptomEntry.COLUMN_CATEGORY, category);
+        values.put(OvumContract.SymptomEntry.COLUMN_NAME, name);
+        values.put(OvumContract.SymptomEntry.COLUMN_DESCRIPTION, description);
+        values.put(OvumContract.SymptomEntry.COLUMN_DATE_RECORDED, dateRecorded);
+        values.put(OvumContract.SymptomEntry.COLUMN_DATE_OCCURRED, dateOccurred);
+        values.put(OvumContract.SymptomEntry.COLUMN_SEVERITY, severity);
+
+        db.insert(OvumContract.SymptomEntry.TABLE_NAME, null, values);
+        db.close();
+    }
+
+    // method to get all the symptoms of the patient for a particular date
+    public Cursor getSymptoms(int patientId, String dateRecorded) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] projection = {
+                OvumContract.SymptomEntry._ID,
+                OvumContract.SymptomEntry.COLUMN_PATIENT_ID,
+                OvumContract.SymptomEntry.COLUMN_CATEGORY,
+                OvumContract.SymptomEntry.COLUMN_NAME,
+                OvumContract.SymptomEntry.COLUMN_DESCRIPTION,
+                OvumContract.SymptomEntry.COLUMN_DATE_RECORDED,
+                OvumContract.SymptomEntry.COLUMN_DATE_OCCURRED,
+                OvumContract.SymptomEntry.COLUMN_SEVERITY
+        };
+        String selection = OvumContract.SymptomEntry.COLUMN_PATIENT_ID + " = ? AND " + OvumContract.SymptomEntry.COLUMN_DATE_RECORDED + " = ?";
+        String[] selectionArgs = {String.valueOf(patientId), dateRecorded};
+        Cursor cursor = db.query(
+                OvumContract.SymptomEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        return cursor;
+    }
 }

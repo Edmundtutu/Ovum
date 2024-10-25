@@ -3,5 +3,10 @@
     <style name="Base.Theme.FemWell" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/deep_pink</item>
+    </style>
+
+    <style name="Base.Widget.Material3.BottomNavigationView." parent="Theme.MaterialComponents">
+        <item name="colorPrimary">@color/deep_pink</item>
     </style>
 </resources>

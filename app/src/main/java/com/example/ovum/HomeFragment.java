@@ -33,7 +33,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 
 import android.os.Build;
 
@@ -44,6 +44,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.ovum.models.Patient;
+import com.example.ovum.models.Symptom;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -65,6 +69,10 @@ public class HomeFragment extends Fragment{
     private CompositeDisposable disposable = new CompositeDisposable();
     private RecyclerView calendarRecyclerView;
 
+    private RecyclerView symptomsRecycleView;
+    private FloatingActionButton addSymptomButton;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,17 +82,23 @@ public class HomeFragment extends Fragment{
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        db = new OvumDbHelper(getContext());
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         // initialize the shared preferences
         sharedPrefManager = SharedPrefManager.getInstance(getContext());
         // Initialize ViewModel
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        MainViewModelFactory factory = new MainViewModelFactory(db.getReadableDatabase());
+        mainViewModel = new ViewModelProvider(requireActivity(), factory).get(MainViewModel.class);
 
-        // Initialize the TextViews
+        // Initialize the DaysTextViews
         dayOfWeekTextView = view.findViewById(R.id.day);
         dateTextView = view.findViewById(R.id.date);
         dayTextView = view.findViewById(R.id.dateNum);
+
+        
+        addSymptomButton = view.findViewById(R.id.add_button);
 
         // Observe currentDate LiveData
         mainViewModel.getCurrentDate().observe(getViewLifecycleOwner(), currentDay -> { // changes from this->getViewLifecylceOwner
@@ -120,6 +134,7 @@ public class HomeFragment extends Fragment{
         }else{
             dueDateAssociates = null;
         }
+
         setWeekView();
 
         mainViewModel.getCurrentDate().observe((LifecycleOwner) getContext(), (Observer<? super DayInfo>) dayInfo -> {
@@ -130,7 +145,6 @@ public class HomeFragment extends Fragment{
 
 
         DaysLeft = view.findViewById(R.id.days_left);
-        db = new OvumDbHelper(getContext());
 
         // Set the number of days left
         // check the databse for the patient's days according to their id from the shared preferences
@@ -236,31 +250,83 @@ public class HomeFragment extends Fragment{
 
         }
 
-        centerImage.setOnClickListener(new View.OnClickListener() {
+        addSymptomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LogSymptomsDialogFragment dialogFragment = new LogSymptomsDialogFragment(currentDate);
                 dialogFragment.show(getParentFragmentManager(), "CustomDialog");
             }
         });
+
+
+        // initialize the recycler view for the symptoms
+        symptomsRecycleView = view.findViewById(R.id.days_symptoms_recycle_view);
+        // set the adapter for the symptoms
+        setSymptomsView(symptomsRecycleView);
+
+
         return view;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setWeekView() {
         ArrayList<LocalDate> days = daysInWeekArray(CalendarUtils.selectedDate);
 
-        HorizontalCalendarAdapter horizontalCalendarAdapter = new HorizontalCalendarAdapter(days, (parent, view, position, id) -> {
+
+        HorizontalCalendarAdapter horizontalCalendarAdapter = new HorizontalCalendarAdapter(mainViewModel, days, (parent, view, position, id) -> {
             CalendarUtils.selectedDate = days.get(position);
-            // toast the day selected
-            Toast.makeText(getContext(), "Selected date: " + CalendarUtils.selectedDate, Toast.LENGTH_SHORT).show();
-//            setWeekView();
-        });
+        },getViewLifecycleOwner(),getContext());
         // Set the layout manager and adapter for the recycler view
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7); // using the date_item.xml as the layout for the recycler view
         calendarRecyclerView.setLayoutManager(layoutManager);
 //        calendarRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false)); // using the item_local_cal.xml as the layout for the recycler view
         calendarRecyclerView.setAdapter(horizontalCalendarAdapter);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void  setSymptomsView(View view){
+        // get the symptoms from the database
+        ArrayList<Symptom> symptoms = new ArrayList<>();
+        // get the symptoms from the database
+        try (Cursor cursor = db.getSymptoms(sharedPrefManager.getUserId(), LocalDate.now().toString())) {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    // Get data from cursor
+                    String symptomDate = cursor.getString(cursor.getColumnIndexOrThrow(OvumContract.SymptomEntry.COLUMN_DATE_RECORDED));
+                    String symptomDescription = cursor.getString(cursor.getColumnIndexOrThrow(OvumContract.SymptomEntry.COLUMN_DESCRIPTION));
+
+                    // Log the symptom's information for debugging
+                    for (int i = 0; i < cursor.getColumnCount(); i++) {
+                        Log.v("HomeFragment sypmtoms", cursor.getColumnName(i) + ": " + cursor.getString(i));
+                    }
+
+                    // add these results to the symptoms list
+                    symptoms.add(new Symptom(new DateUtils().formatDateToLocalDate(symptomDate), symptomDescription));
+                } while (cursor.moveToNext());
+                // for now lets close the cursor
+                cursor.close();
+            } else {
+                Toast.makeText(getContext(), "No symptoms data found", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        // set the adapter for the symptoms
+        HomeSymptomsAdapter homeSymptomsAdapter = new HomeSymptomsAdapter(symptoms,this::onIconClick);
+        symptomsRecycleView.setAdapter(homeSymptomsAdapter);
+        symptomsRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+    }
+
+    public void onIconClick(int position) {
+        // handle the click on the eye icon
+        // get the symptom at the position
+        Symptom symptom = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            symptom = new Symptom(LocalDate.now(), "Headache");
+        }
+        // log the symptom description
+        Log.v("HomeFragment", "Symptom Description: " + symptom.getSymptomDescription());
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

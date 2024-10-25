@@ -1,4 +1,4 @@
-package com.example.ovum;
+package com.example.ovum.models;
 
 public class Patient {
     private String name;

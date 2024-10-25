@@ -21,96 +21,161 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/cardview_default_radius">
+
+            <!-- RecyclerView for the calendar -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/calendarRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content" />
 
+            <!-- TextView for displaying the day -->
             <TextView
                 android:id="@+id/day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="0dp"
                 android:background="@drawable/corner_radiuspinch"
-                android:gravity="center"
-                android:text="Wednesday"
-                android:padding="17dp"
                 android:fontFamily="@font/barlow_semi_condensed_regular"
-                android:textSize="18sp"
+                android:gravity="center"
+                android:padding="17dp"
+                android:text="Wednesday"
                 android:textColor="@color/dim_background"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/calendarRecyclerView" />
 
-
+            <!-- Center image with scaling and three text views -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="310dp"
-                android:layout_height="304dp"
-                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/day">
 
+                <!-- ImageView that scales with the width of the screen -->
                 <ImageView
                     android:id="@+id/center_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/center_image_default"
-                    android:clickable="true"
-                    android:scaleType="centerInside"
-                    tools:ignore="MissingConstraints" />
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="fitCenter"
+                    android:clickable="false"
 
+                    android:src="@drawable/center_image_default"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.7" />
+
+                <!-- TextView for the date -->
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MONTH"
                     android:fontFamily="@font/barlow_semi_condensed_regular"
+                    android:text="MONTH"
                     android:textColor="@color/dim_background"
-                    android:textSize="18sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/days_left"
-                    android:layout_marginBottom="0dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/center_image" />
 
+                <!-- TextView for the days left (bigger projection) -->
                 <TextView
                     android:id="@+id/days_left"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Today \n n_ Days Left"
                     android:fontFamily="@font/barlow_semi_condensed_black"
+                    android:text="Today \n n_ Days Left"
+                    android:textAlignment="center"
                     android:textColor="@color/pale_cream"
-                    android:textSize="30sp"
-                    android:gravity="center"
-                    app:layout_constraintTop_toBottomOf="@id/date"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/dateNum"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="0dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/date" />
 
+                <!-- TextView for the date number -->
                 <TextView
                     android:id="@+id/dateNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="date"
                     android:fontFamily="@font/poppins_semibold"
+                    android:text="date"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
-                    app:layout_constraintTop_toBottomOf="@id/days_left"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/center_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/days_left" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Bottom section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/center_image">
+
+                <LinearLayout
+                    android:id="@+id/downsection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp"
+                    android:background="@drawable/home_below_bg"
+                    android:orientation="vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginTop="0dp" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintTop_toTopOf="parent">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corner_radius_home"
+                        android:minHeight="100dp"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+                        <!-- RecyclerView for day's events -->
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/days_symptoms_recycle_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="none"
+                            tools:listitem="@layout/item_home_symptoms" />
+
+                        <!-- Load more symptoms TextView -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Load More Symptoms"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <!-- Floating Action Button -->
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/add_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="0dp"
+                        android:src="@drawable/circle_add_button"
+                        app:backgroundTint="@color/white"
+                        app:rippleColor="@color/pale_pink"
+                        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

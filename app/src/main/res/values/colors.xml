@@ -5,6 +5,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00FF00</color>
     <color name="green_50">#9900FF00</color>
+    <color name="green_20">#A7F191</color>
     <color name="pale_pink">#e4c9e5</color>
     <color name="very_transparent_grey">#54fcfcfb</color>
     <color name="pinch">#e3dbfd</color>
@@ -27,4 +28,9 @@
     <color name="dim_background">#80000000</color>
     <color name="pale_cream">#fce6e8</color>
     <color name="pale_cream_50">#80fce6e8</color>
+    <color name="girlish_cream">#FAEBD7</color>
+    <color name="girlish_cream_50">#F5F5DC</color>
+    <color name="symptom_blue">#91CAF1</color>
+    <color name="symptom_pink">#FF14A9</color>
+    <color name="symptom_green">#91F1C7</color>
 </resources>

@@ -83,6 +83,7 @@ public class DateUtils {
     public LocalDate formatDateToLocalDate(String dateInSpeech) {
         String[] spokenFormats = {
                 // for a fewer comparisons, lets remove some of the formats
+                "dd-MM-YYYY",
 //                "d'st' MMMM yyyy",   // 1st January 2024
 //                "d'nd' MMMM yyyy",   // 2nd January 2024
 //                "d'rd' MMMM yyyy",   // 3rd January 2024

@@ -9,12 +9,10 @@ import static com.example.ovum.OvumContract.PatientEntry.COLUMN_LAST_PERIOD_DATE
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_LOCATION;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NAME;
 import static com.example.ovum.OvumContract.PatientEntry.COLUMN_NEXT_PROBABLE_DATE_OF_PERIOD;
-import static java.security.AccessController.getContext;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,7 +22,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
@@ -54,6 +51,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.ovum.databinding.ActivityMainBinding;
 import com.example.ovum.databinding.DialogCalenderViewBinding;
+import com.example.ovum.models.Patient;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONException;
@@ -63,10 +61,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -178,7 +173,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dialog.show(getSupportFragmentManager(), "ShowPayDialog");
         });
 
-}
+    }
+
+//    // preventing the back pressed
+//    @Override
+//    public void onBackPressed() {
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.);
+//        if(fragment instanceof HomeFragment){
+//            ((HomeFragment)fragment).onBack
+//        }
+//        super.onBackPressed();
+//    }
+
 
     @Override
     @SuppressLint("NonConstantResourceId")

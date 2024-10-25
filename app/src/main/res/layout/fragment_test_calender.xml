@@ -140,7 +140,7 @@
                     app:compactCalendarBackgroundColor="#0000"
                     app:compactCalendarCurrentDayBackgroundColor="#fcfcfb"
                     app:compactCalendarCurrentSelectedDayBackgroundColor="#54FCFCFB"
-                    app:compactCalendarEventIndicatorStyle="fill_large_indicator"
+                    app:compactCalendarEventIndicatorStyle="small_indicator"
                     app:compactCalendarMultiEventIndicatorColor="@color/green"
                     app:compactCalendarOtherMonthDaysTextColor="@color/very_transparent_grey"
                     app:compactCalendarTargetHeight="420dp"

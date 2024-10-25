@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -45,10 +47,11 @@ public class TestCalenderFragment extends Fragment {
     private List<String> months;
     private List<Integer> years;
 
-    private CompactCalendarView compactCalendarView;
+    public static CompactCalendarView compactCalendarView;
 
     private TextView dueDateTextView;
     private    DateUtils dateUtils;
+    private RecyclerView eventsview;
     private static String timeStamp = null;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -69,6 +72,7 @@ public class TestCalenderFragment extends Fragment {
         yearSpinner = view.findViewById(R.id.yearSpinner);
         monthSpinner = view.findViewById(R.id.monthSpinner);
         compactCalendarView = view.findViewById(R.id.compactcalendar_view);
+        eventsview = view.findViewById(R.id.events_recycler_view);
         // setting the default background of the days
         int defaultbackgroundColor = Color.parseColor("#54FCFCFB");
 
@@ -142,7 +146,7 @@ public class TestCalenderFragment extends Fragment {
         // So you can pass in any arbitary DateTime and you will receive all events for that day.
         List<Event> events = compactCalendarView.getEvents(dateUtils.convertToMilliseconds("2024-7-13")); // can also take a Date object
 
-        // events has size 2 with the 2 events inserted previously
+        // events has size 2 with the 2 events ineserted previously
         Log.d(TAG, "Events: " + events);
 
         // define a listener to receive callbacks when certain events happen.
@@ -201,9 +205,9 @@ public class TestCalenderFragment extends Fragment {
             TextView notDeterminedProvision = view.findViewById(R.id.not_determined_provision_text_view);
             notDeterminedProvision.setVisibility(View.VISIBLE);
         }
-//        updateEventsForCurrentMonth(defaultbackgroundColor);
+//        updateEventsForCurrentMonth(default backgroundColor);
         addSpecificEvents();
-
+        eventsHandler();
         return view;
     }
     private void updateCalendarAccordingToSpinner() {
@@ -279,6 +283,12 @@ public class TestCalenderFragment extends Fragment {
         }
     }
 
+    private void eventsHandler(){
+        // initialis the adapter class for the events
+        EventsAdapter eventsAdapter = new EventsAdapter();
+        eventsview.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventsview.setAdapter(eventsAdapter);
+    }
 
     // Handle click events on the calendar days
     private void handleDayClick(String dateStr) {

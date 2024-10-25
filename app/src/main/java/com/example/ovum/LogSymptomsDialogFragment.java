@@ -53,7 +53,29 @@ public class LogSymptomsDialogFragment extends DialogFragment {
     public Boolean FeelsStomachPain = false;
     public Boolean testpatientId  = false;
     public Boolean test2 = false;
-    RelativeLayout RelativeLayoutTestpatientId;
+    RelativeLayout currentlyActiveLayout;
+
+    RelativeLayout RelativeLayoutItempatientId ;
+    RelativeLayout RelativeLayoutItem2 ;
+    RelativeLayout RelativeLayoutItem3 ;
+    RelativeLayout RelativeLayoutItem4 ;
+    RelativeLayout RelativeLayoutItem5;
+    RelativeLayout RelativeLayoutItem6 ;
+    RelativeLayout RelativeLayoutItem7 ;
+    RelativeLayout RelativeLayoutItem8 ;
+    //RelativeLayout RelativeLayoutItem5 ;
+    RelativeLayout RelativeLayoutItem9;
+    RelativeLayout RelativeLayoutItempatientId0;
+    RelativeLayout RelativeLayoutItempatientIdpatientId ;
+    RelativeLayout RelativeLayoutItempatientId2 ;
+    RelativeLayout RelativeLayoutItempatientId3 ;
+    RelativeLayout RelativeLayoutItempatientId4;
+    RelativeLayout RelativeLayoutItempatientId5 ;
+    RelativeLayout RelativeLayoutItempatientId6 ;
+    RelativeLayout RelativeLayoutItempatientId7 ;
+    RelativeLayout RelativeLayoutItempatientId8;
+    RelativeLayout RelativeLayoutTestpatientId ;
+    RelativeLayout RelativeLayoutTest2;
 
     private int count = 0;
     private Set<RelativeLayout> selectedLayouts = new HashSet<>();
@@ -85,46 +107,95 @@ public class LogSymptomsDialogFragment extends DialogFragment {
         // initialize the confirm symptoms Activity
         confirmChangesBtn = view.findViewById(R.id.confirmbtn);
         // Find all the RelativeLayouts containing the icons
-        RelativeLayout RelativeLayoutItempatientId = view.findViewById(R.id.forheavy);
-        RelativeLayout RelativeLayoutItem2 = view.findViewById(R.id.formedium);
-        RelativeLayout RelativeLayoutItem3 = view.findViewById(R.id.forlow);
-        RelativeLayout RelativeLayoutItem4 = view.findViewById(R.id.forVerylight);
-        RelativeLayout RelativeLayoutItem5 = view.findViewById(R.id.forRedSpotting);
-        RelativeLayout RelativeLayoutItem6 = view.findViewById(R.id.forBrownSpotting);
-        RelativeLayout RelativeLayoutItem7 = view.findViewById(R.id.forLigtBrownSpotting);
-        RelativeLayout RelativeLayoutItem8 = view.findViewById(R.id.forMood);
-        //RelativeLayout RelativeLayoutItem5 = view.findViewById(R.id.guilt);
-        RelativeLayout RelativeLayoutItem9 = view.findViewById(R.id.fornervours);
-        RelativeLayout RelativeLayoutItempatientId0 = view.findViewById(R.id.forAnger);
-        RelativeLayout RelativeLayoutItempatientIdpatientId = view.findViewById(R.id.forStressed);
-        RelativeLayout RelativeLayoutItempatientId2 = view.findViewById(R.id.forbloating);
-        RelativeLayout RelativeLayoutItempatientId3 = view.findViewById(R.id.forheadache);
-        RelativeLayout RelativeLayoutItempatientId4 = view.findViewById(R.id.forhighAppetite);
-        RelativeLayout RelativeLayoutItempatientId5 = view.findViewById(R.id.forlowAppetite);
-        RelativeLayout RelativeLayoutItempatientId6 = view.findViewById(R.id.forsleepy);
-        RelativeLayout RelativeLayoutItempatientId7 = view.findViewById(R.id.forstomachPain);
-        RelativeLayout RelativeLayoutItempatientId8 = view.findViewById(R.id.forTiredness);
-        RelativeLayout RelativeLayoutTestpatientId = view.findViewById(R.id.test1);
-        RelativeLayout RelativeLayoutTest2 = view.findViewById(R.id.test2);
+        RelativeLayoutItempatientId = view.findViewById(R.id.forheavy);
+        RelativeLayoutItem2 = view.findViewById(R.id.formedium);
+        RelativeLayoutItem3 = view.findViewById(R.id.forlow);
+        RelativeLayoutItem4 = view.findViewById(R.id.forVerylight);
+        RelativeLayoutItem5 = view.findViewById(R.id.forRedSpotting);
+        RelativeLayoutItem6 = view.findViewById(R.id.forBrownSpotting);
+        RelativeLayoutItem7 = view.findViewById(R.id.forLigtBrownSpotting);
+        RelativeLayoutItem8 = view.findViewById(R.id.forMood);
+        //RelativeLayoutItem5 = view.findViewById(R.id.guilt);
+        RelativeLayoutItem9 = view.findViewById(R.id.fornervours);
+        RelativeLayoutItempatientId0 = view.findViewById(R.id.forAnger);
+        RelativeLayoutItempatientIdpatientId = view.findViewById(R.id.forStressed);
+        RelativeLayoutItempatientId2 = view.findViewById(R.id.forbloating);
+        RelativeLayoutItempatientId3 = view.findViewById(R.id.forheadache);
+        RelativeLayoutItempatientId4 = view.findViewById(R.id.forhighAppetite);
+        RelativeLayoutItempatientId5 = view.findViewById(R.id.forlowAppetite);
+        RelativeLayoutItempatientId6 = view.findViewById(R.id.forsleepy);
+        RelativeLayoutItempatientId7 = view.findViewById(R.id.forstomachPain);
+        RelativeLayoutItempatientId8 = view.findViewById(R.id.forTiredness);
+        RelativeLayoutTestpatientId = view.findViewById(R.id.test1);
+        RelativeLayoutTest2 = view.findViewById(R.id.test2);
         // Set click listeners for each RelativeLayout
         RelativeLayoutItempatientId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check if this layout is already active; if so, return early
+                if (currentlyActiveLayout == RelativeLayoutItempatientId) return;
+
+                // Reset the previously active layout (if any)
+                if (currentlyActiveLayout != null) {
+                    currentlyActiveLayout.setClickable(true);  // Re-enable clicks
+//                    toggleBackgroundTry(currentlyActiveLayout);  // Reset background if needed
+                }
+
+                // Set the new layout as the active one
+                currentlyActiveLayout = RelativeLayoutItempatientId;
+
+                // Update the background of the new layout
                 Heavy = toggleBackgroundTry(RelativeLayoutItempatientId);
+
+                // Make other layouts non-clickable
+                setLayoutsClickableExcept(RelativeLayoutItempatientId);
             }
         });
 
         RelativeLayoutItem2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check if this layout is already active; if so, return early
+                if (currentlyActiveLayout == RelativeLayoutItem2) return;
+
+                // Reset the previously active layout (if any)
+                if (currentlyActiveLayout != null) {
+                    currentlyActiveLayout.setClickable(true);  // Re-enable clicks
+//                    toggleBackgroundTry(currentlyActiveLayout);  // Reset background if needed
+                }
+
+                // Set the new layout as the active one
+                currentlyActiveLayout = RelativeLayoutItem2;
+
+                // Update the background of the new layout
                 MidLight = toggleBackgroundTry(RelativeLayoutItem2);
+
+                // Make other layouts non-clickable
+                setLayoutsClickableExcept(RelativeLayoutItem2);
             }
         });
 
         RelativeLayoutItem3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Check if this layout is already active; if so, return early
+                if (currentlyActiveLayout == RelativeLayoutItem3) return;
+
+                // Reset the previously active layout (if any)
+                if (currentlyActiveLayout != null) {
+                    currentlyActiveLayout.setClickable(true);  // Re-enable clicks
+//                    toggleBackgroundTry(currentlyActiveLayout);  // Reset background if needed
+                }
+
+                // Set the new layout as the active one
+                currentlyActiveLayout = RelativeLayoutItem3;
+
+                // Update the background of the new layout
                 Light = toggleBackgroundTry(RelativeLayoutItem3);
+
+                // Make other layouts non-clickable
+                setLayoutsClickableExcept(RelativeLayoutItem3);
             }
         });
 
@@ -253,6 +324,12 @@ public class LogSymptomsDialogFragment extends DialogFragment {
         });
 
         return view;
+    }
+
+    private void setLayoutsClickableExcept(RelativeLayout activeLayout) {
+        RelativeLayoutItempatientId.setClickable(RelativeLayoutItempatientId == activeLayout);
+        RelativeLayoutItem2.setClickable(RelativeLayoutItem2 == activeLayout);
+        RelativeLayoutItem3.setClickable(RelativeLayoutItem3 == activeLayout);
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
