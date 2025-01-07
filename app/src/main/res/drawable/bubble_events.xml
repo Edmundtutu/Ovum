@@ -1,0 +1,30 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Main rectangle part of the bubble -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#ffffff" /> <!-- Bubble background color -->
+            <corners
+                android:topLeftRadius="16dp"
+                android:topRightRadius="16dp"
+                android:bottomLeftRadius="16dp"
+                android:bottomRightRadius="16dp" /> <!-- Evenly rounded corners -->
+        </shape>
+    </item>
+
+    <!-- Tail at the top near the right -->
+    <item
+        android:left="9dp"
+        android:top="3dp">  <!-- Negative value to bring the tail up -->
+    <rotate
+        android:fromDegrees="-45"
+        android:pivotX="0%"
+        android:pivotY="100%">  <!-- Pivot set to ensure the tail rotates from the bottom -->
+    <shape android:shape="rectangle">
+        <solid android:color="#ffffff" />
+        <size android:width="12dp" android:height="12dp" />
+    </shape>
+</rotate>
+    </item>
+
+    </layer-list>

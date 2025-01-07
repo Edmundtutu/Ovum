@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/baseline_calendar_month_24"
+            android:title="@string/menu_calendar" />
+        <item
+            android:id="@+id/nav_cycles"
+            android:icon="@drawable/baseline_dialpad_24"
+            android:title="@string/menu_cycles" />
+    </group>
+    <item
+        android:title="@string/account_details"
+        android:icon="@drawable/baseline_account_circle_24">
+
+        <menu>
+            <item
+                android:id="@+id/nav_username"
+                android:icon="@drawable/baseline_drive_file_rename_outline_24"
+                android:title="Name"
+                tools:ignore="HardcodedText" />
+            <item
+                android:id="@+id/nav_age"
+                android:icon="@drawable/age"
+                android:title="@string/age"/>
+            <item
+                android:id="@+id/nav_duedate"
+                android:icon="@drawable/alarm"
+                android:title="@string/due_date"/>
+            <item
+                android:id="@+id/nav_back"
+                android:icon="@drawable/baseline_arrow_back_24"
+                android:title="Back"
+                tools:ignore="HardcodedText" />
+        </menu>
+
+    </item>
+</menu>

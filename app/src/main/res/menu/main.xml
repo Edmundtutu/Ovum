@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="@string/calender"
+        android:id="@+id/calendar_icon"
+        android:icon="@drawable/baseline_calendar_month_24"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:title="@string/search"
+        android:id="@+id/search_icon"
+        android:icon="@drawable/baseline_content_search_24"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+    <item
+        android:title="@string/logout"
+        android:id="@+id/logout_icon"/>
+
+</menu>

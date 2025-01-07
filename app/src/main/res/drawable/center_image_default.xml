@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Outer Circle (Solid Border, No Fill) -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="4dp"
+                android:color="@color/pale_pink" />
+        </shape>
+    </item>
+
+    <!-- Inner Circle (Dashed Border, No Fill, with Padding from Outer Circle) -->
+    <item
+        android:left="10dp"
+        android:right="10dp"
+        android:top="10dp"
+        android:bottom="10dp">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="4dp"
+                android:color="@color/pale_cream"
+                android:dashWidth="3dp"
+                android:dashGap="4dp" />
+            <size
+                android:width="256dp"
+                android:height="256dp" /> <!-- Adjust size as needed -->
+        </shape>
+    </item>
+
+</layer-list>

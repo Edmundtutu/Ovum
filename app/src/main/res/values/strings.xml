@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Ovum</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_calendar">Calendar</string>
+    <string name="menu_cycles">Cycles</string>
+    <string name="cycles">Cycles</string>
+    <string name="calender">Calendar</string>
+    <string name="today">Today</string>
+    <string name="profile_picture">Upload Profile Picture</string>
+    <string name="account_details">Account Details</string>
+    <string name="age">Age</string>
+    <string name="due_date">Due date</string>
+    <string name="mood_swings">Mood Swing</string>
+    <string name="nervous">Nervous</string>
+    <string name="angry">Angry</string>
+    <string name="stressed">Stressed</string>
+    <string name="physical_symptoms">Physical Symptoms</string>
+    <string name="bloating">Bloating</string>
+    <string name="feeling_tired">Feeling Tired</string>
+    <string name="high_appetite">High Appetie</string>
+    <string name="low_appetite">Low Appetite</string>
+    <string name="feeling_sleepy">Feeling Sleepy</string>
+    <string name="stomach_pain">Stomach pain</string>
+    <string name="confirm_your_symptoms">Confirm your Symptoms</string>
+    <string name="date_of_the_day">Date of the day</string>
+    <string name="event_fragment_dialog_tip">Is beyond today, set an event for it</string>
+    <string name="event_plan_title">Plan for Your Next Cylces</string>
+    <string name="slider_img_content_description">TODO: Slide out of fragment</string>
+    <string name="visit_doctor">Visit Doctor</string>
+    <string name="talk_to_doc">Talk To Doc</string>
+    <string name="log_a_symptom">Log a Symptom</string>
+    <string name="involve_in_sex">Involve in Sex</string>
+    <string name="take_a_pill">Take a pill</string>
+    <string name="doctors_events_section_title">View the what the Doctor says</string>
+    <string name="meet_doctor">Meet Doctor</string>
+    <string name="call_doctor">Call Doctor</string>
+    <string name="prescription">Prescription</string>
+    <string name="symptom_log_tip">How do/did you feel today/that day</string>
+    <string name="your_period_started">Your Period Started</string>
+    <string name="heavy">Heavy</string>
+    <string name="cycle_log">Cycle Logs</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="search">Search</string>
+    <string name="logout">Logout</string>
+</resources>
