@@ -8,27 +8,45 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
 
 public class DateUtils {
 
-    // method for fomarting a date in spoken i.e. if given 2002-2-21 it returns 21st Feb
+    private SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.getDefault());
+    private SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+    public Date parseDate(String dateStr) throws ParseException {
+        return inputFormat.parse(dateStr);
+    }
+
+    public String formatDate(Date date) {
+        return outputFormat.format(date);
+    }
+
+    /**
+     * Formats a date string into a spoken format (e.g., "21st Feb").
+     *
+     * @param dateStr the date string to format
+     * @return the formatted date string or an error message if the format is invalid
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public String formatDateToSpeech(String dateStr) {
         String[] inputFormats = {
                 "yyyy-MM-dd", "dd-MM-yyyy", "MM-dd-yyyy", "d-M-yyyy", "M-d-yyyy"
         };
 
         // Define output format
-        SimpleDateFormat outputFormat = new SimpleDateFormat("d'th' MMMM yyyy", Locale.getDefault());
+        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("d'th' MMMM yyyy", Locale.getDefault());
 
         for (String format : inputFormats) {
             try {
-                SimpleDateFormat inputFormat = new SimpleDateFormat(format, Locale.getDefault());
-                Date date = inputFormat.parse(dateStr);
+                DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern(format, Locale.getDefault());
+                LocalDate date = LocalDate.parse(dateStr, inputFormat);
                 return outputFormat.format(date);
-            } catch (ParseException ignored) {
+            } catch (DateTimeParseException ignored) {
                 // Ignore and try next format
             }
         }
@@ -36,79 +54,66 @@ public class DateUtils {
         return "Invalid date format";
     }
 
-    // method to calculate the Age given the DOB
+    /**
+     * Calculates the age based on the date of birth.
+     *
+     * @param dob the date of birth in "d-M-yyyy" format
+     * @return the age as a string or an error message if the format is invalid
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public String calculateAge(String dob) {
         if (dob == null || dob.isEmpty()) {
-            return dob;
+            return "Date of birth cannot be null or empty";
         }
 
-        // Define the expected date format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-yyyy", Locale.getDefault());
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("d-M-yyyy", Locale.getDefault());
         try {
-            // Parse the date of birth string to a Date object
-            Date dateOfBirth = dateFormat.parse(dob);
-
-            // Get the current year
-            Calendar currentDate = Calendar.getInstance();
-            int currentYear = currentDate.get(Calendar.YEAR);
-
-            // Get the year from the date of birth
-            Calendar dobCalendar = Calendar.getInstance();
-            dobCalendar.setTime(dateOfBirth);
-            int birthYear = dobCalendar.get(Calendar.YEAR);
-
-            // Calculate the age
-            return String.valueOf(currentYear - birthYear);
-        } catch (ParseException e) {
-            e.printStackTrace();
+            LocalDate dateOfBirth = LocalDate.parse(dob, dateFormat);
+            LocalDate currentDate = LocalDate.now();
+            return String.valueOf(currentDate.getYear() - dateOfBirth.getYear());
+        } catch (DateTimeParseException e) {
             return "Invalid date format";
         }
     }
 
-    // method to convert date in millisecods
+    /**
+     * Converts a date string to milliseconds since epoch.
+     *
+     * @param dateString the date string in "yyyy-MM-dd" format
+     * @return the milliseconds since epoch or 0 if the format is invalid
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public long convertToMilliseconds(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        long milliseconds = 0;
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
-            Date date = dateFormat.parse(dateString);
-            milliseconds = date.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            LocalDate date = LocalDate.parse(dateString, dateFormat);
+            return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        } catch (DateTimeParseException e) {
+            return 0; // Return 0 for invalid format
         }
-        return milliseconds;
     }
 
-    // method to convert  date from speech format to LocalDate format
+    /**
+     * Converts a date from speech format to LocalDate format.
+     *
+     * @param dateInSpeech the date in speech format
+     * @return the LocalDate or null if the format is invalid
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public LocalDate formatDateToLocalDate(String dateInSpeech) {
         String[] spokenFormats = {
-                // for a fewer comparisons, lets remove some of the formats
-                "dd-MM-YYYY",
-//                "d'st' MMMM yyyy",   // 1st January 2024
-//                "d'nd' MMMM yyyy",   // 2nd January 2024
-//                "d'rd' MMMM yyyy",   // 3rd January 2024
-                "d'th' MMMM yyyy",   // 4th January 2024
-//                "MMMM d'st', yyyy",  // January 1st, 2024
-//                "MMMM d'nd', yyyy",  // January 2nd, 2024
-//                "MMMM d'rd', yyyy",  // January 3rd, 2024
-                "MMMM d'th', yyyy",  // January 4th, 2024
-//                "d'st' MMMM",        // 1st January
-//                "d'nd' MMMM",        // 2nd January
-//                "d'rd' MMMM",        // 3rd January
-                "d'th' MMMM",        // 4th January
-//                "MMMM d'st'",        // January 1st
-//                "MMMM d'nd'",        // January 2nd
-//                "MMMM d'rd'",        // January 3rd
-                "MMMM d'th'"         // January 4th
+                "dd-MM-yyyy",
+                "d'th' MMMM yyyy",
+                "MMMM d'th', yyyy",
+                "d'th' MMMM",
+                "MMMM d'th'"
         };
-
 
         for (String format : spokenFormats) {
             try {
-                SimpleDateFormat inputFormat = new SimpleDateFormat(format, Locale.getDefault());
-                Date date = inputFormat.parse(dateInSpeech);
-                return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            } catch (ParseException ignored) {
+                DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern(format, Locale.getDefault());
+                return LocalDate.parse(dateInSpeech, inputFormat);
+            } catch (DateTimeParseException ignored) {
                 // Ignore and try next format
             }
         }

@@ -1,24 +1,39 @@
 package com.example.ovum;
 
+
+
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.ovum.models.Event;
 
+import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Represents a day in the calendar with its associated information.
+ */
 public class DayInfo {
     private final String dayOfWeek;
-    private final String date;
-
+    private final LocalDate date;
     private final List<Event> events;
 
-
-    /**  A day in the ovum calendar should havethe following features
-     * A date eg 10/19/2222
-     * A day of the week eg Mon- Sun
-     * An event/events (should be a list of events)
+    /**
+     * Constructs a DayInfo object.
+     *
+     * @param dayOfWeek the day of the week
+     * @param date      the date
+     * @param events    the list of events associated with this day
+     * @throws IllegalArgumentException if dayOfWeek or date is null
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public DayInfo(String dayOfWeek, String date, List<Event> events) {
+        if (dayOfWeek == null || date == null) {
+            throw new IllegalArgumentException("Day of week and date cannot be null");
+        }
         this.dayOfWeek = dayOfWeek;
-        this.date = date;
+        this.date = LocalDate.parse(date);
         this.events = events;
     }
 
@@ -26,16 +41,17 @@ public class DayInfo {
         return dayOfWeek;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
+    }
+
+    public List<Event> getEvents() {
+        return events;
     }
 
     @Override
     public String toString() {
-        return "DayInfo{" +
-                "dayOfWeek='" + dayOfWeek + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return String.format("DayInfo{dayOfWeek='%s', date=%s, events=%s}", dayOfWeek, date, events);
     }
 
     @Override

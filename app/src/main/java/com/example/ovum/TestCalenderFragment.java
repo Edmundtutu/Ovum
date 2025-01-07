@@ -38,8 +38,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Arrays;
 
 public class TestCalenderFragment extends Fragment {
+    // Constants for default values
+    private static final int DEFAULT_START_YEAR = 1900;
+    private static final int DEFAULT_END_YEAR = 2040;
+    private static final String TAG = "TestCalenderFragment";
+
     private SharedPrefManager sharedPrefManager;
     private Spinner monthSpinner;
     private Spinner yearSpinner;
@@ -60,97 +66,49 @@ public class TestCalenderFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_test_calender, container, false);
-        // initialize the due date text view
-        dueDateTextView = view.findViewById(R.id.due_date_text_view);
-        // set the text to the duDateText view from the values in the sharedPref if it's null set the "Not Determined Yet" to the notDeterminedProvision View
-        sharedPrefManager =  SharedPrefManager.getInstance(getContext());
-        String dueDate = sharedPrefManager.getDueDate().speechFormat();
-        // initialize a date Utils class to handle date converssions
-        dateUtils= new DateUtils();
+        initializeViews(view);
+        setupSpinners();
+        setupCalendar();
+        setupListeners();
+        updateCalendarAccordingToSpinner();
+        return view;
+    }
 
-        // Initialize UI components
-        yearSpinner = view.findViewById(R.id.yearSpinner);
+    private void initializeViews(View view) {
+        dueDateTextView = view.findViewById(R.id.due_date_text_view);
+        sharedPrefManager = SharedPrefManager.getInstance(getContext());
+        dateUtils = new DateUtils();
         monthSpinner = view.findViewById(R.id.monthSpinner);
+        yearSpinner = view.findViewById(R.id.yearSpinner);
         compactCalendarView = view.findViewById(R.id.compactcalendar_view);
         eventsview = view.findViewById(R.id.events_recycler_view);
-        // setting the default background of the days
-        int defaultbackgroundColor = Color.parseColor("#54FCFCFB");
+    }
 
+    private void setupSpinners() {
         // Populate the Month Spinner
-        months = new ArrayList<>();
-        months.add("January");
-        months.add("February");
-        months.add("March");
-        months.add("April");
-        months.add("May");
-        months.add("June");
-        months.add("July");
-        months.add("August");
-        months.add("September");
-        months.add("October");
-        months.add("November");
-        months.add("December");
-
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getContext(),R.layout.spinner_item_month, months);
-        monthAdapter.setDropDownViewResource(R.layout.spinner_item_month);
+        months = new ArrayList<>(Arrays.asList("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"));
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item_month, months);
         monthSpinner.setAdapter(monthAdapter);
 
-        // Populate the Spinner with years
-        Calendar calendar = Calendar.getInstance();
-        int currentYear = calendar.get(Calendar.YEAR);
+        // Populate the Year Spinner
         years = new ArrayList<>();
-        for (int i = 1900; i <= 2040; i++) {
+        for (int i = DEFAULT_START_YEAR; i <= DEFAULT_END_YEAR; i++) {
             years.add(i);
         }
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item_year, years);
-        adapter.setDropDownViewResource(R.layout.spinner_item_year);
-        yearSpinner.setAdapter(adapter);
+        ArrayAdapter<Integer> yearAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item_year, years);
+        yearSpinner.setAdapter(yearAdapter);
+    }
 
-
+    private void setupCalendar() {
         // Set default selection to current month and year
-        int currentMonth = calendar.get(Calendar.MONTH);
-        monthSpinner.setSelection(currentMonth);
-        yearSpinner.setSelection(years.indexOf(currentYear));
-
-        // Set up listener for the Month Spinner
-        monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateCalendarAccordingToSpinner();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
-
-        // Set up listener for the Year Spinner
-        yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updateCalendarAccordingToSpinner();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
-
-        // Set first day of week to Monday, defaults to Monday so calling setFirstDayOfWeek is not necessary
-        // Use constants provided by Java Calendar class
+        Calendar calendar = Calendar.getInstance();
+        monthSpinner.setSelection(calendar.get(Calendar.MONTH));
+        yearSpinner.setSelection(years.indexOf(calendar.get(Calendar.YEAR)));
         compactCalendarView.setFirstDayOfWeek(Calendar.MONDAY);
 
-        // Time is not relevant when querying for events, since events are returned by day.
-        // So you can pass in any arbitary DateTime and you will receive all events for that day.
-        List<Event> events = compactCalendarView.getEvents(dateUtils.convertToMilliseconds("2024-7-13")); // can also take a Date object
-
-        // events has size 2 with the 2 events ineserted previously
-        Log.d(TAG, "Events: " + events);
-
-        // define a listener to receive callbacks when certain events happen.
+        // Set up the listener for the CompactCalendarView
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDayClick(Date dateClicked) {
                 List<Event> events = compactCalendarView.getEvents(dateClicked);
@@ -158,6 +116,7 @@ public class TestCalenderFragment extends Fragment {
                 Log.d(TAG, "Day was clicked: " + dateClicked + " with events " + events);
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 Log.d(TAG, "Month was scrolled to: " + firstDayOfNewMonth);
@@ -170,46 +129,34 @@ public class TestCalenderFragment extends Fragment {
                 yearSpinner.setSelection(years.indexOf(newYear));
                 monthSpinner.setSelection(newMonth);
 
-                // update the event of days for the scrolled to monthh
-//                updateEventsForCurrentMonth(defaultbackgroundColor);
+                // Update events for the scrolled month
                 addSpecificEvents();
             }
         });
-        // Initialize calendar view to current month and year
-        updateCalendarAccordingToSpinner();
-        // Get current date
-        LocalDate today = LocalDate.now(ZoneId.systemDefault());
+    }
 
-        // Extract month and year
-        int monthToday = today.getMonthValue();
-        int yearToday = today.getYear();
-        // set the due Date Views if the currently selected month is of the current month to show a prediction of the next month
-        if (dueDate != null) {
-            // get the first part of the due date i.e. the "dd th" part
-            String dueDateArrayParts[] = dueDate.split(" ");
-            String dueDatePart = dueDateArrayParts[0];
-            if (yearSpinner.getSelectedItem() != null && yearSpinner.getSelectedItem().equals(yearToday)
-                    && monthSpinner.getSelectedItemPosition() == (monthToday - 1)) {
-                // set the due date text view to the due date
-                dueDateTextView.setText(dueDatePart);
-            }else{
-                // set the  visibility of estimatedPeriodLayout and dueDateLayout to gone
-                LinearLayout estimatedPeriodLayout = view.findViewById(R.id.estimated_period_layout);
-                LinearLayout dueDateLayout = view.findViewById(R.id.due_date_layout);
-                estimatedPeriodLayout.setVisibility(View.GONE);
-                dueDateLayout.setVisibility(View.GONE);
+    private void setupListeners() {
+        monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateCalendarAccordingToSpinner();
             }
 
-        } else {
-            // initialize the not determined provision view
-            TextView notDeterminedProvision = view.findViewById(R.id.not_determined_provision_text_view);
-            notDeterminedProvision.setVisibility(View.VISIBLE);
-        }
-//        updateEventsForCurrentMonth(default backgroundColor);
-        addSpecificEvents();
-        eventsHandler();
-        return view;
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateCalendarAccordingToSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
+
     private void updateCalendarAccordingToSpinner() {
         // Update CompactCalendarView based on Spinner selections
         int selectedYear = (int) yearSpinner.getSelectedItem();
@@ -291,14 +238,13 @@ public class TestCalenderFragment extends Fragment {
     }
 
     // Handle click events on the calendar days
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void handleDayClick(String dateStr) {
-        if (dateStr != null && !dateStr.isEmpty()) {
-            SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        if (isDateStringValid(dateStr)) {
             try {
-                Date date = inputFormat.parse(dateStr);
-                String formattedDate = outputFormat.format(date);
-                Log.d("CalendarGridAdapter", "Formatted Date: " + formattedDate);
+                Date date = dateUtils.parseDate(dateStr); // Use DateUtils for parsing
+                String formattedDate = dateUtils.formatDate(date); // Use DateUtils for formatting
+                Log.d(TAG, "Formatted Date: " + formattedDate);
 
                 Calendar clickedCalendar = Calendar.getInstance();
                 clickedCalendar.setTime(date);
@@ -307,19 +253,31 @@ public class TestCalenderFragment extends Fragment {
                 String dayValue = dateUtils.formatDateToSpeech(formattedDate);
 
                 if (!clickedCalendar.after(currentCalendar)) {
-                    Log.d("CalendarGridAdapter", "Day is not beyond the current date");
-                    LogSymptomsDialogFragment dialogFragment = new LogSymptomsDialogFragment(dayValue);
-                    dialogFragment.show(getParentFragmentManager(), "CustomDialog");
+                    Log.d(TAG, "Day is not beyond the current date");
+                    showLogSymptomsDialog(dayValue);
                 } else {
-                    Log.d("CalendarGridAdapter", "Day is beyond the current date");
-                    SetGynEventFragment dialogFragment = new SetGynEventFragment(dayValue);
-                    dialogFragment.show(getParentFragmentManager(), "CustomDialog");
+                    Log.d(TAG, "Day is beyond the current date");
+                    showSetGynEventDialog(dayValue);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
-                Log.e("CalendarGridAdapter", "Failed to parse date: " + dateStr);
+                Log.e(TAG, "Failed to parse date: " + dateStr, e);
             }
         }
     }
 
+    private boolean isDateStringValid(String dateStr) {
+        return dateStr != null && !dateStr.isEmpty();
+    }
+
+    private void showLogSymptomsDialog(String dayValue) {
+        LogSymptomsDialogFragment dialogFragment = new LogSymptomsDialogFragment(dayValue);
+        dialogFragment.show(getParentFragmentManager(), "CustomDialog");
+    }
+
+    private void showSetGynEventDialog(String dayValue) {
+        SetGynEventFragment dialogFragment = new SetGynEventFragment(dayValue);
+        dialogFragment.show(getParentFragmentManager(), "CustomDialog");
+    }
+
 }
+

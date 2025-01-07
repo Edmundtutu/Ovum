@@ -7,7 +7,7 @@
             <solid android:color="@android:color/transparent" />
             <stroke
                 android:width="4dp"
-                android:color="@android:color/white" />
+                android:color="@color/pale_pink" />
         </shape>
     </item>
 
@@ -21,7 +21,7 @@
             <solid android:color="@android:color/transparent" />
             <stroke
                 android:width="4dp"
-                android:color="@android:color/white"
+                android:color="@color/pale_cream"
                 android:dashWidth="3dp"
                 android:dashGap="4dp" />
             <size

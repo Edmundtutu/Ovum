@@ -156,7 +156,8 @@
                 android:padding="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendar_layout" />
+                app:layout_constraintTop_toBottomOf="@+id/calendar_layout"
+                tools:listitem="@layout/event_item_view"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

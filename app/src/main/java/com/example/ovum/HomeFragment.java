@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment{
     private RecyclerView calendarRecyclerView;
 
     private RecyclerView symptomsRecycleView;
-    private FloatingActionButton addSymptomButton;
+    private Button addSymptomButton;
 
 
     @Override
@@ -78,7 +79,7 @@ public class HomeFragment extends Fragment{
         super.onCreate(savedInstanceState);
     }
 
-    @SuppressLint({"CheckResult", "NotifyDataSetChanged", "SetTextI18n"})
+    @SuppressLint({"CheckResult", "NotifyDataSetChanged", "SetTextI18n", "MissingInflatedId"})
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,8 +95,8 @@ public class HomeFragment extends Fragment{
 
         // Initialize the DaysTextViews
         dayOfWeekTextView = view.findViewById(R.id.day);
-        dateTextView = view.findViewById(R.id.date);
-        dayTextView = view.findViewById(R.id.dateNum);
+        dateTextView = view.findViewById(R.id.dateLabel);
+        dayTextView = view.findViewById(R.id.dateNumber);
 
         
         addSymptomButton = view.findViewById(R.id.add_button);
@@ -104,7 +105,7 @@ public class HomeFragment extends Fragment{
         mainViewModel.getCurrentDate().observe(getViewLifecycleOwner(), currentDay -> { // changes from this->getViewLifecylceOwner
             // Update the UI
 
-            String formattedDate = currentDay.getDate();
+            String formattedDate = String.valueOf(currentDay.getDate());
             // first log the fomattedDate
             Log.v("HomeFragment", "Formatted Date: " + formattedDate);
             //set the current date to the formatted date
@@ -144,7 +145,7 @@ public class HomeFragment extends Fragment{
         centerImage = view.findViewById(R.id.center_image);
 
 
-        DaysLeft = view.findViewById(R.id.days_left);
+        DaysLeft = view.findViewById(R.id.daysLeft);
 
         // Set the number of days left
         // check the databse for the patient's days according to their id from the shared preferences
@@ -260,7 +261,7 @@ public class HomeFragment extends Fragment{
 
 
         // initialize the recycler view for the symptoms
-        symptomsRecycleView = view.findViewById(R.id.days_symptoms_recycle_view);
+        symptomsRecycleView = view.findViewById(R.id.symptomsRecyclerView);
         // set the adapter for the symptoms
         setSymptomsView(symptomsRecycleView);
 

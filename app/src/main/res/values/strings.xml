@@ -47,4 +47,5 @@
     <string name="profile_picture">uploaded_picture</string>
     <string name="open_nav">Open Navigation Drawer</string>
     <string name="close_nav">Close Navigation Drawer</string>
+    <string name="cycle_log">Cycle Logs</string>
 </resources>
