@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class DayInfo {
     private final String dayOfWeek;
-    private final LocalDate date;
+    private final String date;
     private final List<Event> events;
 
     /**
@@ -33,7 +33,7 @@ public class DayInfo {
             throw new IllegalArgumentException("Day of week and date cannot be null");
         }
         this.dayOfWeek = dayOfWeek;
-        this.date = LocalDate.parse(date);
+        this.date = date;
         this.events = events;
     }
 
@@ -41,7 +41,7 @@ public class DayInfo {
         return dayOfWeek;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 

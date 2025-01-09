@@ -13,18 +13,26 @@ import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Locale;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class DateUtils {
 
     private SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.getDefault());
     private SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private DateTimeFormatter outPutLocalDateFormart = DateTimeFormatter.ofPattern("LLL d, yyyy");
 
     public Date parseDate(String dateStr) throws ParseException {
         return inputFormat.parse(dateStr);
     }
 
-    public String formatDate(Date date) {
-        return outputFormat.format(date);
+    public String formatDate(Object date) {
+    if (date instanceof Date) {
+        return outputFormat.format((Date) date);
+    } else if (date instanceof LocalDate) {
+        return ((LocalDate) date).format(outPutLocalDateFormart);
+    } else {
+        throw new IllegalArgumentException("Unsupported date type");
     }
+}
 
     /**
      * Formats a date string into a spoken format (e.g., "21st Feb").
