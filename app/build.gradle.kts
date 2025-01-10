@@ -40,6 +40,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.fragment.testing)
+    androidTestImplementation(project(":app"))
+    androidTestImplementation(project(":app"))
     val room_version = "2.6.1"
 
     implementation(libs.appcompat)
@@ -78,6 +81,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
+
 }
 
 configurations.all {

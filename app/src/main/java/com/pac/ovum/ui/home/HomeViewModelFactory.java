@@ -1,6 +1,9 @@
 package com.pac.ovum.ui.home;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,6 +16,7 @@ public class HomeViewModelFactory implements ViewModelProvider.Factory {
         this.repository = repository;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
