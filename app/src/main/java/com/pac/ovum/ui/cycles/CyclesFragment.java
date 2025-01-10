@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pac.ovum.data.models.CycleSummary;
 import com.pac.ovum.data.repositories.CycleRepository;
+import com.pac.ovum.data.repositories.MockCycleRepository;
 import com.pac.ovum.databinding.FragmentCyclesBinding;
 import com.pac.ovum.utils.AppModule;
 
@@ -32,7 +33,10 @@ public class CyclesFragment extends Fragment {
 
         // Initialize the repository and ViewModel
         CycleRepository cycleRepository = AppModule.provideCycleRepository(getContext());
-        cyclesViewModel = new ViewModelProvider(this, new CyclesViewModelFactory(cycleRepository)).get(CyclesViewModel.class);
+//        cyclesViewModel = new ViewModelProvider(this, new CyclesViewModelFactory(cycleRepository)).get(CyclesViewModel.class);
+
+        // Manual simple test with a dummy data from the MockCycleRepository class
+         cyclesViewModel = new ViewModelProvider(this, new CyclesViewModelFactory(new MockCycleRepository())).get(CyclesViewModel.class);
 
         // Set up RecyclerView
         RecyclerView recyclerView = binding.cardRecyleView;

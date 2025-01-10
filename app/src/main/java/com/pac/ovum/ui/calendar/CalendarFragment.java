@@ -13,20 +13,26 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
+
 import com.pac.ovum.R;
+import com.pac.ovum.data.models.Event;
+import com.pac.ovum.data.repositories.EventRepository;
 import com.pac.ovum.databinding.FragmentCalendarBinding;
 import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
 import com.pac.ovum.ui.dialogs.SetGynEventFragment;
+import com.pac.ovum.utils.AppModule;
 import com.pac.ovum.utils.data.calendarutils.DateUtils;
 
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -50,7 +56,10 @@ public class CalendarFragment extends Fragment {
 
     private DateUtils dateUtils;
 
+    private EventAdapter eventAdapter;
+    private CalendarViewModel viewModel;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -65,11 +74,24 @@ public class CalendarFragment extends Fragment {
         setupCalendar();
         setupListeners();
         updateCalendarAccordingToSpinner();
-        eventsHandler();
 
         return root;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        
+        RecyclerView recyclerView = view.findViewById(R.id.events_recycler_view);
+        eventAdapter = new EventAdapter();
+        recyclerView.setAdapter(eventAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        initializeViewModel();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initializeViews() {
         TextView dueDateTextView = binding.dueDateTextView;
         dateUtils = new DateUtils();
@@ -106,7 +128,7 @@ public class CalendarFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDayClick(Date dateClicked) {
-                List<Event> events = compactCalendarView.getEvents(dateClicked);
+                List<com.github.sundeepk.compactcalendarview.domain.Event> events = compactCalendarView.getEvents(dateClicked);
                 handleDayClick(dateClicked.toString());
                 Log.d(TAG, "Day was clicked: " + dateClicked + " with events " + events);
             }
@@ -125,7 +147,7 @@ public class CalendarFragment extends Fragment {
                 monthSpinner.setSelection(newMonth);
 
                 // Update events for the scrolled month
-                addSpecificEvents();
+                updateEventsOnScroll();
             }
         });
     }
@@ -176,7 +198,7 @@ public class CalendarFragment extends Fragment {
         int defaultBackgroundColor = Color.parseColor("#54FCFCFB"); // TODO: Use non hardcoded colors
 //        updateEventsForCurrentMonth(defaultBackgroundColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            addSpecificEvents();
+            updateEventsOnScroll();
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -219,15 +241,58 @@ public class CalendarFragment extends Fragment {
         dialogFragment.show(getParentFragmentManager(), "CustomDialog");
     }
 
-    private void addSpecificEvents() {
-        // TODO: Handle the population of the calendar dates with the cycle events: make use of the ViewModel
+    private void updateEventsOnScroll() {
+        // TODO: Handle the population of the calendar dates with the proper cycle events: use the CycleIDs to distinguish between the different cycles
     }
 
-    // Handling the Events List
-    private void eventsHandler(){
-        // TODO: Observe an events adapter from the ViewModel to dynamically display the events in the @param eventsView
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void initializeViewModel() {
+        EventRepository eventRepository = AppModule.provideEventRepository(getContext()); //new EventRepository(/* pass your EventDao here */);
+        CalendarViewModelFactory factory = new CalendarViewModelFactory(eventRepository);
+        viewModel = new ViewModelProvider(this, factory).get(CalendarViewModel.class);
+        
+        // Assuming you have the current cycle ID
+        int currentCycleId = getCurrentCycleId(); // TODO: Implement this method to get current cycle ID
+        viewModel.getEventsByCycleId(currentCycleId).observe(getViewLifecycleOwner(), events -> {
+            eventAdapter.setEvents(events);
+            updateCalendarEvents(events);
+        });
     }
 
+    private int getCurrentCycleId() {
+        return 1; // Placeholder
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateCalendarEvents(List<Event> events) {
+        compactCalendarView.removeAllEvents();
+        
+        for (Event event : events) {
+            // Convert your Event to CompactCalendarView.Event
+            long timeInMillis = event.getEventDate().atTime(event.getEventTime())
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant()
+                    .toEpochMilli();
+                    
+            int color = getEventColor(event.getEventType()); // Implement this method to get color based on event type
+            com.github.sundeepk.compactcalendarview.domain.Event calendarEvent = 
+                new com.github.sundeepk.compactcalendarview.domain.Event(color, timeInMillis);
+            compactCalendarView.addEvent(calendarEvent);
+        }
+    }
+
+    // Add helper method to get event colors
+    private int getEventColor(String eventType) {
+        switch (eventType.toLowerCase()) {
+            case "period":
+                return Color.RED;
+            case "ovulation":
+                return Color.BLUE;
+            // Add more event types and colors as needed
+            default:
+                return Color.GREEN;
+        }
+    }
 
     @Override
     public void onDestroyView() {

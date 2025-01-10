@@ -1,5 +1,8 @@
 package com.pac.ovum.data.database;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
@@ -16,6 +19,7 @@ import com.pac.ovum.data.models.User;
 import com.pac.ovum.data.models.UserPreferences;
 import com.pac.ovum.utils.LocalDateTimeConverter;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 @Database(
         entities = {User.class, CycleData.class, Event.class, Episode.class, UserPreferences.class},
         version = 1

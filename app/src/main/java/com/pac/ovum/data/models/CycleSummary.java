@@ -4,6 +4,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.pac.ovum.utils.data.calendarutils.DateUtils;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -50,9 +52,12 @@ public class CycleSummary extends CycleData {
     }
 
     // Custom methods for computed fields
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private String computeTitle() {
+        // instantiate a new date utils class to convert the date to speech format for better UX
+        DateUtils dateFormatter = new DateUtils();
         // Example: Title based on cycle dates
-        return "Cycle from " + getStartDate() + " to " + (getEndDate() != null ? getEndDate() : "Ongoing");
+        return "From " + dateFormatter.formatDateToSpeech(String.valueOf(getStartDate())) + " to " + (getEndDate() != null ? dateFormatter.formatDateToSpeech(String.valueOf(getEndDate())) : "Ongoing");
     }
 
     private int computeSeverity() {
@@ -62,7 +67,7 @@ public class CycleSummary extends CycleData {
 
 
     private Rating computeRating() {
-        int averageScore = (getSeverityScore() + getEpisodesCount()) / 2; // TODO: This calculation is arbitrary, may change
+        int averageScore = (getSeverityScore() + getEpisodesCount()) / 2 % getSeverityScore(); // TODO: This calculation is arbitrary, may change
 
         if (averageScore >= 5) {
             return Rating.FIVE;

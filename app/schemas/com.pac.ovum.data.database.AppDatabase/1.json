@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c4205af828346bd54bb13da3c8a3dc2d",
+    "identityHash": "85e16abf6ebd99e8e5662ed2e3423457",
     "entities": [
       {
         "tableName": "User",
@@ -164,7 +164,7 @@
       },
       {
         "tableName": "Event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cycleId` INTEGER NOT NULL, `eventType` TEXT, `eventDate` TEXT, `description` TEXT, FOREIGN KEY(`cycleId`) REFERENCES `CycleData`(`cycleId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`eventId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cycleId` INTEGER NOT NULL, `eventType` TEXT, `eventDate` TEXT, `description` TEXT, `eventTime` TEXT, FOREIGN KEY(`cycleId`) REFERENCES `CycleData`(`cycleId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "eventId",
@@ -193,6 +193,12 @@
           {
             "fieldPath": "description",
             "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eventTime",
+            "columnName": "eventTime",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -358,7 +364,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c4205af828346bd54bb13da3c8a3dc2d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '85e16abf6ebd99e8e5662ed2e3423457')"
     ]
   }
 }

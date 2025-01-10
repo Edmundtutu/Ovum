@@ -27,10 +27,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Cycle One"
-                android:textSize="16sp"
-                android:textColor="@color/material_dynamic_primary0"/>
+                android:textSize="16sp"/>
 
             <ImageButton
                 android:id="@+id/expandButton"
