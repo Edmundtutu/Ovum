@@ -1,7 +1,9 @@
 package com.pac.ovum.utils;
 
 import android.content.Context;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.room.Room;
 
 import com.pac.ovum.data.database.AppDatabase;
@@ -26,9 +28,12 @@ public class AppModule {
      * @param context The application context used to create the database instance.
      * @return An instance of AppDatabase.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static AppDatabase provideAppDatabase(Context context) {
         if (appDatabase == null) {
-            appDatabase = Room.databaseBuilder(context, AppDatabase.class, "ovum.db").build();
+            appDatabase = Room.databaseBuilder(context, AppDatabase.class, "ovum.db")
+//                    .addMigrations(AppDatabase.MIGRATION_1_2)
+                    .build();
         }
         return appDatabase;
     }
@@ -39,6 +44,7 @@ public class AppModule {
      * @param context The application context used to access the database.
      * @return An instance of UserRepository.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static UserRepository provideUserRepository(Context context) {
         return new UserRepository(provideAppDatabase(context).userDao());
     }
@@ -49,6 +55,7 @@ public class AppModule {
      * @param context The application context used to access the database.
      * @return An instance of CycleRepository.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static CycleRepository provideCycleRepository(Context context) {
         return new CycleRepository(provideAppDatabase(context).cycleDao());
     }
@@ -59,6 +66,7 @@ public class AppModule {
      * @param context The application context used to access the database.
      * @return An instance of EpisodeRepository.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static EpisodeRepository provideEpisodeRepository(Context context) {
         return new EpisodeRepository(provideAppDatabase(context).episodeDao());
     }
@@ -69,6 +77,7 @@ public class AppModule {
      * @param context The application context used to access the database.
      * @return An instance of EventRepository.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static EventRepository provideEventRepository(Context context) {
         return new EventRepository(provideAppDatabase(context).eventDao());
     }
@@ -79,6 +88,7 @@ public class AppModule {
      * @param context The application context used to access the database.
      * @return An instance of UserPreferencesRepository.
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static UserPreferencesRepository provideUserPreferencesRepository(Context context) {
         return new UserPreferencesRepository(provideAppDatabase(context).userPreferencesDao());
     }

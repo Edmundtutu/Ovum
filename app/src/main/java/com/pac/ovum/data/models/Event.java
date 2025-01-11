@@ -1,5 +1,6 @@
 package com.pac.ovum.data.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -24,6 +25,7 @@ public class Event {
     private String eventType; // Type of event (e.g., period start, ovulation)
     private LocalDate eventDate; // Date of the event
     private String description; // Additional details or notes
+    @ColumnInfo(name ="eventTime",defaultValue = "00:00:00")
     private LocalTime eventTime; // Time of the event
 
     // Getters and Setters
