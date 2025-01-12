@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pac.ovum.R;
 import com.pac.ovum.data.repositories.SimulatedEventsRepository;
-import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
 import com.pac.ovum.databinding.FragmentHomeBinding;
+import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
 import com.pac.ovum.utils.data.calendarutils.HorizontalCalendarUtils;
 import com.pac.ovum.utils.ui.PulseEffectShader;
 
@@ -41,6 +41,7 @@ public class HomeFragment extends Fragment {
     private TextView dayOfWeekTextView;
     private TextView dateTextView;
     private TextView dayTextView;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,8 +65,8 @@ public class HomeFragment extends Fragment {
         setBlinderView();
 
         // Setting up the Load Symptoms button
-        final Button loadSymptomsButton = binding.addButton;
-        loadSymptomsButton.setOnClickListener(new View.OnClickListener() {
+        binding.feelButton.leftEmoji.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.emoji_pulse));
+        binding.feelButton.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LogSymptomsDialogFragment dialogFragment = new LogSymptomsDialogFragment("00,00,00"); // TODO: Pass the current date variable if has one

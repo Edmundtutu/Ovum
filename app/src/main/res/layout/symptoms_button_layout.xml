@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/symptomsButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    android:background="@drawable/corner_radiuspinch"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:foreground="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/leftEmoji"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/shy"
+        android:contentDescription="Smile emoji"
+        android:padding="4dp" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="How are you feeling today?"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:fontFamily="@font/poppins_medium"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="start" />
+
+    <ImageView
+        android:id="@+id/rightArrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_chevron_right"
+        android:contentDescription="Right arrow"/>
+</LinearLayout>

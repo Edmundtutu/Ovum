@@ -1,11 +1,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <corners android:radius="16dp"/>
+    <corners android:radius="32dp" />   <!-- Very rounded corners -->
     <gradient
         android:type="radial"
-        android:gradientRadius="60%"
+        android:gradientRadius="100%"
         android:centerY="50%"
-        android:centerX="50%"
+        android:centerX="10%"
         android:startColor="#ffffff"
         android:endColor="#e4c9e5" />
 </shape>
