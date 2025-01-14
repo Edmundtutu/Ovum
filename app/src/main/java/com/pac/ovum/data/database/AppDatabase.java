@@ -3,6 +3,7 @@ package com.pac.ovum.data.database;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
@@ -24,10 +25,10 @@ import com.pac.ovum.utils.LocalDateTimeConverter;
 @RequiresApi(api = Build.VERSION_CODES.O)
 @Database(
         entities = {User.class, CycleData.class, Event.class, Episode.class, UserPreferences.class},
-        version = 1
-//        autoMigrations = {
-//                @AutoMigration(from = 1, to = 2)
-//        }
+        version = 2,
+        autoMigrations = {
+                @AutoMigration(from = 1, to = 2)
+        }
 )
 @TypeConverters({LocalDateTimeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {

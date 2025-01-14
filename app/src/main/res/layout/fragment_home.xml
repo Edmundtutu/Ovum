@@ -148,8 +148,7 @@
                         android:layout_height="wrap_content"
                         android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"
-                        android:background="@color/girlish_cream_50"
-                        tools:listitem="@layout/item_home_symptoms"/>
+                        android:background="@color/girlish_cream_50"/>
 
                     <include
                         android:id="@+id/feelButton"

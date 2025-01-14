@@ -1,11 +1,13 @@
 package com.pac.ovum.data.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity(
         foreignKeys = @ForeignKey(
@@ -22,6 +24,8 @@ public class Episode {
     private int cycleId; // Foreign key to CycleData
     private String symptomType; // Type of symptom (e.g., pain, mood change)
     private LocalDate date; // Date of the episode
+    @ColumnInfo(name = "time", defaultValue = "00:00:00")
+    private LocalTime time; // Time of Logging the episode
     private String notes; // Notes or description of the symptom
     private int intensity; // Symptom intensity on a 1-10 scale
 
@@ -73,4 +77,13 @@ public class Episode {
     public void setIntensity(int intensity) {
         this.intensity = intensity;
     }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
 }

@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pac.ovum.R;
+import com.pac.ovum.data.repositories.EpisodeRepository;
+import com.pac.ovum.data.repositories.MockEpisodesRepository;
 import com.pac.ovum.data.repositories.SimulatedEventsRepository;
 import com.pac.ovum.databinding.FragmentHomeBinding;
 import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
@@ -29,6 +31,7 @@ import com.pac.ovum.utils.ui.PulseEffectShader;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -37,6 +40,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
 
     private RecyclerView HorizontalCalendarRecyclerView;
+    private RecyclerView symptomsRecyclerView;
     private ImageView centerImage;
     private TextView dayOfWeekTextView;
     private TextView dateTextView;
@@ -47,8 +51,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Create repository and factory
-        SimulatedEventsRepository repository = new SimulatedEventsRepository(); //TODO: Get the Events Repository from the Real EventsRepository class
-        HomeViewModelFactory factory = new HomeViewModelFactory(repository);
+        SimulatedEventsRepository eventsRepository = new SimulatedEventsRepository(); //TODO: Get the Events Repository from the Real EventsRepository class
+        EpisodeRepository episodesRepository = new MockEpisodesRepository();  //TODO: Get the Episodes Repository from the Real Data source
+        HomeViewModelFactory factory = new HomeViewModelFactory(eventsRepository, episodesRepository);
         homeViewModel = new ViewModelProvider(this, factory).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -63,6 +68,9 @@ public class HomeFragment extends Fragment {
 
         // Setting the Center Image view
         setBlinderView();
+
+        // setting the Symptoms RecyclerView
+        setSymptomsRecyclerView();
 
         // Setting up the Load Symptoms button
         binding.feelButton.leftEmoji.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.emoji_pulse));
@@ -82,6 +90,7 @@ public class HomeFragment extends Fragment {
         dayOfWeekTextView = binding.day;
         dateTextView = binding.dateLabel;
         dayTextView = binding.dateNumber;
+        symptomsRecyclerView = binding.symptomsRecyclerView;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -125,6 +134,28 @@ public class HomeFragment extends Fragment {
     // Designing the Center Image view according to what day it is in the current cycle
     private void applyPulseEffectOn(ImageView centerImage, int daysLeftCount){
         PulseEffectShader.configureImage(centerImage, daysLeftCount, R.drawable.shim_status_container, R.drawable.shim_status_container);
+    }
+
+    private void setSymptomsRecyclerView(){
+        int cycleId = getCyleId(); // TODO: Implement the getCyleId method with the right logic
+        //  Get the symptoms from the view model using the CycleId
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            homeViewModel.getSymptoms(LocalDate.now(), cycleId).observe(getViewLifecycleOwner(), symptoms -> {
+                Log.d("HomeFragment", "Symptoms: " + symptoms);
+                // Set the layout manager and adapter for the recycler view
+                symptomsRecyclerView.setAdapter(new SymptomsAdapter(getContext(),symptoms));
+                // Set the layout manager and adapter for the recycler view
+                RecyclerView.LayoutManager layoutManager = (!symptoms.isEmpty()) ? new GridLayoutManager(getContext(),symptoms.size()) :new GridLayoutManager(getContext(),1);
+                symptomsRecyclerView.setLayoutManager(layoutManager);
+                // Update the adapter with the new symptoms
+                ((SymptomsAdapter) Objects.requireNonNull(symptomsRecyclerView.getAdapter())).updateSymptoms(symptoms);
+            });
+        }
+
+    }
+
+    private int getCyleId() {
+        return 1; // Placeholder
     }
 
     @Override
