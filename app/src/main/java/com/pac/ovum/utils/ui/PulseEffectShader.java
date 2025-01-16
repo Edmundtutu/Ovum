@@ -2,13 +2,13 @@ package com.pac.ovum.utils.ui;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.widget.ImageView;
+import android.view.View;
 
 public class PulseEffectShader {
 
     // Applies the pulsing animation to the given ImageView
     @SuppressLint("ObjectAnimatorBinding")
-    public static void applyPulsingEffect(ImageView imageView, long duration) {
+    public static void applyPulsingEffect(View imageView, long duration) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(imageView, "alpha", 0.2f, 1.0f, 0.2f);
         animator.setDuration(duration);
         animator.setRepeatCount(ObjectAnimator.INFINITE);
@@ -17,7 +17,7 @@ public class PulseEffectShader {
     }
 
     // Configures the background and animation based on days left
-    public static void configureImage(ImageView image, long daysLeftCount, int lateDrawableRes, int dueDrawableRes) {
+    public static void configureImage(View image, long daysLeftCount, int lateDrawableRes, int dueDrawableRes) {
         if (daysLeftCount < 1) {
             // For late period
             image.setBackgroundResource(lateDrawableRes);

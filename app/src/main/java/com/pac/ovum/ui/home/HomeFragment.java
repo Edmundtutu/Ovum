@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,10 +40,9 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView HorizontalCalendarRecyclerView;
     private RecyclerView symptomsRecyclerView;
-    private ImageView centerImage;
+    private View centerImage;
+    private  View indicatorImage;
     private TextView dayOfWeekTextView;
-    private TextView dateTextView;
-    private TextView dayTextView;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -88,8 +86,7 @@ public class HomeFragment extends Fragment {
         HorizontalCalendarRecyclerView = binding.calendarRecyclerView;
         centerImage = binding.centerImage;
         dayOfWeekTextView = binding.day;
-        dateTextView = binding.dateLabel;
-        dayTextView = binding.dateNumber;
+        indicatorImage = binding.indicator;
         symptomsRecyclerView = binding.symptomsRecyclerView;
     }
 
@@ -121,19 +118,16 @@ public class HomeFragment extends Fragment {
             String day = dateParts[1].replace(",", ""); // "dd"
             String year = dateParts[2];  // "yyyy"
 
-            // Combine the day and year into a single string
-            String dayYear = day + ", " + year;
             dayOfWeekTextView.setText(currentDay.getDayOfWeek());
-            dateTextView.setText(month);
-            dayTextView.setText(dayYear);
+
         });
         // set the pulse effect on the center image according to days left count
-        applyPulseEffectOn(centerImage, 0); // TODO: Pass the daysLeftCount variable in the current cycle
+        applyPulseEffectOn(indicatorImage, 0); // TODO: Pass the daysLeftCount variable in the current cycle
 
     }
     // Designing the Center Image view according to what day it is in the current cycle
-    private void applyPulseEffectOn(ImageView centerImage, int daysLeftCount){
-        PulseEffectShader.configureImage(centerImage, daysLeftCount, R.drawable.shim_status_container, R.drawable.shim_status_container);
+    private void applyPulseEffectOn(View indicator, int daysLeftCount){
+        PulseEffectShader.configureImage(indicator, daysLeftCount, R.drawable.shim_status_container, R.drawable.shim_status_container);
     }
 
     private void setSymptomsRecyclerView(){

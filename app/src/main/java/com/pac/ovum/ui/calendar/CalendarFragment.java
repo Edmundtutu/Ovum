@@ -25,6 +25,7 @@ import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.pac.ovum.R;
 import com.pac.ovum.data.models.Event;
 import com.pac.ovum.data.repositories.EventRepository;
+import com.pac.ovum.data.repositories.MockCalendarEventsRepository;
 import com.pac.ovum.databinding.FragmentCalendarBinding;
 import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
 import com.pac.ovum.ui.dialogs.SetGynEventFragment;
@@ -245,7 +246,8 @@ public class CalendarFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initializeViewModel() {
         EventRepository eventRepository = AppModule.provideEventRepository(getContext()); //new EventRepository(/* pass your EventDao here */);
-        CalendarViewModelFactory factory = new CalendarViewModelFactory(eventRepository);
+//        CalendarViewModelFactory factory = new CalendarViewModelFactory(eventRepository); // TODO: uncomment for real Data Repository
+        CalendarViewModelFactory factory = new CalendarViewModelFactory(new MockCalendarEventsRepository());
         viewModel = new ViewModelProvider(this, factory).get(CalendarViewModel.class);
         
         // Assuming you have the current cycle ID
