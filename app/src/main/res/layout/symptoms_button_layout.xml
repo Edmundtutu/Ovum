@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/how_do_you_feel_today"
+        android:text="@string/add_symptoms_button"
         android:textColor="#333333"
         android:textSize="14sp"
         android:fontFamily="@font/poppins_medium"

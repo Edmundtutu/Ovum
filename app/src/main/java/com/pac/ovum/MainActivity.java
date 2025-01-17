@@ -124,9 +124,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == R.id.logout_icon) {
             // TODO: Handle the logout action
-            // start the MainActivit2
-            startActivity(new Intent(this, MainActivity2.class));
-//            finish();
+            finish();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation(libs.fragment.testing)
+    implementation(libs.activity)
     androidTestImplementation(project(":app"))
     androidTestImplementation(project(":app"))
     val room_version = "2.6.1"

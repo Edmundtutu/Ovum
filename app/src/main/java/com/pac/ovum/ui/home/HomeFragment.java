@@ -17,6 +17,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pac.ovum.R;
@@ -26,7 +27,7 @@ import com.pac.ovum.data.repositories.SimulatedEventsRepository;
 import com.pac.ovum.databinding.FragmentHomeBinding;
 import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
 import com.pac.ovum.utils.data.calendarutils.HorizontalCalendarUtils;
-import com.pac.ovum.utils.ui.PulseEffectShader;
+import com.pac.ovum.utils.ui.CircularPeriodProgressView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView HorizontalCalendarRecyclerView;
     private RecyclerView symptomsRecyclerView;
-    private View centerImage;
-    private  View indicatorImage;
+    private CircularPeriodProgressView progressView;
+
     private TextView dayOfWeekTextView;
 
 
@@ -84,9 +85,8 @@ public class HomeFragment extends Fragment {
 
     private void initViews(){
         HorizontalCalendarRecyclerView = binding.calendarRecyclerView;
-        centerImage = binding.centerImage;
+        progressView = binding.progressView;
         dayOfWeekTextView = binding.day;
-        indicatorImage = binding.indicator;
         symptomsRecyclerView = binding.symptomsRecyclerView;
     }
 
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
             HorizontalCalendarUtils.selectedDate = days.get(position);
         },getContext(), homeViewModel);
         // Set the layout manager and adapter for the recycler view
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7); // using the date_item.xml as the layout for the recycler view
         HorizontalCalendarRecyclerView.setLayoutManager(layoutManager);
         HorizontalCalendarRecyclerView.setAdapter(horizontalCalendarAdapter);
     }
@@ -121,13 +121,22 @@ public class HomeFragment extends Fragment {
             dayOfWeekTextView.setText(currentDay.getDayOfWeek());
 
         });
-        // set the pulse effect on the center image according to days left count
-        applyPulseEffectOn(indicatorImage, 0); // TODO: Pass the daysLeftCount variable in the current cycle
+        // set the circular progress
+        setCircularProgressView(28,15);  // TODO: configure the progress view with the real cycle INFO
 
     }
-    // Designing the Center Image view according to what day it is in the current cycle
-    private void applyPulseEffectOn(View indicator, int daysLeftCount){
-        PulseEffectShader.configureImage(indicator, daysLeftCount, R.drawable.shim_status_container, R.drawable.shim_status_container);
+
+    private void setCircularProgressView(int cycleLength, int progress) {
+        progressView.setCenterImageResource(R.drawable.icon_logo);
+        progressView.setCycleLength(cycleLength);
+        progressView.setProgress(progress);
+        progressView.setDaysUntilPeriod(1);
+        progressView.setDaysUntilFertile(14);
+
+        // apply the pulse effect
+//        Configure based on days left
+        int daysLeftCount = cycleLength - progress;
+        progressView.configurePulseEffect(daysLeftCount);
     }
 
     private void setSymptomsRecyclerView(){
@@ -138,8 +147,8 @@ public class HomeFragment extends Fragment {
                 Log.d("HomeFragment", "Symptoms: " + symptoms);
                 // Set the layout manager and adapter for the recycler view
                 symptomsRecyclerView.setAdapter(new SymptomsAdapter(getContext(),symptoms));
-                // Set the layout manager and adapter for the recycler view
-                RecyclerView.LayoutManager layoutManager = (!symptoms.isEmpty()) ? new GridLayoutManager(getContext(),symptoms.size()) :new GridLayoutManager(getContext(),1);
+                // Set the layout manager to a horizontal LinearLayoutManager
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
                 symptomsRecyclerView.setLayoutManager(layoutManager);
                 // Update the adapter with the new symptoms
                 ((SymptomsAdapter) Objects.requireNonNull(symptomsRecyclerView.getAdapter())).updateSymptoms(symptoms);
