@@ -19,6 +19,15 @@ import androidx.annotation.Keep;
 import androidx.core.content.ContextCompat;
 
 public class CircularPeriodProgressView extends View {
+    // Color constants from first version
+    private static final int PERIOD_RED = Color.parseColor("#FF4B55");
+    private static final int LIGHT_RED = Color.parseColor("#FF8087");
+    private static final int SAFE_GREEN = Color.parseColor("#4CAF50");
+    private static final int LIGHT_GREEN = Color.parseColor("#81C784");
+    private static final int OVULATION_BLUE = Color.parseColor("#2196F3");
+    private static final int LIGHT_BLUE = Color.parseColor("#64B5F6");
+
+    // Properties from both versions
     private Paint progressPaint;
     private Paint backgroundPaint;
     private Paint dotPaint;
@@ -36,13 +45,12 @@ public class CircularPeriodProgressView extends View {
     private SweepGradient sweepGradient;
     private Matrix rotateMatrix;
     private Drawable centerImage;
-    private float imageSize = 0.4f; // Image will take 40% of the view's size
+    private float imageSize = 0.4f;
     private ObjectAnimator pulseAnimator;
     private boolean isPulsing = false;
-
-    // Add new property for center image alpha
     private float centerImageAlpha = 1.0f;
 
+    // Constructors
     public CircularPeriodProgressView(Context context) {
         super(context);
         init(null);
@@ -91,11 +99,32 @@ public class CircularPeriodProgressView extends View {
         innerDashedCirclePaint.setPathEffect(dashEffect);
     }
 
-    // Add to init method or create new method
     private void initPulseAnimator() {
         pulseAnimator = ObjectAnimator.ofFloat(this, "centerImageAlpha", 0.2f, 1.0f, 0.2f);
         pulseAnimator.setRepeatCount(ObjectAnimator.INFINITE);
         pulseAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+    }
+
+    // Method from first version for calculating gradient positions
+    private float[] calculateGradientPositions(int cycleLength) {
+        float periodLength = 5f / cycleLength;
+        float follicularStart = periodLength;
+        float ovulationStart = 14f / cycleLength;
+        float ovulationEnd = (14f + 2f) / cycleLength;
+        float lutealStart = ovulationEnd;
+        float preMenstrualStart = (cycleLength - 5f) / cycleLength;
+
+        return new float[] {
+                0f,
+                periodLength,
+                follicularStart + 0.05f,
+                ovulationStart - 0.05f,
+                ovulationStart,
+                ovulationEnd,
+                lutealStart + 0.05f,
+                preMenstrualStart,
+                1f
+        };
     }
 
     @Override
@@ -126,7 +155,6 @@ public class CircularPeriodProgressView extends View {
                 h - getPaddingBottom() - padding
         );
 
-        // Calculate image bounds
         float imageWidth = contentWidth * imageSize;
         float imageHeight = contentHeight * imageSize;
         imageRect.set(
@@ -136,17 +164,25 @@ public class CircularPeriodProgressView extends View {
                 centerY + imageHeight / 2
         );
 
+        updateGradient(centerX, centerY);
+    }
+
+    private void updateGradient(float centerX, float centerY) {
+        float[] positions = calculateGradientPositions(maxProgress);
+
         int[] colors = {
-                Color.parseColor("#4B9BF7"),
-                Color.BLUE,
-                Color.parseColor("#4B9BF7"),
-                Color.CYAN,
-                Color.parseColor("#CCFDD4"),
-                Color.RED,
-                Color.parseColor("#82FA96"),
-                Color.parseColor("#4B9BF7")
+                PERIOD_RED,
+                LIGHT_RED,
+                SAFE_GREEN,
+                LIGHT_BLUE,
+                OVULATION_BLUE,
+                LIGHT_BLUE,
+                SAFE_GREEN,
+                LIGHT_RED,
+                PERIOD_RED
         };
-        sweepGradient = new SweepGradient(centerX, centerY, colors, null);
+
+        sweepGradient = new SweepGradient(centerX, centerY, colors, positions);
         rotateMatrix.setRotate(270, centerX, centerY);
         sweepGradient.setLocalMatrix(rotateMatrix);
         progressPaint.setShader(sweepGradient);
@@ -162,18 +198,14 @@ public class CircularPeriodProgressView extends View {
         float centerY = getPaddingTop() + contentHeight / 2;
         float radius = Math.min(contentWidth, contentHeight) / 2;
 
-        // Draw outer circles
         canvas.drawCircle(centerX, centerY, radius * 0.8f, outerCirclePaint);
         canvas.drawCircle(centerX, centerY, radius * 0.7f, innerDashedCirclePaint);
 
-        // Draw background arc
         canvas.drawArc(arcRect, 0, 360, false, backgroundPaint);
 
-        // Draw progress arc
         float sweepAngle = (progress / (float) maxProgress) * 360;
         canvas.drawArc(arcRect, -90, sweepAngle, false, progressPaint);
 
-        // Draw center image if available
         if (centerImage != null) {
             int alpha = (int) (centerImageAlpha * 255);
             centerImage.setAlpha(alpha);
@@ -186,12 +218,9 @@ public class CircularPeriodProgressView extends View {
             centerImage.draw(canvas);
         }
 
-
-        // Draw dots with text
         drawDotWithText(canvas, -90, Color.RED, String.valueOf(daysUntilPeriod), Color.WHITE);
         drawDotWithText(canvas, 90, Color.BLUE, String.valueOf(daysUntilFertile), Color.WHITE);
 
-        // Draw center text slightly below the image
         textPaint.setTextSize(spToPx(18));
         String centerText = progress + " days";
         float textY = centerY + (centerImage != null ? imageRect.height()/2 : 0) + textPaint.getTextSize();
@@ -219,12 +248,15 @@ public class CircularPeriodProgressView extends View {
         canvas.drawText(text, dotX, dotY + textPaint.getTextSize()/3, textPaint);
     }
 
-    // Public methods for setting properties
+    // Public methods
     public void setCycleLength(int cycleDays) {
         if (cycleDays > 0) {
             this.maxProgress = cycleDays;
             if (this.progress > cycleDays) {
                 this.progress = cycleDays;
+            }
+            if (getWidth() > 0) {
+                updateGradient(getWidth() / 2f, getHeight() / 2f);
             }
             invalidate();
         }
@@ -263,11 +295,10 @@ public class CircularPeriodProgressView extends View {
         invalidate();
     }
 
-    // Getter and setter for the animator property
-    @Keep // Add this annotation to prevent ProGuard from removing this method
+    @Keep
     public void setCenterImageAlpha(float alpha) {
         this.centerImageAlpha = alpha;
-        invalidate(); // Request redraw with new alpha
+        invalidate();
     }
 
     @Keep
@@ -275,7 +306,6 @@ public class CircularPeriodProgressView extends View {
         return centerImageAlpha;
     }
 
-    // Method to start pulsing
     public void startPulseEffect(long duration) {
         if (centerImage != null && !isPulsing) {
             if (pulseAnimator == null) {
@@ -287,7 +317,6 @@ public class CircularPeriodProgressView extends View {
         }
     }
 
-    // Method to stop pulsing
     public void stopPulseEffect() {
         if (pulseAnimator != null && isPulsing) {
             pulseAnimator.cancel();
@@ -297,22 +326,22 @@ public class CircularPeriodProgressView extends View {
         }
     }
 
-    // Method to configure pulsing based on days
     public void configurePulseEffect(long daysLeftCount) {
         if (daysLeftCount < 1) {
-            startPulseEffect(500); // Faster pulsing for urgency
+            startPulseEffect(500);
         } else if (daysLeftCount <= 5) {
-            startPulseEffect(1000); // Slower pulsing
+            startPulseEffect(1000);
         } else {
             stopPulseEffect();
         }
     }
-    // Add cleanup in case the view is removed
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         stopPulseEffect();
     }
+
     private float dpToPx(float dp) {
         return dp * getResources().getDisplayMetrics().density;
     }

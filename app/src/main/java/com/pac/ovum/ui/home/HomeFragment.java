@@ -122,7 +122,7 @@ public class HomeFragment extends Fragment {
 
         });
         // set the circular progress
-        setCircularProgressView(28,15);  // TODO: configure the progress view with the real cycle INFO
+        setCircularProgressView(33,28);  // TODO: configure the progress view with the real cycle INFO
 
     }
 
