@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MockCalendarEventsRepository extends EventRepository{
     private MutableLiveData<List<Event>> events = new MutableLiveData<>();
@@ -28,7 +29,7 @@ public class MockCalendarEventsRepository extends EventRepository{
         List<Event> mockCalendarEvents = new ArrayList<>();
 
         mockCalendarEvents.add(createMockEvent(1, LocalDate.now().plusDays(5), LocalTime.of(3,8), "Period Start", "Next Period Starts"));
-        mockCalendarEvents.add(createMockEvent(2, LocalDate.now().plusDays(7), LocalTime.of(5,8), "Ovulation", "Next Ovulation Starts"));
+        mockCalendarEvents.add(createMockEvent(2, LocalDate.now().plusDays(3), LocalTime.of(5,8), "Ovulation", "Next Ovulation Starts"));
         mockCalendarEvents.add(createMockEvent(3, LocalDate.now().plusDays(2), LocalTime.of(1,40), "Gyn Event", "Meet Doctor"));
         mockCalendarEvents.add(createMockEvent(4, LocalDate.now().plusDays(20), LocalTime.of(12,20), "Gyn Event", "Get pill"));
         mockCalendarEvents.add(createMockEvent(5, LocalDate.now().minusDays(5), LocalTime.of(13,12), "Gyn Event", "Call Doctor"));
@@ -51,5 +52,83 @@ public class MockCalendarEventsRepository extends EventRepository{
     @Override
     public LiveData<List<Event>> getEventsByCycleId(int cycleId) {
         return events;
+    }
+
+    @Override
+    public LiveData<List<Event>> getEventsForDate(LocalDate date) {
+        MutableLiveData<List<Event>> dateEvents = new MutableLiveData<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            List<Event> currentEvents = events.getValue();
+            if (currentEvents != null) {
+                List<Event> filtered = currentEvents.stream()
+                        .filter(event -> event.getEventDate().equals(date))
+                        .collect(Collectors.toList());
+                dateEvents.setValue(filtered);
+            }
+        }
+        return dateEvents;
+    }
+
+    @Override
+    public LiveData<Event> getEventById(int eventId) {
+        MutableLiveData<Event> event = new MutableLiveData<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            List<Event> currentEvents = events.getValue();
+            if (currentEvents != null) {
+                event.setValue(currentEvents.stream()
+                        .filter(e -> e.getEventId() == eventId)
+                        .findFirst()
+                        .orElse(null));
+            }
+        }
+        return event;
+    }
+
+    @Override
+    public LiveData<List<Event>> getEventsByTypeAndCycle(String eventType, int cycleId) {
+        MutableLiveData<List<Event>> filteredEvents = new MutableLiveData<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            List<Event> currentEvents = events.getValue();
+            if (currentEvents != null) {
+                List<Event> filtered = currentEvents.stream()
+                        .filter(event -> event.getEventType().equals(eventType) 
+                                && event.getCycleId() == cycleId)
+                        .collect(Collectors.toList());
+                filteredEvents.setValue(filtered);
+            }
+        }
+        return filteredEvents;
+    }
+
+    @Override
+    public void insertEvent(Event event) {
+        List<Event> currentEvents = events.getValue();
+        if (currentEvents != null) {
+            currentEvents.add(event);
+            events.postValue(currentEvents);
+        }
+    }
+
+    @Override
+    public void updateEvent(Event event) {
+        List<Event> currentEvents = events.getValue();
+        if (currentEvents != null) {
+            for (int i = 0; i < currentEvents.size(); i++) {
+                if (currentEvents.get(i).getEventId() == event.getEventId()) {
+                    currentEvents.set(i, event);
+                    break;
+                }
+            }
+            events.postValue(currentEvents);
+        }
+    }
+
+    @Override
+    public void deleteEvent(Event event) {
+        List<Event> currentEvents = events.getValue();
+        if (currentEvents != null) {
+            currentEvents.removeIf(e -> e.getEventId() == event.getEventId());
+            events.postValue(currentEvents);
+        }
     }
 }

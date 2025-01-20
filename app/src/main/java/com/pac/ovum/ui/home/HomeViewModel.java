@@ -9,8 +9,9 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.pac.ovum.data.models.Episode;
+import com.pac.ovum.data.models.Event;
 import com.pac.ovum.data.repositories.EpisodeRepository;
-import com.pac.ovum.data.repositories.SimulatedEventsRepository;
+import com.pac.ovum.data.repositories.EventRepository;
 import com.pac.ovum.utils.data.calendarutils.DateUtils;
 import com.pac.ovum.utils.data.calendarutils.DayInfo;
 
@@ -26,15 +27,15 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<LocalDate> selectedDate = new MutableLiveData<>();
     private final MutableLiveData<DayInfo> currentDate = new MutableLiveData<>();
 
-    private final LiveData<List<String>> eventsForSelectedDate;
+    private final LiveData<List<Event>> eventsForSelectedDate;
     private final EpisodeRepository symptomsRepository;
 
     // TODO: Implement the Real EventsRepository
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public HomeViewModel(SimulatedEventsRepository repository, EpisodeRepository symptomsRepository) {
+    public HomeViewModel(EventRepository repository, EpisodeRepository symptomsRepository) {
         eventsForSelectedDate = Transformations.switchMap(selectedDate, date -> {
             if (date != null) {
-                return repository.getEventsForDate(date); // Returns LiveData<List<String>>
+                return repository.getEventsForDate(date); // Returns LiveData<List<Event>> of events for the selected date
             } else {
                 return new MutableLiveData<>(Collections.emptyList());
             }
@@ -60,7 +61,13 @@ public class HomeViewModel extends ViewModel {
     }
 
     public LiveData<List<String>> getEventsForSelectedDate() {
-        return eventsForSelectedDate;
+        return Transformations.map(eventsForSelectedDate, events -> {
+            List<String> eventTitles = new ArrayList<>();
+            for (Event event : events) {
+                eventTitles.add(event.getDescription()); // TODO: Review this fetch may not be appropriate to return event description. Event Title may be more appropriate
+            }
+            return eventTitles;
+        });
     }
 
     

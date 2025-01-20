@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import com.pac.ovum.data.models.Event;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Dao
@@ -25,6 +26,12 @@ public interface EventDao {
 
     @Query("SELECT * FROM Event WHERE eventType = :eventType AND cycleId = :cycleId")
     LiveData<List<Event>> getEventsByTypeAndCycle(String eventType, int cycleId);
+
+    @Query("SELECT * FROM Event WHERE eventDate = :date")
+    LiveData<List<Event>> getEventsForDate(LocalDate date);
+
+    @Query("SELECT * FROM Event WHERE eventDate BETWEEN :startDate AND :endDate")
+    LiveData<List<Event>> getEventsForDateRange(LocalDate startDate, LocalDate endDate);
 
     @Update
     void updateEvent(Event event);

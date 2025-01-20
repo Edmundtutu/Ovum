@@ -6,6 +6,7 @@ import com.pac.ovum.data.dao.EventDao;
 import com.pac.ovum.data.models.Event;
 import com.pac.ovum.utils.AppExecutors;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EventRepository {
@@ -37,5 +38,9 @@ public class EventRepository {
 
     public void deleteEvent(Event event) {
         AppExecutors.getInstance().diskIO().execute(() -> eventDao.deleteEvent(event));
+    }
+
+    public LiveData<List<Event>> getEventsForDate(LocalDate date) {
+        return eventDao.getEventsForDate(date);
     }
 }

@@ -8,13 +8,13 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.pac.ovum.data.repositories.EpisodeRepository;
-import com.pac.ovum.data.repositories.SimulatedEventsRepository;
+import com.pac.ovum.data.repositories.EventRepository;
 
 public class HomeViewModelFactory implements ViewModelProvider.Factory {
-    private final SimulatedEventsRepository eventsRepository;
+    private final EventRepository eventsRepository;
     private final EpisodeRepository symptomsRepository;
 
-    public HomeViewModelFactory(SimulatedEventsRepository eventsRepository, EpisodeRepository symptomsRepository) {
+    public HomeViewModelFactory(EventRepository eventsRepository, EpisodeRepository symptomsRepository) {
         this.eventsRepository = eventsRepository;
         this.symptomsRepository = symptomsRepository;
     }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LifecycleOwner;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pac.ovum.R;
-import com.pac.ovum.utils.data.calendarutils.HorizontalCalendarUtils;
 import com.pac.ovum.utils.ui.BalloonUtil;
 import com.pac.ovum.utils.ui.BubblesListAdapter;
 import com.pac.ovum.utils.ui.DoubleClickListener;
@@ -90,7 +88,7 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
         // Create the balloon using the utility class
         Balloon balloon = BalloonUtil.createBalloonForHorizontalCalendar(holder.itemView.getContext());
 
-        holder.dateTextView.setOnClickListener(new DoubleClickListener() {
+        holder.dateTextView.setOnClickListener(new DoubleClickListener(200) {
             @Override
             public void onSingleClick(View v) {
                 listener.onItemClick(null, v, position, 0);

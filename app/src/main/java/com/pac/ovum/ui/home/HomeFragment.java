@@ -22,8 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pac.ovum.R;
 import com.pac.ovum.data.repositories.EpisodeRepository;
+import com.pac.ovum.data.repositories.MockCalendarEventsRepository;
 import com.pac.ovum.data.repositories.MockEpisodesRepository;
-import com.pac.ovum.data.repositories.SimulatedEventsRepository;
+import com.pac.ovum.data.repositories.EventRepository;
 import com.pac.ovum.databinding.FragmentHomeBinding;
 import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
 import com.pac.ovum.utils.data.calendarutils.HorizontalCalendarUtils;
@@ -50,7 +51,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Create repository and factory
-        SimulatedEventsRepository eventsRepository = new SimulatedEventsRepository(); //TODO: Get the Events Repository from the Real EventsRepository class
+        EventRepository eventsRepository = new MockCalendarEventsRepository(); //TODO: Get the Events Repository from the Real EventsRepository class
         EpisodeRepository episodesRepository = new MockEpisodesRepository();  //TODO: Get the Episodes Repository from the Real Data source
         HomeViewModelFactory factory = new HomeViewModelFactory(eventsRepository, episodesRepository);
         homeViewModel = new ViewModelProvider(this, factory).get(HomeViewModel.class);
