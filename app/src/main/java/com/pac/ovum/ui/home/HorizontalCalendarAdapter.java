@@ -27,13 +27,15 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCalendarAdapter.HorizontalCalendarViewHolder>{
+public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCalendarAdapter.HorizontalCalendarViewHolder> {
     private final ArrayList<LocalDate> datesList;
     private final AdapterView.OnItemClickListener listener;
     private final Context context;
-    private final  HomeViewModel viewModel;
+    private final HomeViewModel viewModel;
+    private Balloon currentBalloon; // Track current balloon
+    private int selectedPosition = -1; // Track selected position
 
-    public HorizontalCalendarAdapter(ArrayList<LocalDate> datesList, AdapterView.OnItemClickListener listener, Context context, HomeViewModel viewModel){
+    public HorizontalCalendarAdapter(ArrayList<LocalDate> datesList, AdapterView.OnItemClickListener listener, Context context, HomeViewModel viewModel) {
         this.datesList = datesList;
         this.listener = listener;
         this.context = context;
@@ -43,7 +45,6 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     @NonNull
     @Override
     public HorizontalCalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the item layout for each date
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.date_item, parent, false);
         return new HorizontalCalendarViewHolder(view);
     }
@@ -52,10 +53,10 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     @Override
     public void onBindViewHolder(@NonNull HorizontalCalendarViewHolder holder, int position) {
         final LocalDate date = datesList.get(position);
-        if(date != null){
+        if (date != null) {
             updateDateViews(holder, date);
             setDateBackground(holder, date);
-            setupBalloon(holder, position);
+            setupDateClickListener(holder, position, date);
         }
     }
 
@@ -63,6 +64,7 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     public int getItemCount() {
         return datesList.size();
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateDateViews(HorizontalCalendarViewHolder holder, LocalDate date) {
         holder.dayTextView.setText(date.getDayOfWeek().getDisplayName(TextStyle.NARROW, Locale.getDefault()));
@@ -79,49 +81,73 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
         }
     }
 
-    private void setupEventObserver(HorizontalCalendarViewHolder holder, LocalDate date) {
-        // TODO: Logic to observe events for the date
-        // Nested Recycler View Logic Here
-    }
-
-    private void setupBalloon(HorizontalCalendarViewHolder holder, int position) {
-        // Create the balloon using the utility class
-        Balloon balloon = BalloonUtil.createBalloonForHorizontalCalendar(holder.itemView.getContext());
-
-        holder.dateTextView.setOnClickListener(new DoubleClickListener(200) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setupDateClickListener(HorizontalCalendarViewHolder holder, int position, LocalDate date) {
+        holder.itemView.setOnClickListener(new DoubleClickListener(200) {
             @Override
             public void onSingleClick(View v) {
-                listener.onItemClick(null, v, position, 0);
-//                balloon.showAlignBottom(holder.dateTextView);
-//                RecyclerView listOfShortEvents = balloon.getContentView().findViewById(R.id.bubble_recycle_view);
-//                listOfShortEvents.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-//                listOfShortEvents.setAdapter(new BubblesListAdapter(eventsInShort));
-
-                // Set the selected date in the ViewModel
-                viewModel.setSelectedDate(selectedDate);
-
-                // Observe the LiveData for events
-                viewModel.getEventsForSelectedDate().observe((LifecycleOwner) context, events -> {
-                    balloon.showAlignBottom(holder.dateTextView);
-
-                    // Set up RecyclerView for events
-                    RecyclerView listOfShortEvents = balloon.getContentView().findViewById(R.id.bubble_recycle_view);
-                    listOfShortEvents.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-                    listOfShortEvents.setAdapter(new BubblesListAdapter(events));
-                });
+                handleSingleClick(holder, position, date);
             }
 
             @Override
             public void onDoubleClick(View v) {
-                listener.onItemClick(null, v, position, 0);
-                balloon.dismiss();
+                handleDoubleClick(position);
             }
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void handleSingleClick(HorizontalCalendarViewHolder holder, int position, LocalDate date) {
+        // Dismiss previous balloon if exists
+        dismissCurrentBalloon();
+
+        // Update selection
+        int previousSelected = selectedPosition;
+        selectedPosition = position;
+        selectedDate = date;
+        
+        // Notify adapter of changes
+        notifyItemChanged(previousSelected);
+        notifyItemChanged(selectedPosition);
+
+        // Notify listener
+        listener.onItemClick(null, holder.itemView, position, 0);
+
+        // Show balloon with events
+        showBalloonWithEvents(holder, date);
+    }
+
+    private void handleDoubleClick(int position) {
+        dismissCurrentBalloon();
+        listener.onItemClick(null, null, position, 0);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showBalloonWithEvents(HorizontalCalendarViewHolder holder, LocalDate date) {
+        currentBalloon = BalloonUtil.createBalloonForHorizontalCalendar(holder.itemView.getContext());
+        
+        viewModel.setSelectedDate(date);
+        viewModel.getEventsForSelectedDate().observe((LifecycleOwner) context, events -> {
+            if (events != null && !events.isEmpty()) {
+                RecyclerView listOfShortEvents = currentBalloon.getContentView()
+                        .findViewById(R.id.bubble_recycle_view);
+                listOfShortEvents.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+                listOfShortEvents.setAdapter(new BubblesListAdapter(events));
+                currentBalloon.showAlignBottom(holder.dateTextView);
+            }
+        });
+    }
+
+    private void dismissCurrentBalloon() {
+        if (currentBalloon != null && currentBalloon.isShowing()) {
+            currentBalloon.dismiss();
+            currentBalloon = null;
+        }
+    }
+
     static class HorizontalCalendarViewHolder extends RecyclerView.ViewHolder {
         TextView dateTextView;
-        TextView dayTextView;  // day of the week
+        TextView dayTextView;
 
         public HorizontalCalendarViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -130,3 +156,4 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
         }
     }
 }
+

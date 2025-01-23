@@ -10,15 +10,18 @@ import androidx.lifecycle.ViewModel;
 import com.pac.ovum.data.models.CycleData;
 import com.pac.ovum.data.models.CycleSummary;
 import com.pac.ovum.data.repositories.CycleRepository;
+import com.pac.ovum.data.repositories.EpisodeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CyclesViewModel extends ViewModel {
     private final CycleRepository cycleRepository;
+    private final EpisodeRepository episodeRepository;
 
-    public CyclesViewModel(CycleRepository cycleRepository) {
+    public CyclesViewModel(CycleRepository cycleRepository, EpisodeRepository episodeRepository) {
         this.cycleRepository = cycleRepository;
+        this.episodeRepository = episodeRepository;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -30,7 +33,7 @@ public class CyclesViewModel extends ViewModel {
         return Transformations.map(cyclesLiveData, cycles -> {
             List<CycleSummary> summaries = new ArrayList<>();
             for (CycleData cycle : cycles) {
-                summaries.add(new CycleSummary(cycle));
+                summaries.add(new CycleSummary(cycle, episodeRepository.getEpisodesByCycleId(cycle.getCycleId())));
             }
             return summaries;
         });

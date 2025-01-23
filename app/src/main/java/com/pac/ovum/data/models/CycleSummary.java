@@ -3,17 +3,20 @@ package com.pac.ovum.data.models;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.LiveData;
 
 import com.pac.ovum.utils.data.calendarutils.DateUtils;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class CycleSummary extends CycleData {
     private String title;             // Title of the cycle
     private int severityScore;        // Computed severity score
     private int episodesCount;        // Number of episodes (if applicable)
     private int remainingDays;        // Days left in the cycle (if ongoing)
+    private List<Episode> episodes;
 
     private enum Rating {
         FIVE(5f), FOUR(4f), THREE(3f), TWO(2f);
@@ -31,7 +34,7 @@ public class CycleSummary extends CycleData {
 
     // Constructor for adding summary-specific fields
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public CycleSummary(CycleData cycleData) {
+    public CycleSummary(CycleData cycleData, LiveData<List<Episode>> episodes) {
         // Copy all CycleData fields
         this.setCycleId(cycleData.getCycleId());
         this.setUserId(cycleData.getUserId());
@@ -49,6 +52,7 @@ public class CycleSummary extends CycleData {
         this.severityScore = computeSeverity();
         this.episodesCount = computeEpisodes();
         this.remainingDays = computeRemainingDays();
+        this.episodes = (List<Episode>) episodes;
     }
 
     // Custom methods for computed fields
@@ -82,7 +86,10 @@ public class CycleSummary extends CycleData {
 
     private int computeEpisodes() {
         // Placeholder for episodes computation (if applicable)
-        return 0; // Replace with actual logic
+        // The number of symptoms logged from the Start of the cycle to the end of the cycle.
+        // This can be got by looking up from the database for the resultSet size of the episodes from getCycleStartDate() to getCycleEndDate()
+        // alternatively since the cycleId is the foreign key in the Episodes Entity: just return the number of episodes with the this cycleId
+        return !episodes.isEmpty() ? episodes.size() : 0 ; // return 0 if the episodes cycle is empty
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
