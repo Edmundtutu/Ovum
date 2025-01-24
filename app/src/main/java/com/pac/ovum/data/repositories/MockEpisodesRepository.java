@@ -5,16 +5,21 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
 import com.pac.ovum.data.models.Episode;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MockEpisodesRepository extends EpisodeRepository {
     private final MutableLiveData<List<Episode>> episodes = new MutableLiveData<>();
+    
     public MockEpisodesRepository() {
         super(null);
         loadData();
@@ -69,5 +74,23 @@ public class MockEpisodesRepository extends EpisodeRepository {
     @Override
     public LiveData<List<Episode>> getEpisodesByCycleId(int cycleId) {
         return episodes;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public LiveData<Map<LocalDate, Integer>> getEpisodesCountBetweenLive(LocalDate start, LocalDate end) {
+        return Transformations.map(episodes, episodeList -> {
+            Map<LocalDate, Integer> countMap = new HashMap<>();
+            if (episodeList != null) {
+                // Group episodes by date and count them
+                Map<LocalDate, List<Episode>> groupedByDate = episodeList.stream()
+                    .filter(episode -> !episode.getDate().isBefore(start) && !episode.getDate().isAfter(end))
+                    .collect(Collectors.groupingBy(Episode::getDate));
+                
+                // Convert to count map
+                groupedByDate.forEach((date, episodes) -> countMap.put(date, episodes.size()));
+            }
+            return countMap;
+        });
     }
 }

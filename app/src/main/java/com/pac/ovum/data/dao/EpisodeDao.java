@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import com.pac.ovum.data.models.Episode;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Dao
@@ -26,9 +27,17 @@ public interface EpisodeDao {
     @Query("SELECT * FROM Episode WHERE symptomType = :symptomType AND cycleId = :cycleId")
     LiveData<List<Episode>> getEpisodesBySymptomTypeAndCycle(String symptomType, int cycleId);
 
+    @Query("SELECT date as episodeDate, COUNT(*) as count FROM Episode WHERE date BETWEEN :start AND :end GROUP BY date")
+    LiveData<List<EpisodeCount>> getEpisodesCountBetweenLive(LocalDate start, LocalDate end);
+
     @Update
     void updateEpisode(Episode episode);
 
     @Delete
     void deleteEpisode(Episode episode);
+
+    class EpisodeCount {
+        public LocalDate episodeDate;
+        public int count;
+    }
 }

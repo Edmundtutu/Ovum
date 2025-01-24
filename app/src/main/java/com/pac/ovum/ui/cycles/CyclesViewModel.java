@@ -11,9 +11,12 @@ import com.pac.ovum.data.models.CycleData;
 import com.pac.ovum.data.models.CycleSummary;
 import com.pac.ovum.data.repositories.CycleRepository;
 import com.pac.ovum.data.repositories.EpisodeRepository;
+import com.pac.ovum.utils.ui.LiveDataUtil;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class CyclesViewModel extends ViewModel {
     private final CycleRepository cycleRepository;
@@ -29,13 +32,24 @@ public class CyclesViewModel extends ViewModel {
         // Fetch CycleData from the repository
         LiveData<List<CycleData>> cyclesLiveData = cycleRepository.getCyclesByUserId(userId);
 
-        // Map CycleData to CycleSummary using Transformations.map
-        return Transformations.map(cyclesLiveData, cycles -> {
-            List<CycleSummary> summaries = new ArrayList<>();
+        // Transform CycleData into CycleSummary with live episode data
+        return Transformations.switchMap(cyclesLiveData, cycles -> {
+            List<LiveData<CycleSummary>> summaryLiveDataList = new ArrayList<>();
+
             for (CycleData cycle : cycles) {
-                summaries.add(new CycleSummary(cycle, episodeRepository.getEpisodesByCycleId(cycle.getCycleId())));
+                LiveData<Map<LocalDate, Integer>> episodesLiveData =
+                        episodeRepository.getEpisodesCountBetweenLive(cycle.getStartDate(), cycle.getEndDate());
+
+                // Transform episode data into CycleSummary
+                LiveData<CycleSummary> summaryLiveData = Transformations.map(episodesLiveData, episodeCounts ->
+                        new CycleSummary(cycle, episodeCounts)
+                );
+
+                summaryLiveDataList.add(summaryLiveData);
             }
-            return summaries;
+
+            // Merge all LiveData into one list
+            return LiveDataUtil.combineLatest(summaryLiveDataList);
         });
     }
 }
