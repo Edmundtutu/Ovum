@@ -2,6 +2,7 @@ package com.pac.ovum.ui.home;
 
 import static com.pac.ovum.utils.data.calendarutils.HorizontalCalendarUtils.selectedDate;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     private final AdapterView.OnItemClickListener listener;
     private final Context context;
     private final HomeViewModel viewModel;
+    private Boolean hasEvent = false;
     private Balloon currentBalloon; // Track current balloon
     private int selectedPosition = -1; // Track selected position
 
@@ -71,6 +73,7 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
         holder.dateTextView.setText(String.valueOf(date.getDayOfMonth()));
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void setDateBackground(HorizontalCalendarViewHolder holder, LocalDate date) {
         // TODO:  Logic to set background based on due dates and events
         //  Use helper methods to reduce redundancy
@@ -78,6 +81,10 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
             holder.dayTextView.setTextAppearance(R.style.HorizontalCalendar_Text_SelectedDayOfWeek);
             holder.dateTextView.setBackground(holder.dateTextView.getContext().getDrawable(R.drawable.circle_background_horizontal_cal));
             holder.dateTextView.setTextAppearance(R.style.HorizontalCalendar_Text_SelectedDayOfMonth);
+        }
+
+        if(hasEvent){
+            holder.dateTextView.setBackground(holder.dateTextView.getContext().getDrawable(R.drawable.event_background));
         }
     }
 
@@ -129,11 +136,16 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
         viewModel.setSelectedDate(date);
         viewModel.getEventsForSelectedDate().observe((LifecycleOwner) context, events -> {
             if (events != null && !events.isEmpty()) {
+                // flag the date with color by assigning the hasEvent to true
+                hasEvent = !hasEvent? true: true;
+
                 RecyclerView listOfShortEvents = currentBalloon.getContentView()
                         .findViewById(R.id.bubble_recycle_view);
                 listOfShortEvents.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
                 listOfShortEvents.setAdapter(new BubblesListAdapter(events));
                 currentBalloon.showAlignBottom(holder.dateTextView);
+            }else {
+                hasEvent = false;
             }
         });
     }
