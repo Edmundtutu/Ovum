@@ -1,5 +1,7 @@
 package com.pac.ovum.data.repositories;
 
+import android.os.Build;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 
 import com.pac.ovum.data.dao.EventDao;
@@ -42,5 +44,10 @@ public class EventRepository {
 
     public LiveData<List<Event>> getEventsForDate(LocalDate date) {
         return eventDao.getEventsForDate(date);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public LiveData<List<Event>> getEventsForDateRange(LocalDate startDate, LocalDate endDate) {
+        return eventDao.getEventsForDateRange(startDate, endDate);
     }
 }

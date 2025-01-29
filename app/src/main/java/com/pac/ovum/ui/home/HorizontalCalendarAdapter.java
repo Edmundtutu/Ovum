@@ -5,6 +5,7 @@ import static com.pac.ovum.utils.data.calendarutils.HorizontalCalendarUtils.sele
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
 
 import com.pac.ovum.R;
 import com.pac.ovum.utils.ui.BalloonUtil;
@@ -30,14 +33,17 @@ import java.util.Locale;
 
 public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCalendarAdapter.HorizontalCalendarViewHolder> {
     private final ArrayList<LocalDate> datesList;
-    private final AdapterView.OnItemClickListener listener;
+    private final OnDateSelectedListener listener;
     private final Context context;
     private final HomeViewModel viewModel;
-    private Boolean hasEvent = false;
-    private Balloon currentBalloon; // Track current balloon
+    private Balloon currentBalloon;
     private int selectedPosition = -1; // Track selected position
 
-    public HorizontalCalendarAdapter(ArrayList<LocalDate> datesList, AdapterView.OnItemClickListener listener, Context context, HomeViewModel viewModel) {
+    public interface OnDateSelectedListener {
+        void onDateSelected(LocalDate date);
+    }
+
+    public HorizontalCalendarAdapter(ArrayList<LocalDate> datesList, OnDateSelectedListener listener, Context context, HomeViewModel viewModel) {
         this.datesList = datesList;
         this.listener = listener;
         this.context = context;
@@ -54,12 +60,62 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull HorizontalCalendarViewHolder holder, int position) {
-        final LocalDate date = datesList.get(position);
+        LocalDate date = datesList.get(position);
         if (date != null) {
-            updateDateViews(holder, date);
-            setDateBackground(holder, date);
-            setupDateClickListener(holder, position, date);
+            holder.dayTextView.setText(date.getDayOfWeek().getDisplayName(TextStyle.NARROW, Locale.getDefault()));
+            holder.dateTextView.setText(String.valueOf(date.getDayOfMonth()));
+            
+            // Update background based on selection and events
+            updateDateItemBackground(holder, date, position);
+            
+            holder.itemView.setOnClickListener(new DoubleClickListener(200) {
+                @Override
+                public void onSingleClick(View v) {
+                    int previousSelected = selectedPosition;
+                    selectedPosition = position;
+                    notifyItemChanged(previousSelected);
+                    notifyItemChanged(selectedPosition);
+                    handleSingleClick(holder, date);
+                }
+
+                @Override
+                public void onDoubleClick(View v) {
+                    // Handle double click if needed
+                }
+            });
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateDateItemBackground(HorizontalCalendarViewHolder holder, LocalDate date, int position) {
+        // Check if this date has events
+        viewModel.getEventsForSelectedDate().observe((LifecycleOwner) context, events -> {
+            boolean hasEvents = events != null && !events.isEmpty();
+            
+            if (position == selectedPosition || date.equals(selectedDate)) {
+                // Selected date background
+                holder.dateTextView.setBackground(
+                    ContextCompat.getDrawable(context, R.drawable.selected_background)
+                );
+                holder.dayTextView.setTextColor(
+                    ContextCompat.getColor(context, android.R.color.black)
+                );
+            } else if (hasEvents) {
+                // Date with events background
+                holder.dateTextView.setBackground(
+                    ContextCompat.getDrawable(context, R.drawable.event_background)
+                );
+                holder.dayTextView.setTextColor(
+                    ContextCompat.getColor(context, R.color.green_50)
+                );
+            } else {
+                // Default background
+                holder.dateTextView.setBackground(null);
+                holder.dayTextView.setTextColor(
+                    ContextCompat.getColor(context, android.R.color.darker_gray)
+                );
+            }
+        });
     }
 
     @Override
@@ -68,92 +124,92 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void updateDateViews(HorizontalCalendarViewHolder holder, LocalDate date) {
-        holder.dayTextView.setText(date.getDayOfWeek().getDisplayName(TextStyle.NARROW, Locale.getDefault()));
-        holder.dateTextView.setText(String.valueOf(date.getDayOfMonth()));
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void setDateBackground(HorizontalCalendarViewHolder holder, LocalDate date) {
-        // TODO:  Logic to set background based on due dates and events
-        //  Use helper methods to reduce redundancy
-        if(date.equals(selectedDate)){
-            holder.dayTextView.setTextAppearance(R.style.HorizontalCalendar_Text_SelectedDayOfWeek);
-            holder.dateTextView.setBackground(holder.dateTextView.getContext().getDrawable(R.drawable.circle_background_horizontal_cal));
-            holder.dateTextView.setTextAppearance(R.style.HorizontalCalendar_Text_SelectedDayOfMonth);
-        }
-
-        if(hasEvent){
-            holder.dateTextView.setBackground(holder.dateTextView.getContext().getDrawable(R.drawable.event_background));
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void setupDateClickListener(HorizontalCalendarViewHolder holder, int position, LocalDate date) {
-        holder.itemView.setOnClickListener(new DoubleClickListener(200) {
-            @Override
-            public void onSingleClick(View v) {
-                handleSingleClick(holder, position, date);
-            }
-
-            @Override
-            public void onDoubleClick(View v) {
-                handleDoubleClick(position);
-            }
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void handleSingleClick(HorizontalCalendarViewHolder holder, int position, LocalDate date) {
-        // Dismiss previous balloon if exists
+    private void handleSingleClick(HorizontalCalendarViewHolder holder, LocalDate date) {
         dismissCurrentBalloon();
-
-        // Update selection
-        int previousSelected = selectedPosition;
-        selectedPosition = position;
         selectedDate = date;
-        
-        // Notify adapter of changes
-        notifyItemChanged(previousSelected);
-        notifyItemChanged(selectedPosition);
-
-        // Notify listener
-        listener.onItemClick(null, holder.itemView, position, 0);
-
-        // Show balloon with events
+        listener.onDateSelected(date);
         showBalloonWithEvents(holder, date);
-    }
-
-    private void handleDoubleClick(int position) {
-        dismissCurrentBalloon();
-        listener.onItemClick(null, null, position, 0);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showBalloonWithEvents(HorizontalCalendarViewHolder holder, LocalDate date) {
-        currentBalloon = BalloonUtil.createBalloonForHorizontalCalendar(holder.itemView.getContext());
+        Log.d("HorizontalCalendarAdapter", "Attempting to show balloon for date: " + date);
         
-        viewModel.setSelectedDate(date);
-        viewModel.getEventsForSelectedDate().observe((LifecycleOwner) context, events -> {
-            if (events != null && !events.isEmpty()) {
-                // flag the date with color by assigning the hasEvent to true
-                hasEvent = !hasEvent? true: true;
+        // Check if context is valid and activity is not finishing
+        if (context == null || !(context instanceof FragmentActivity) || 
+            ((FragmentActivity) context).isFinishing() || 
+            ((FragmentActivity) context).isDestroyed()) {
+            Log.d("HorizontalCalendarAdapter", "Context is invalid or activity is finishing/destroyed");
+            return;
+        }
 
-                RecyclerView listOfShortEvents = currentBalloon.getContentView()
-                        .findViewById(R.id.bubble_recycle_view);
-                listOfShortEvents.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-                listOfShortEvents.setAdapter(new BubblesListAdapter(events));
-                currentBalloon.showAlignBottom(holder.dateTextView);
-            }else {
-                hasEvent = false;
-            }
-        });
+        try {
+            currentBalloon = BalloonUtil.createBalloonForHorizontalCalendar(holder.itemView.getContext());
+            Log.d("HorizontalCalendarAdapter", "Balloon created");
+            
+            viewModel.setSelectedDate(date);
+            viewModel.getEventsForSelectedDate().observe((LifecycleOwner) context, events -> {
+                // Check again if context is still valid before showing balloon
+                if (context == null || !(context instanceof FragmentActivity) || 
+                    ((FragmentActivity) context).isFinishing() || 
+                    ((FragmentActivity) context).isDestroyed() || 
+                    currentBalloon == null) {
+                    Log.d("HorizontalCalendarAdapter", "Context became invalid while loading events");
+                    return;
+                }
+
+                if (events != null && !events.isEmpty()) {
+                    try {
+                        RecyclerView listOfShortEvents = currentBalloon.getContentView()
+                                .findViewById(R.id.bubble_recycle_view);
+                        listOfShortEvents.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+                        listOfShortEvents.setAdapter(new BubblesListAdapter(events));
+                        
+                        // Check view validity before showing balloon
+                        if (holder.dateTextView.getWindowToken() != null) {
+                            currentBalloon.showAlignBottom(holder.dateTextView);
+                            Log.d("HorizontalCalendarAdapter", "Balloon shown for date: " + date);
+                        } else {
+                            Log.d("HorizontalCalendarAdapter", "View is no longer valid");
+                        }
+                    } catch (Exception e) {
+                        Log.e("HorizontalCalendarAdapter", "Error showing balloon", e);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e("HorizontalCalendarAdapter", "Error creating balloon", e);
+        }
     }
 
-    private void dismissCurrentBalloon() {
-        if (currentBalloon != null && currentBalloon.isShowing()) {
-            currentBalloon.dismiss();
+    public void dismissCurrentBalloon() {
+        try {
+            if (currentBalloon != null && currentBalloon.isShowing()) {
+                currentBalloon.dismiss();
+                Log.d("HorizontalCalendarAdapter", "Balloon dismissed");
+            }
+        } catch (Exception e) {
+            Log.e("HorizontalCalendarAdapter", "Error dismissing balloon", e);
+        } finally {
             currentBalloon = null;
+        }
+    }
+
+    // Add method to cleanup resources
+    public void cleanup() {
+        dismissCurrentBalloon();
+        if (context instanceof LifecycleOwner) {
+            viewModel.getEventsForSelectedDate().removeObservers((LifecycleOwner) context);
+        }
+    }
+
+    // Add method to set initial selected date
+    public void setSelectedDate(LocalDate date) {
+        int position = datesList.indexOf(date);
+        if (position != -1) {
+            selectedPosition = position;
+            selectedDate = date;
+            notifyDataSetChanged();
         }
     }
 
