@@ -2,25 +2,24 @@ package com.pac.ovum.ui.home;
 
 import static com.pac.ovum.utils.data.calendarutils.HorizontalCalendarUtils.selectedDate;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.core.content.ContextCompat;
 
 import com.pac.ovum.R;
+import com.pac.ovum.data.models.Event;
 import com.pac.ovum.utils.ui.BalloonUtil;
 import com.pac.ovum.utils.ui.BubblesListAdapter;
 import com.pac.ovum.utils.ui.DoubleClickListener;
@@ -29,7 +28,10 @@ import com.skydoves.balloon.Balloon;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCalendarAdapter.HorizontalCalendarViewHolder> {
     private final ArrayList<LocalDate> datesList;
@@ -37,7 +39,8 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     private final Context context;
     private final HomeViewModel viewModel;
     private Balloon currentBalloon;
-    private int selectedPosition = -1; // Track selected position
+    private int selectedPosition = -1;
+    private Map<LocalDate, Boolean> dateHasEvents = new HashMap<>(); // Cache for dates with events
 
     public interface OnDateSelectedListener {
         void onDateSelected(LocalDate date);
@@ -88,34 +91,31 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateDateItemBackground(HorizontalCalendarViewHolder holder, LocalDate date, int position) {
-        // Check if this date has events
-        viewModel.getEventsForSelectedDate().observe((LifecycleOwner) context, events -> {
-            boolean hasEvents = events != null && !events.isEmpty();
-            
-            if (position == selectedPosition || date.equals(selectedDate)) {
-                // Selected date background
-                holder.dateTextView.setBackground(
-                    ContextCompat.getDrawable(context, R.drawable.selected_background)
-                );
-                holder.dayTextView.setTextColor(
-                    ContextCompat.getColor(context, android.R.color.black)
-                );
-            } else if (hasEvents) {
-                // Date with events background
-                holder.dateTextView.setBackground(
-                    ContextCompat.getDrawable(context, R.drawable.event_background)
-                );
-                holder.dayTextView.setTextColor(
-                    ContextCompat.getColor(context, R.color.green_50)
-                );
-            } else {
-                // Default background
-                holder.dateTextView.setBackground(null);
-                holder.dayTextView.setTextColor(
-                    ContextCompat.getColor(context, android.R.color.darker_gray)
-                );
-            }
-        });
+        boolean hasEvents = dateHasEvents.containsKey(date);
+        
+        if (position == selectedPosition || date.equals(selectedDate)) {
+            // Selected date background
+            holder.dateTextView.setBackground(
+                ContextCompat.getDrawable(context, R.drawable.selected_background)
+            );
+            holder.dayTextView.setTextColor(
+                ContextCompat.getColor(context, android.R.color.black)
+            );
+        } else if (hasEvents) {
+            // Date with events background
+            holder.dateTextView.setBackground(
+                ContextCompat.getDrawable(context, R.drawable.event_background)
+            );
+            holder.dayTextView.setTextColor(
+                ContextCompat.getColor(context, R.color.green_50)
+            );
+        } else {
+            // Default background
+            holder.dateTextView.setBackground(null);
+            holder.dayTextView.setTextColor(
+                ContextCompat.getColor(context, android.R.color.darker_gray)
+            );
+        }
     }
 
     @Override
@@ -211,6 +211,20 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
             selectedDate = date;
             notifyDataSetChanged();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void setEvents(List<Event> events) {
+        // Clear previous cache
+        dateHasEvents.clear();
+        
+        // Cache which dates have events
+        if (events != null) {
+            for (Event event : events) {
+                dateHasEvents.put(event.getEventDate(), true);
+            }
+        }
+        notifyDataSetChanged();
     }
 
     static class HorizontalCalendarViewHolder extends RecyclerView.ViewHolder {

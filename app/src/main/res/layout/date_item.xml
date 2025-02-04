@@ -3,39 +3,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parentView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="48dp"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="1dp">
 
     <TextView
         android:id="@+id/day_text"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="M"
-        android:textSize="@dimen/horizontalCalendarTextSize"
+        android:textSize="12sp"
         android:textColor="@color/black_50"
-        app:layout_constraintDimensionRatio="1:0.4"
-        app:layout_constraintWidth_percent="0.25"
-        app:layout_constraintHeight_percent="0.4"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/date_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/date_text"
         style="@style/HorizontalCalendar.Text.DeselectedDayOfMonth"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:background="@drawable/horizontal_background_default"
         android:gravity="center"
         android:text="1"
-        android:textSize="16sp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintWidth_percent="0.25"
-        app:layout_constraintHeight_percent="0.6"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="14sp"
+        android:maxLines="1"
         app:layout_constraintTop_toBottomOf="@+id/day_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
