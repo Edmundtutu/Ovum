@@ -42,6 +42,9 @@ android {
 dependencies {
     implementation(libs.fragment.testing)
     implementation(libs.activity)
+//    implementation(libs.legacy.support.v4)
+//    implementation(libs.lifecycle.livedata.ktx)
+//    implementation(libs.lifecycle.viewmodel.ktx)
     androidTestImplementation(project(":app"))
     androidTestImplementation(project(":app"))
     val room_version = "2.6.1"

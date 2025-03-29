@@ -18,6 +18,7 @@
     <color name="deep_pink">#FF1493</color>
     <color name="light_pink">#FFB6C1</color>
     <color name="medium_pink">#FFC0CB</color>
+    <color name="bg_pinch">#FAFFC0CB</color>
     <color name="bg_pink">#e4c9e5</color>
     <color name="gray">#8f8e8e</color>
     <color name="logo_color">#fdc0e5</color>

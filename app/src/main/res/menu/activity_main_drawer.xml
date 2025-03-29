@@ -16,6 +16,10 @@
             android:id="@+id/nav_cycles"
             android:icon="@drawable/baseline_dialpad_24"
             android:title="@string/menu_cycles" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/ic_chat"
+            android:title="@string/chat_bot" />
     </group>
     <item
         android:title="@string/account_details"

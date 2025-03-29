@@ -22,4 +22,9 @@
         android:name="com.pac.ovum.ui.cycles.CyclesFragment"
         android:label="@string/menu_cycles"
         tools:layout="@layout/fragment_cycles" />
+    <fragment
+        android:id="@+id/nav_chat"
+        android:name="com.pac.ovum.ui.chatbot.ChatBotFragment"
+        android:label="@string/chat_bot"
+        tools:layout="@layout/fragment_chat_bot" />
 </navigation>

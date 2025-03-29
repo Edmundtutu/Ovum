@@ -44,4 +44,6 @@
     <string name="search">Search</string>
     <string name="logout">Logout</string>
     <string name="add_symptoms_button">Add more of what you feel today</string>
+    <string name="chat_bot_question">Hello! How can I help you today?</string>
+    <string name="chat_bot">Assistant</string>
 </resources>
