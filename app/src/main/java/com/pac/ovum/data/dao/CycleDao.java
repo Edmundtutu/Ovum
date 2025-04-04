@@ -15,13 +15,19 @@ import java.util.List;
 @Dao
 public interface CycleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertCycle(CycleData cycleData);
+    long insertCycle(CycleData cycleData);
 
     @Query("SELECT * FROM CycleData WHERE userId = :userId")
     LiveData<List<CycleData>> getCyclesByUserId(int userId);
 
+    @Query("SELECT * FROM CycleData WHERE userId = :userId")
+    List<CycleData> getCyclesByUserIdSync(int userId);
+
     @Query("SELECT * FROM CycleData WHERE cycleId = :cycleId")
     LiveData<CycleData> getCycleById(int cycleId);
+
+    @Query("SELECT * FROM CycleData WHERE cycleId = :cycleId")
+    CycleData getCycleByIdSync(int cycleId);
 
     @Query("SELECT * FROM CycleData WHERE userId = :userId AND isOngoing = 1")
     LiveData<CycleData> getOngoingCycleByUserId(int userId);

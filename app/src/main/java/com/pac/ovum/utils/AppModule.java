@@ -57,7 +57,8 @@ public class AppModule {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static CycleRepository provideCycleRepository(Context context) {
-        return new CycleRepository(provideAppDatabase(context).cycleDao());
+        AppDatabase db = provideAppDatabase(context);
+        return new CycleRepository(db.cycleDao(), db.episodeDao());
     }
 
     /**

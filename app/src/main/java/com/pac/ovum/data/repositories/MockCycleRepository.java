@@ -17,7 +17,7 @@ public class MockCycleRepository extends CycleRepository {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public MockCycleRepository() {
-        super(null);
+        super(null,null);
         // Simulate data loading on the main thread
         loadData(); 
     }

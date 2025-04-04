@@ -16,19 +16,31 @@ import java.util.List;
 @Dao
 public interface EpisodeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertEpisode(Episode episode);
+    long insertEpisode(Episode episode);
 
     @Query("SELECT * FROM Episode WHERE cycleId = :cycleId")
     LiveData<List<Episode>> getEpisodesByCycleId(int cycleId);
+    
+    @Query("SELECT * FROM Episode WHERE cycleId = :cycleId")
+    List<Episode> getEpisodesByCycleIdSync(int cycleId);
 
     @Query("SELECT * FROM Episode WHERE episodeId = :episodeId")
     LiveData<Episode> getEpisodeById(int episodeId);
+    
+    @Query("SELECT * FROM Episode WHERE episodeId = :episodeId")
+    Episode getEpisodeByIdSync(int episodeId);
 
     @Query("SELECT * FROM Episode WHERE symptomType = :symptomType AND cycleId = :cycleId")
     LiveData<List<Episode>> getEpisodesBySymptomTypeAndCycle(String symptomType, int cycleId);
+    
+    @Query("SELECT * FROM Episode WHERE symptomType = :symptomType AND cycleId = :cycleId")
+    List<Episode> getEpisodesBySymptomTypeAndCycleSync(String symptomType, int cycleId);
 
     @Query("SELECT date as episodeDate, COUNT(*) as count FROM Episode WHERE date BETWEEN :start AND :end GROUP BY date")
     LiveData<List<EpisodeCount>> getEpisodesCountBetweenLive(LocalDate start, LocalDate end);
+    
+    @Query("SELECT date as episodeDate, COUNT(*) as count FROM Episode WHERE date BETWEEN :start AND :end GROUP BY date")
+    List<EpisodeCount> getEpisodesCountBetweenSync(LocalDate start, LocalDate end);
 
     @Update
     void updateEpisode(Episode episode);

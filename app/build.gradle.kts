@@ -42,12 +42,15 @@ android {
 dependencies {
     implementation(libs.fragment.testing)
     implementation(libs.activity)
+    implementation(libs.swiperefreshlayout)
 //    implementation(libs.legacy.support.v4)
 //    implementation(libs.lifecycle.livedata.ktx)
 //    implementation(libs.lifecycle.viewmodel.ktx)
     androidTestImplementation(project(":app"))
     androidTestImplementation(project(":app"))
     val room_version = "2.6.1"
+    val retrofit_version = "2.9.0"
+    val okhttp_version = "4.11.0"
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -64,6 +67,12 @@ dependencies {
     // RxJava (for reactive programming)
     implementation ("io.reactivex.rxjava3:rxjava:3.0.0")
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.0")
+
+    // Retrofit for API calls
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
+    implementation("com.squareup.okhttp3:okhttp:$okhttp_version")
+    implementation("com.squareup.okhttp3:logging-interceptor:$okhttp_version")
 
     // Compact Calendar View
     implementation("com.github.sundeepk:compact-calendar-view:3.0.0") {

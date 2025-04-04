@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -28,6 +30,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
+import com.google.android.material.snackbar.Snackbar;
 import com.pac.ovum.R;
 import com.pac.ovum.data.models.CycleSummary;
 import com.pac.ovum.data.repositories.CycleRepository;
@@ -47,6 +50,7 @@ public class CyclesFragment extends Fragment {
     private CyclesAdapter cyclesAdapter;
     private LineChart lineChart;
     private NestedScrollView scrollView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,7 +61,15 @@ public class CyclesFragment extends Fragment {
         // Initialize the repository and ViewModel
         CycleRepository cycleRepository = AppModule.provideCycleRepository(getContext());
         EpisodeRepository episodeRepository = AppModule.provideEpisodeRepository(getContext());
-        cyclesViewModel = new ViewModelProvider(this, new CyclesViewModelFactory(new MockCycleRepository(), new MockEpisodesRepository())).get(CyclesViewModel.class);
+        cyclesViewModel = new ViewModelProvider(this, new CyclesViewModelFactory(cycleRepository, episodeRepository)).get(CyclesViewModel.class);
+
+        // Initialize SwipeRefreshLayout
+        swipeRefreshLayout = binding.swipeRefresh;
+        swipeRefreshLayout.setOnRefreshListener(() -> syncDataFromApi());
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.purple_500,
+                R.color.teal_200,
+                R.color.purple_700);
 
         // Initialize LineChart and ScrollView
         lineChart = binding.chart;
@@ -67,6 +79,12 @@ public class CyclesFragment extends Fragment {
         // Set up RecyclerView
         RecyclerView recyclerView = binding.cardRecyleView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Set up sync button
+        binding.syncButton.setOnClickListener(v -> syncDataToApi());
+
+        // Observe sync status
+        observeSyncStatus();
 
         // Observe the LiveData from the ViewModel
         cyclesViewModel.getCycleSummaries(getCurrentUserId()).observe(getViewLifecycleOwner(), cycleSummaries -> {
@@ -96,6 +114,53 @@ public class CyclesFragment extends Fragment {
         });
 
         return root;
+    }
+
+    /**
+     * Observe sync status from ViewModel
+     */
+    private void observeSyncStatus() {
+        // Observe syncing status
+        cyclesViewModel.getIsSyncing().observe(getViewLifecycleOwner(), isSyncing -> {
+            swipeRefreshLayout.setRefreshing(isSyncing);
+            binding.syncButton.setEnabled(!isSyncing);
+            
+            if (isSyncing) {
+                binding.syncButton.setText(R.string.syncing);
+            } else {
+                binding.syncButton.setText(R.string.sync_to_server);
+            }
+        });
+        
+        // Observe sync errors
+        cyclesViewModel.getSyncError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty()) {
+                Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_LONG)
+                        .setAction("Dismiss", v -> {})
+                        .show();
+            }
+        });
+        
+        // Observe sync success
+        cyclesViewModel.getSyncSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success != null && success) {
+                Toast.makeText(getContext(), "Sync completed successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    
+    /**
+     * Sync data from API to local database (pull)
+     */
+    private void syncDataFromApi() {
+        cyclesViewModel.syncFromApi(getCurrentUserId());
+    }
+    
+    /**
+     * Sync data from local database to API (push)
+     */
+    private void syncDataToApi() {
+        cyclesViewModel.syncToApi(getCurrentUserId());
     }
 
     private void setupChart() {
