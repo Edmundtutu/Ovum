@@ -15,6 +15,7 @@ import retrofit2.http.Query;
 
 /**
  * Retrofit API service interface for gynecological events operations
+ * These are majorly going to be appointments with the doctor since the other gyn events do not really involve the Doctor.
  */
 public interface EventApiService {
     
@@ -23,28 +24,23 @@ public interface EventApiService {
      * @param userId User ID
      * @return List of events data
      */
-    @GET("events")
+    @GET("appointments")
     Call<List<EventData>> getAllEvents(@Query("userId") int userId);
     
     /**
      * Get events by date range
-     * @param userId User ID
-     * @param startDate Start date in format "yyyy-MM-dd"
-     * @param endDate End date in format "yyyy-MM-dd"
-     * @return List of events in the date range
+     * @param dateRange like "2023-10-01,2023-10-31"
+     * @return List of appointments in the date range
      */
-    @GET("events/range")
-    Call<List<EventData>> getEventsByDateRange(
-            @Query("userId") int userId,
-            @Query("startDate") String startDate,
-            @Query("endDate") String endDate);
+    @GET("appointments")
+    Call<List<EventData>> getEventsByDateRange(@Query("appointment_date[within]") String dateRange);
     
     /**
      * Get events by cycle ID
      * @param cycleId Cycle ID
      * @return List of events for the cycle
      */
-    @GET("events/cycle/{cycleId}")
+    @GET("appointments/cycle/{cycleId}") // Not yet Implemented in the REST Api
     Call<List<EventData>> getEventsByCycleId(@Path("cycleId") int cycleId);
     
     /**
@@ -52,7 +48,7 @@ public interface EventApiService {
      * @param id Event ID
      * @return Event data
      */
-    @GET("events/{id}")
+    @GET("appointments/{id}")
     Call<EventData> getEventById(@Path("id") int id);
     
     /**
@@ -60,7 +56,7 @@ public interface EventApiService {
      * @param eventData Event data
      * @return Added event data
      */
-    @POST("events")
+    @POST("appointments")
     Call<EventData> addEvent(@Body EventData eventData);
     
     /**
@@ -69,7 +65,7 @@ public interface EventApiService {
      * @param eventData Updated event data
      * @return Updated event data
      */
-    @PUT("events/{id}")
+    @PUT("appointments/{id}")
     Call<EventData> updateEvent(@Path("id") int id, @Body EventData eventData);
     
     /**
@@ -77,7 +73,7 @@ public interface EventApiService {
      * @param id Event ID
      * @return Success message
      */
-    @DELETE("events/{id}")
+    @DELETE("appointments/{id}/cancel")
     Call<Void> deleteEvent(@Path("id") int id);
     
     /**
@@ -86,7 +82,7 @@ public interface EventApiService {
      * @param eventDataList List of events to sync
      * @return Synced events data
      */
-    @POST("events/sync")
+    @POST("appointments/sync") // Not yet Implemented in the REST Api
     Call<List<EventData>> syncEvents(@Query("userId") int userId,
                                      @Body List<EventData> eventDataList);
 } 

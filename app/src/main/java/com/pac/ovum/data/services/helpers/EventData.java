@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * EventData data model for API communication.
- * This model represents event data for gynecological events, for example doctor visits,
+ * This model represents event data particulary the appointments made by the doctor
+ * and other gyn data from the central db for gynecological events, for example doctor visits,
  * medication events, and other events that correlate with menstrual cycle.
  */
 public class EventData {

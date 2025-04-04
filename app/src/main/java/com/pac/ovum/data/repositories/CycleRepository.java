@@ -1,5 +1,8 @@
 package com.pac.ovum.data.repositories;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -76,6 +79,7 @@ public class CycleRepository {
      * @param userId User ID
      * @return LiveData containing success status
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public LiveData<Boolean> syncCyclesFromApi(int userId) {
         MediatorLiveData<Boolean> result = new MediatorLiveData<>();
         isSyncing.setValue(true);
@@ -131,6 +135,7 @@ public class CycleRepository {
      * @param userId User ID
      * @return LiveData containing success status
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public LiveData<Boolean> syncCyclesToApi(int userId) {
         MediatorLiveData<Boolean> result = new MediatorLiveData<>();
         isSyncing.setValue(true);
@@ -195,6 +200,7 @@ public class CycleRepository {
      * @param episodes Episodes for this cycle
      * @return LiveData containing success status
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public LiveData<Boolean> addCycleWithSync(CycleData cycleData, List<Episode> episodes) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         

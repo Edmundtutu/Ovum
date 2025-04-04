@@ -3,9 +3,6 @@ package com.pac.ovum.data.services.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -16,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitClient {
     // Base URL for development environment, can be easily changed for production
-    private static final String BASE_URL = "http://127.0.0.1:8000/ovum/api/";
+    private static final String BASE_URL = "https://d697-154-72-203-214.ngrok-free.app/api/";
     private static RetrofitClient instance;
     private final Retrofit retrofit;
 
@@ -31,9 +28,11 @@ public class RetrofitClient {
                 .addInterceptor(chain -> {
                     // Add authentication header - for future implementation
                     // This would use a token manager or shared preferences to get the token
-                    // String token = TokenManager.getInstance().getToken();
+//                     String token = TokenManager.getInstance().getToken(); //TODO: To create a Token Manager class for single source of truth tokens
+                    // for now lets just provide the Token  the simple way
+                    String token = "2|BkcO1xqx2dyoCOHILZCEadmepppHWolsgw9J0zCm8ca965cf";
                     return chain.proceed(chain.request().newBuilder()
-                            // .header("Authorization", "Bearer " + token)
+                             .header("Authorization", "Bearer " + token)
                             .build());
                 })
                 .build();

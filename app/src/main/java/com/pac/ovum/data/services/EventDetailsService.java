@@ -18,17 +18,17 @@ import retrofit2.Response;
 /**
  * Service for managing event history data with the REST API.
  */
-public class EventHistoryService {
-    private static EventHistoryService instance;
+public class EventDetailsService {
+    private static EventDetailsService instance;
     private final EventApiService apiService;
 
-    private EventHistoryService() {
+    private EventDetailsService() {
         apiService = RetrofitClient.getInstance().getService(EventApiService.class);
     }
 
-    public static EventHistoryService getInstance() {
+    public static EventDetailsService getInstance() {
         if (instance == null) {
-            instance = new EventHistoryService();
+            instance = new EventDetailsService();
         }
         return instance;
     }
@@ -73,7 +73,7 @@ public class EventHistoryService {
         MutableLiveData<List<EventData>> result = new MutableLiveData<>();
         
         AppExecutors.getInstance().networkIO().execute(() -> {
-            apiService.getEventsByDateRange(userId, startDate, endDate)
+            apiService.getEventsByDateRange((startDate+','+endDate))
                     .enqueue(new Callback<List<EventData>>() {
                 @Override
                 public void onResponse(Call<List<EventData>> call, Response<List<EventData>> response) {

@@ -23,7 +23,7 @@ public interface CycleHistoryApiService {
      * @param userId User ID
      * @return List of cycle history data
      */
-    @GET("cycle-history")
+    @GET("cycle-histories")
     Call<List<CycleHistory>> getAllCycleHistory(@Query("userId") int userId);
     
     /**
@@ -31,7 +31,7 @@ public interface CycleHistoryApiService {
      * @param id Cycle history ID
      * @return Cycle history data
      */
-    @GET("cycle-history/{id}")
+    @GET("cycle-histories/{id}")
     Call<CycleHistory> getCycleHistoryById(@Path("id") int id);
     
     /**
@@ -39,7 +39,7 @@ public interface CycleHistoryApiService {
      * @param cycleHistory Cycle history data
      * @return Added cycle history data
      */
-    @POST("cycle-history")
+    @POST("cycle-histories")
     Call<CycleHistory> addCycleHistory(@Body CycleHistory cycleHistory);
     
     /**
@@ -48,7 +48,7 @@ public interface CycleHistoryApiService {
      * @param cycleHistory Updated cycle history data
      * @return Updated cycle history data
      */
-    @PUT("cycle-history/{id}")
+    @PUT("cycle-histories/{id}")
     Call<CycleHistory> updateCycleHistory(@Path("id") int id, @Body CycleHistory cycleHistory);
     
     /**
@@ -56,7 +56,7 @@ public interface CycleHistoryApiService {
      * @param id Cycle history ID
      * @return Success message
      */
-    @DELETE("cycle-history/{id}")
+    @DELETE("cycle-histories/{id}")
     Call<Void> deleteCycleHistory(@Path("id") int id);
     
     /**
@@ -65,7 +65,7 @@ public interface CycleHistoryApiService {
      * @param cycleHistoryList List of cycle history data to sync
      * @return Synced cycle history data
      */
-    @POST("cycle-history/sync")
+    @POST("cycle-histories/sync")
     Call<List<CycleHistory>> syncCycleHistory(@Query("userId") int userId, 
                                             @Body List<CycleHistory> cycleHistoryList);
 } 
