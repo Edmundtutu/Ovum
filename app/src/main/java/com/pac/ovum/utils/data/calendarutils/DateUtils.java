@@ -111,6 +111,7 @@ public class DateUtils {
     public LocalDate formatDateToLocalDate(String dateInSpeech) {
         String[] spokenFormats = {
                 "dd-MM-yyyy",
+                "yyyy-MM-dd",
                 "d'th' MMMM yyyy",
                 "MMMM d'th', yyyy",
                 "d'th' MMMM",

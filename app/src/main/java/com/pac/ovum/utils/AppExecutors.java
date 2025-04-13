@@ -4,16 +4,17 @@ import android.os.Handler;
 import android.os.Looper;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AppExecutors {
     private static final Object LOCK = new Object();
     private static AppExecutors instance;
-    private final Executor diskIO;
-    private final Executor networkIO;
+    private final ExecutorService diskIO;
+    private final ExecutorService networkIO;
     private final Executor mainThread;
 
-    private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
+    private AppExecutors(ExecutorService diskIO, ExecutorService networkIO, Executor mainThread) {
         this.diskIO = diskIO;
         this.networkIO = networkIO;
         this.mainThread = mainThread;
@@ -31,11 +32,11 @@ public class AppExecutors {
         return instance;
     }
 
-    public Executor diskIO() {
+    public ExecutorService diskIO() {
         return diskIO;
     }
     
-    public Executor networkIO() {
+    public ExecutorService networkIO() {
         return networkIO;
     }
     

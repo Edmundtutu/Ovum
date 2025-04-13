@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,10 +50,17 @@ public class CalendarFragment extends Fragment {
     private TextView monthYearTitle;
     private Button addSymptomButton;
     private Button addEventButton;
+    private TextView calendarTitle;
 
     private DateUtils dateUtils;
     private EventAdapter eventAdapter;
     private CalendarViewModel viewModel;
+
+    // Variable to store the currently selected date
+    private LocalDate selectedDate;
+
+    // Observer for event updates to prevent memory leaks
+    private Observer<List<com.pac.ovum.data.models.Event>> eventsObserver;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -63,7 +72,7 @@ public class CalendarFragment extends Fragment {
         initializeViews();
         setupCalendar();
         setupListeners();
-        
+
         return root;
     }
 
@@ -71,7 +80,7 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         RecyclerView recyclerView = view.findViewById(R.id.events_recycler_view);
         eventAdapter = new EventAdapter();
         recyclerView.setAdapter(eventAdapter);
@@ -90,7 +99,12 @@ public class CalendarFragment extends Fragment {
         monthYearTitle = binding.monthYearTitle;
         addSymptomButton = binding.addSymptomButton;
         addEventButton = binding.addEventButton;
-        
+        calendarTitle = binding.calendarTitle;
+
+        // Initially hide the action buttons
+        addSymptomButton.setVisibility(View.GONE);
+        addEventButton.setVisibility(View.GONE);
+
         // Set current month/year title
         updateMonthYearTitle(compactCalendarView.getFirstDayOfCurrentMonth());
     }
@@ -103,11 +117,12 @@ public class CalendarFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDayClick(Date dateClicked) {
-                java.time.LocalDate localDate = dateClicked.toInstant()
+                // Store the clicked date
+                selectedDate = dateClicked.toInstant()
                         .atZone(ZoneId.systemDefault())
                         .toLocalDate();
-                handleDayClick(localDate);
-                Log.d(TAG, "Day was clicked: " + dateClicked);
+                handleDayClick(selectedDate);
+                Log.d(TAG, "Day was clicked: " + dateClicked + ", LocalDate: " + selectedDate);
             }
 
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -116,7 +131,11 @@ public class CalendarFragment extends Fragment {
                 Log.d(TAG, "Month was scrolled to: " + firstDayOfNewMonth);
                 // Update month/year title
                 updateMonthYearTitle(firstDayOfNewMonth);
-                
+
+                // Hide action buttons when month changes
+                hideActionButtons();
+                selectedDate = null;
+
                 // Update events for the scrolled month
                 updateEventsForCurrentMonth();
             }
@@ -128,11 +147,11 @@ public class CalendarFragment extends Fragment {
         cal.setTime(firstDayOfMonth);
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
-        
+
         // Get month name
-        String[] monthNames = {"January", "February", "March", "April", "May", "June", 
+        String[] monthNames = {"January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"};
-        
+
         monthYearTitle.setText(monthNames[month] + " " + year);
     }
 
@@ -144,27 +163,40 @@ public class CalendarFragment extends Fragment {
                 R.color.purple_500,
                 R.color.teal_200,
                 R.color.purple_700);
-        
+
         // Set up sync button
         syncButton.setOnClickListener(v -> syncEventsToApi());
-        
-        // Set up add symptom button
+
+        // Set up add symptom button - now uses the selected date
         addSymptomButton.setOnClickListener(v -> {
-            Date date = compactCalendarView.getFirstDayOfCurrentMonth();
-            java.time.LocalDate localDate = date.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            showLogSymptomsDialog(localDate);
+            if (selectedDate != null) {
+                showLogSymptomsDialog(selectedDate);
+            } else {
+                Toast.makeText(getContext(), "Please select a date first", Toast.LENGTH_SHORT).show();
+                // Highlight the calendar to indicate user should select a date
+                highlightCalendarForSelection();
+            }
         });
-        
-        // Set up add event button
+
+        // Set up add event button - now uses the selected date
         addEventButton.setOnClickListener(v -> {
-            Date date = compactCalendarView.getFirstDayOfCurrentMonth();
-            java.time.LocalDate localDate = date.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-            showSetGynEventDialog(localDate);
+            Log.d(TAG, "Selected date for Gyn Event: " + selectedDate);
+            if (selectedDate != null) {
+                showSetGynEventDialog(selectedDate);
+            } else {
+                Toast.makeText(getContext(), "Please select a date first", Toast.LENGTH_SHORT).show();
+                // Highlight the calendar to indicate user should select a date
+                highlightCalendarForSelection();
+            }
         });
+    }
+
+    // Method to highlight calendar briefly to guide user
+    private void highlightCalendarForSelection() {
+        if (compactCalendarView != null) {
+            compactCalendarView.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY);
+            // Could add a brief animation here if desired
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -174,10 +206,38 @@ public class CalendarFragment extends Fragment {
             List<com.pac.ovum.data.models.Event> dayEvents = viewModel.getEventsForDate(date);
             eventAdapter.setEvents(dayEvents);
             eventAdapter.notifyDataSetChanged();
-            
-            // Show appropriate add buttons
+
+            // Show action buttons with smooth animation
+            showActionButtons();
+
+            // Update UI to show selected date info
+            calendarTitle.setText("Events for " + date.toString());
+        }
+    }
+
+    private void showActionButtons() {
+        // Show buttons with animation
+        if (addSymptomButton.getVisibility() != View.VISIBLE) {
+            addSymptomButton.setAlpha(0f);
             addSymptomButton.setVisibility(View.VISIBLE);
+            addSymptomButton.animate().alpha(1f).setDuration(300).start();
+
+            addEventButton.setAlpha(0f);
             addEventButton.setVisibility(View.VISIBLE);
+            addEventButton.animate().alpha(1f).setDuration(300).start();
+        }
+    }
+
+    private void hideActionButtons() {
+        // Hide buttons with animation
+        if (addSymptomButton.getVisibility() == View.VISIBLE) {
+            addSymptomButton.animate().alpha(0f).setDuration(300).withEndAction(() -> {
+                addSymptomButton.setVisibility(View.GONE);
+            }).start();
+
+            addEventButton.animate().alpha(0f).setDuration(300).withEndAction(() -> {
+                addEventButton.setVisibility(View.GONE);
+            }).start();
         }
     }
 
@@ -190,6 +250,8 @@ public class CalendarFragment extends Fragment {
     }
 
     private void showSetGynEventDialog(LocalDate date) {
+        // Just to be sure if this date is really bring passed at this point
+        Log.d(TAG, "Selected date for Gyn Event: " + date.toString());
         SetGynEventFragment dialog = new SetGynEventFragment(date.toString());
         Bundle args = new Bundle();
         args.putString("selectedDate", date.toString());
@@ -206,23 +268,33 @@ public class CalendarFragment extends Fragment {
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate();
             LocalDate endDate = startDate.plusMonths(1).minusDays(1);
-            
+
+            // Remove previous observer if exists
+            if (eventsObserver != null) {
+                LiveData<List<com.pac.ovum.data.models.Event>> currentEvents =
+                        viewModel.getEventsForDateRange(startDate, endDate);
+                currentEvents.removeObserver(eventsObserver);
+            }
+
+            // Create and add new observer
+            eventsObserver = events -> updateCalendarEvents(events);
+
             // Fetch and update events for this date range
             viewModel.getEventsForDateRange(startDate, endDate).observe(
-                    getViewLifecycleOwner(), this::updateCalendarEvents);
+                    getViewLifecycleOwner(), eventsObserver);
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void initializeViewModel() {
         EventRepository eventRepository = AppModule.provideEventRepository(requireContext());
-        viewModel = new ViewModelProvider(this, 
+        viewModel = new ViewModelProvider(this,
                 new CalendarViewModelFactory(eventRepository)).get(CalendarViewModel.class);
-        
+
         // Get events for current month initially
         updateEventsForCurrentMonth();
     }
-    
+
     /**
      * Set up observers for sync status
      */
@@ -232,14 +304,14 @@ public class CalendarFragment extends Fragment {
         viewModel.getIsSyncing().observe(getViewLifecycleOwner(), isSyncing -> {
             swipeRefreshLayout.setRefreshing(isSyncing);
             syncButton.setEnabled(!isSyncing);
-            
+
             if (isSyncing) {
                 syncButton.setText(R.string.syncing);
             } else {
                 syncButton.setText(R.string.sync_to_server);
             }
         });
-        
+
         // Observe sync errors
         viewModel.getSyncError().observe(getViewLifecycleOwner(), error -> {
             if (error != null && !error.isEmpty()) {
@@ -248,7 +320,7 @@ public class CalendarFragment extends Fragment {
                         .show();
             }
         });
-        
+
         // Observe sync success
         viewModel.getSyncSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success != null && success) {
@@ -257,7 +329,7 @@ public class CalendarFragment extends Fragment {
             }
         });
     }
-    
+
     /**
      * Sync events from API to local database (pull)
      */
@@ -269,14 +341,15 @@ public class CalendarFragment extends Fragment {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
-        
+
         // Sync events for this date range
         viewModel.syncEventsForDateRange(getCurrentUserId(), startDate, endDate);
     }
-    
+
     /**
      * Sync events from local database to API (push)
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void syncEventsToApi() {
         viewModel.syncAllEventsToApi(getCurrentUserId());
     }
@@ -290,19 +363,19 @@ public class CalendarFragment extends Fragment {
     private void updateCalendarEvents(List<com.pac.ovum.data.models.Event> events) {
         // Clear previous events
         compactCalendarView.removeAllEvents();
-        
+
         // Add events to calendar
         for (com.pac.ovum.data.models.Event event : events) {
             long timeInMillis = event.getEventDate()
                     .atStartOfDay(ZoneId.systemDefault())
                     .toInstant()
                     .toEpochMilli();
-            
+
             int color = getEventColor(event.getEventType());
             Event calEvent = new Event(color, timeInMillis, event);
             compactCalendarView.addEvent(calEvent);
         }
-        
+
         // Refresh the view
         compactCalendarView.invalidate();
     }
@@ -310,7 +383,7 @@ public class CalendarFragment extends Fragment {
     private int getEventColor(String eventType) {
         // Return different colors based on event type
         if (eventType == null) return Color.GRAY;
-        
+
         switch (eventType.toLowerCase()) {
             case "period":
                 return Color.RED;
@@ -328,6 +401,13 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // Clean up observers to prevent memory leaks
+        if (eventsObserver != null && viewModel != null && viewModel.getEvents() != null) {
+            viewModel.getEvents().removeObserver(eventsObserver);
+            eventsObserver = null;
+        }
+
         binding = null;
     }
 }

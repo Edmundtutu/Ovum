@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +52,9 @@ public class CyclesFragment extends Fragment {
     private LineChart lineChart;
     private NestedScrollView scrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    
+    // Observer for cycle summaries to prevent memory leaks
+    private Observer<List<CycleSummary>> cyclesObserver;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -75,19 +79,24 @@ public class CyclesFragment extends Fragment {
         lineChart = binding.chart;
         scrollView = binding.mainScrollView;
         setupChart();
-
+        
         // Set up RecyclerView
         RecyclerView recyclerView = binding.cardRecyleView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        
         // Set up sync button
         binding.syncButton.setOnClickListener(v -> syncDataToApi());
 
         // Observe sync status
         observeSyncStatus();
 
-        // Observe the LiveData from the ViewModel
-        cyclesViewModel.getCycleSummaries(getCurrentUserId()).observe(getViewLifecycleOwner(), cycleSummaries -> {
+        // Remove previous observer if exists to prevent leaks
+        if (cyclesObserver != null) {
+            cyclesViewModel.getCycleSummaries(getCurrentUserId()).removeObserver(cyclesObserver);
+        }
+        
+        // Create new observer that properly cleans up resources
+        cyclesObserver = cycleSummaries -> {
             cyclesAdapter = new CyclesAdapter(cycleSummaries, new CyclesAdapter.OnCycleItemClickListener() {
                 @Override
                 public void onItemClick(CycleSummary cycle) {
@@ -103,6 +112,8 @@ public class CyclesFragment extends Fragment {
                 @Override
                 public void onExpandClick(CycleSummary cycle) {
                     // Handle expand click
+                    // cycle.setExpanded(!cycle.isExpanded());
+                    // cyclesAdapter.notifyDataSetChanged();
                 }
             });
             recyclerView.setAdapter(cyclesAdapter);
@@ -111,14 +122,15 @@ public class CyclesFragment extends Fragment {
             if (!cycleSummaries.isEmpty()) {
                 updateGraphs(cycleSummaries, cycleSummaries.get(0));
             }
-        });
-
+        };
+        
+        // Observe cycles data with our managed observer
+        cyclesViewModel.getCycleSummaries(getCurrentUserId())
+            .observe(getViewLifecycleOwner(), cyclesObserver);
+        
         return root;
     }
-
-    /**
-     * Observe sync status from ViewModel
-     */
+    
     private void observeSyncStatus() {
         // Observe syncing status
         cyclesViewModel.getIsSyncing().observe(getViewLifecycleOwner(), isSyncing -> {
@@ -145,24 +157,24 @@ public class CyclesFragment extends Fragment {
         cyclesViewModel.getSyncSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success != null && success) {
                 Toast.makeText(getContext(), "Sync completed successfully", Toast.LENGTH_SHORT).show();
+                
+                // Refresh data after successful sync by re-observing
+                cyclesViewModel.getCycleSummaries(getCurrentUserId())
+                    .observe(getViewLifecycleOwner(), cyclesObserver);
             }
         });
     }
     
-    /**
-     * Sync data from API to local database (pull)
-     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void syncDataFromApi() {
         cyclesViewModel.syncFromApi(getCurrentUserId());
     }
     
-    /**
-     * Sync data from local database to API (push)
-     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void syncDataToApi() {
         cyclesViewModel.syncToApi(getCurrentUserId());
     }
-
+    
     private void setupChart() {
         // Basic chart setup
         lineChart.setBackgroundColor(Color.WHITE);
@@ -173,7 +185,7 @@ public class CyclesFragment extends Fragment {
         lineChart.setPinchZoom(true);
         lineChart.setDrawGridBackground(false);
         lineChart.setMaxHighlightDistance(300);
-
+        
         // Enable animations with longer duration
         lineChart.animateX(2000, Easing.EaseInOutCubic);
 
@@ -188,7 +200,7 @@ public class CyclesFragment extends Fragment {
         xAxis.setDrawAxisLine(true);
         xAxis.setAxisLineWidth(1f);
         xAxis.setAxisLineColor(Color.DKGRAY);
-
+        
         // Y-axis setup
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setDrawGridLines(false); // Remove grid lines
@@ -198,10 +210,10 @@ public class CyclesFragment extends Fragment {
         leftAxis.setDrawAxisLine(true);
         leftAxis.setAxisLineWidth(1f);
         leftAxis.setAxisLineColor(Color.DKGRAY);
-
+        
         // Disable right Y-axis
         lineChart.getAxisRight().setEnabled(false);
-
+        
         // Legend setup
         Legend legend = lineChart.getLegend();
         legend.setEnabled(true);
@@ -213,10 +225,10 @@ public class CyclesFragment extends Fragment {
         legend.setYEntrySpace(6f);
         legend.setWordWrapEnabled(true);
     }
-
+    
     private void updateGraphs(List<CycleSummary> allCycles, CycleSummary selectedCycle) {
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-
+        
         // 1️⃣ Overall Episodes Graph
         List<Entry> overallEntries = new ArrayList<>();
         for (int i = 0; i < allCycles.size(); i++) {
@@ -235,13 +247,13 @@ public class CyclesFragment extends Fragment {
         for (int i = 0; i < allCycles.size(); i++) {
             severityEntries.add(new Entry(i, allCycles.get(i).getRating()));
         }
-
+        
         // Create and style the datasets with enhanced visuals
         LineDataSet overallSet = createDataSet(overallEntries, "Overall Episodes", 
             R.color.teal_700, false); // Changed to continuous line
         
         LineDataSet dailySet = createDataSet(episodeEntries, "Daily Symptoms", 
-            R.color.purple_500, false);
+                R.color.purple_500, false);
         
         LineDataSet severitySet = createDataSet(severityEntries, "Severity", 
             android.R.color.holo_red_light, false); // Changed to continuous line
@@ -250,7 +262,7 @@ public class CyclesFragment extends Fragment {
         dataSets.add(overallSet);
         dataSets.add(dailySet);
         dataSets.add(severitySet);
-
+        
         // Combine all datasets
         LineData lineData = new LineData(dataSets);
         lineData.setValueTextSize(10f);
@@ -261,11 +273,11 @@ public class CyclesFragment extends Fragment {
                 return String.valueOf((int) value);
             }
         });
-
+        
         lineChart.setData(lineData);
         lineChart.invalidate();
     }
-
+    
     private LineDataSet createDataSet(List<Entry> entries, String label, int colorResId, boolean isDashed) {
         LineDataSet set = new LineDataSet(entries, label);
         int color = ContextCompat.getColor(requireContext(), colorResId);
@@ -323,9 +335,16 @@ public class CyclesFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        
+        // Clean up observers to prevent memory leaks
+        if (cyclesObserver != null && cyclesViewModel != null) {
+            cyclesViewModel.getCycleSummaries(getCurrentUserId()).removeObserver(cyclesObserver);
+            cyclesObserver = null;
+        }
+        
         binding = null;
     }
-
+    
     private int getCurrentUserId() {
         return 1; // Placeholder
     }

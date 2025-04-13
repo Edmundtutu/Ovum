@@ -5,7 +5,6 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.pac.ovum.data.models.Event;
@@ -114,6 +113,7 @@ public class CalendarViewModel extends ViewModel {
      * @param userId User ID
      * @return LiveData containing inserted event ID
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public LiveData<Long> insertEventWithSync(Event event, int userId) {
         return eventRepository.insertEventWithSync(event, userId);
     }
@@ -124,6 +124,7 @@ public class CalendarViewModel extends ViewModel {
      * @param userId User ID
      * @return LiveData containing success status
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public LiveData<Boolean> updateEventWithSync(Event event, int userId) {
         return eventRepository.updateEventWithSync(event, userId);
     }
@@ -139,7 +140,7 @@ public class CalendarViewModel extends ViewModel {
     
     /**
      * Sync events from API to local database for a specific date range
-     * @param userId User ID
+     * @param userId User ID for local model
      * @param startDate Start date
      * @param endDate End date
      * @return LiveData containing success status
@@ -150,7 +151,7 @@ public class CalendarViewModel extends ViewModel {
         syncError.setValue(null);
         
         // Start sync from repository
-        LiveData<Boolean> syncResult = eventRepository.syncEventsByDateRange(userId, startDate, endDate);
+        LiveData<Boolean> syncResult = eventRepository.syncEventsByDateRange(startDate, endDate);
         result.addSource(syncResult, success -> {
             result.removeSource(syncResult);
             
@@ -158,10 +159,8 @@ public class CalendarViewModel extends ViewModel {
                 syncSuccess.setValue(true);
                 result.setValue(true);
                 
-                // Refresh events for the cycle if we have a cycle ID set
-                if (events != null) {
-                    events = eventRepository.getEventsForDateRange(startDate, endDate);
-                }
+                // Refresh events for the date range
+                events = eventRepository.getEventsForDateRange(startDate, endDate);
             } else {
                 String error = syncError.getValue();
                 if (error == null || error.isEmpty()) {
@@ -176,7 +175,7 @@ public class CalendarViewModel extends ViewModel {
     
     /**
      * Sync all events from API to local database
-     * @param userId User ID
+     * @param userId User ID for local model
      * @return LiveData containing success status
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -185,7 +184,7 @@ public class CalendarViewModel extends ViewModel {
         syncError.setValue(null);
         
         // Start sync from repository
-        LiveData<Boolean> syncResult = eventRepository.syncEventsFromApi(userId);
+        LiveData<Boolean> syncResult = eventRepository.syncEventsFromApi();
         result.addSource(syncResult, success -> {
             result.removeSource(syncResult);
             
@@ -206,9 +205,10 @@ public class CalendarViewModel extends ViewModel {
     
     /**
      * Sync all events from local database to API
-     * @param userId User ID
+     * @param userId User ID for API model
      * @return LiveData containing success status
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public LiveData<Boolean> syncAllEventsToApi(int userId) {
         MediatorLiveData<Boolean> result = new MediatorLiveData<>();
         syncError.setValue(null);

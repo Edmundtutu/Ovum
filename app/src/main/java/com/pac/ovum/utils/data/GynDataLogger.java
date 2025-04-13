@@ -43,6 +43,9 @@ public class GynDataLogger {
         SharedPrefManager sharedPrefs = SharedPrefManager.getInstance(context);
         int userId = sharedPrefs.getUserId();
 
+        //  Just to be sure if the date is really being returned
+        Log.d("GynDataLogger", "Date recorded: " + dateRecorded);
+
         // Get the current ongoing cycle for this user
         cycleRepository.getOngoingCycleByUserId(userId).observeForever(cycleData -> {
             if (cycleData != null) {

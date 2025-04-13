@@ -25,34 +25,35 @@
 
     <include layout="@layout/content_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
-        app:srcCompat="@drawable/belll_alert"
-        tools:ignore="ContentDescription" />
-
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:backgroundTint="@android:color/transparent"
         app:fabAlignmentMode="end"
-        app:fabCradleMargin="8dp"
+        app:fabCradleMargin="10dp"
         app:fabCradleRoundedCornerRadius="16dp"
-        app:fabCradleVerticalOffset="6dp">
+        app:fabCradleVerticalOffset="8dp"
+        app:elevation="2dp">
 
-        <!-- Bottom Navigation inside the Bottom App Bar -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="56dp"
+            app:elevation="0dp"
+            android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
+            app:itemBackground="@android:color/transparent"
             app:menu="@menu/bottom_nav_menu" />
     </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/bottomAppBar"
+        app:srcCompat="@drawable/belll_alert"
+        tools:ignore="ContentDescription" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

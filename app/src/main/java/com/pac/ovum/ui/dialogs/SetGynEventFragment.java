@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -116,6 +117,8 @@ public class SetGynEventFragment extends DialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void logGynData() {
         LocalDate fromTitleDate = new DateUtils().formatDateToLocalDate(titleDate);
+        // Log the selected gynecological events
+        Log.d("SetGynEventFragment", "Selected Date " + fromTitleDate);
         GynDataLogger gynDataLogger = new GynDataLogger(getContext());
         gynDataLogger.logGynData(selectedEvents, fromTitleDate);
         dismiss();

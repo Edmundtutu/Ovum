@@ -20,11 +20,18 @@ public interface CycleHistoryApiService {
     
     /**
      * Get all cycle history data for the user
-     * @param userId User ID
      * @return List of cycle history data
      */
     @GET("cycle-histories")
-    Call<List<CycleHistory>> getAllCycleHistory(@Query("userId") int userId);
+    Call<List<CycleHistory>> getAllCycleHistory();
+    
+    /**
+     * Get cycle histories for a specific date range
+     * @param dateRange Date range in format "2023-10-01,2023-10-31"
+     * @return List of cycle histories in the date range
+     */
+    @GET("cycle-histories")
+    Call<List<CycleHistory>> getCycleHistoriesByDateRange(@Query("month[within]") String dateRange);
     
     /**
      * Get cycle history by ID
@@ -61,11 +68,9 @@ public interface CycleHistoryApiService {
     
     /**
      * Sync cycle history with server
-     * @param userId User ID
      * @param cycleHistoryList List of cycle history data to sync
      * @return Synced cycle history data
      */
     @POST("cycle-histories/sync")
-    Call<List<CycleHistory>> syncCycleHistory(@Query("userId") int userId, 
-                                            @Body List<CycleHistory> cycleHistoryList);
+    Call<List<CycleHistory>> syncCycleHistory(@Body List<CycleHistory> cycleHistoryList);
 } 

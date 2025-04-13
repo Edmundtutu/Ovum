@@ -4,13 +4,13 @@
     <string name="title_calendar">Calendar</string>
     <string name="title_cycles">Cycles</string>
     <string name="title_chat">Chat</string>
-    
+
     <!-- Cycle Sync Strings -->
     <string name="sync_to_server">Sync to Server</string>
     <string name="syncing">Syncing...</string>
     <string name="sync_error">Sync Error</string>
     <string name="sync_success">Sync Successful</string>
-    
+
     <string name="cycle_log">Cycle log</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -59,4 +59,27 @@
     <string name="add_symptoms_button">Add more of what you feel today</string>
     <string name="chat_bot_question">Hello! How can I help you today?</string>
     <string name="chat_bot">Assistant</string>
+
+    <!-- Auth Strings -->
+    <string name="welcome_back">Welcome</string>
+    <string name="login_instruction">Please sign in to continue tracking your cycle</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="register_now">Register Now</string>
+    <string name="app_logo">App Logo</string>
+    <string name="create_account">Create Account</string>
+    <string name="register_instruction">Please fill in the form to create your account</string>
+    <string name="full_name">Full Name</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="gender">Gender:</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="register">Register</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="login_here">Login Here</string>
+    <string name="back_button">Back</string>
+    <string name="intialize_cycle_text">Make Ovum know about your Cycle</string>
 </resources>

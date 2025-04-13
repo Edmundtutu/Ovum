@@ -23,10 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.pac.ovum.R;
 import com.pac.ovum.data.repositories.EpisodeRepository;
 import com.pac.ovum.data.repositories.EventRepository;
-import com.pac.ovum.data.repositories.MockCalendarEventsRepository;
-import com.pac.ovum.data.repositories.MockEpisodesRepository;
 import com.pac.ovum.databinding.FragmentHomeBinding;
 import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
+import com.pac.ovum.utils.AppModule;
 import com.pac.ovum.utils.ui.CircularPeriodProgressView;
 
 import java.time.LocalDate;
@@ -56,9 +55,11 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         Log.d("HomeFragment", "onCreateView called");
         // Create repository and factory
-        EventRepository eventsRepository = new MockCalendarEventsRepository(); //TODO: Get the Events Repository from the Real EventsRepository class
-        EpisodeRepository episodesRepository = new MockEpisodesRepository();  //TODO: Get the Episodes Repository from the Real Data source
-        HomeViewModelFactory factory = new HomeViewModelFactory(eventsRepository, episodesRepository);
+//        EventRepository eventsRepository = new MockCalendarEventsRepository(); //TODO: Get the Events Repository from the Real EventsRepository class
+//        EpisodeRepository episodesRepository = new MockEpisodesRepository();  //TODO: Get the Episodes Repository from the Real Data source
+        EventRepository eventsRepository = AppModule.provideEventRepository(getContext());
+        EpisodeRepository episodeRepository = AppModule.provideEpisodeRepository(getContext());
+        HomeViewModelFactory factory = new HomeViewModelFactory(eventsRepository, episodeRepository);
         homeViewModel = new ViewModelProvider(this, factory).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -118,7 +119,7 @@ public class HomeFragment extends Fragment {
             String formattedDate = currentDay.getDate();
             dayOfWeekTextView.setText(currentDay.getDayOfWeek());
         });
-        setCircularProgressView(33, 28);
+        setCircularProgressView(28, 10); // TODO: Get the cycle length  from cycle data and progress as days since cycle start in the ViewModel
     }
 
     private void setCircularProgressView(int cycleLength, int progress) {

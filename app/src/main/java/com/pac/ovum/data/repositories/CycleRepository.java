@@ -16,6 +16,8 @@ import com.pac.ovum.data.services.helpers.CycleHistory;
 import com.pac.ovum.data.services.mappers.CycleHistoryMapper;
 import com.pac.ovum.utils.AppExecutors;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,15 @@ public class CycleRepository {
 
     public void insertCycle(CycleData cycleData) {
         AppExecutors.getInstance().diskIO().execute(() -> cycleDao.insertCycle(cycleData));
+    }
+
+    /**
+     * Inserts a cycle synchronously - should only be called from a background thread
+     * @param cycleData The cycle data to insert
+     * @return The ID of the inserted cycle, or -1 if insertion failed
+     */
+    public long insertCycleSync(CycleData cycleData) {
+        return cycleDao.insertCycle(cycleData);
     }
 
     public LiveData<List<CycleData>> getCyclesByUserId(int userId) {
@@ -76,7 +87,7 @@ public class CycleRepository {
 
     /**
      * Sync cycles from the API to local database
-     * @param userId User ID
+     * @param userId User ID for local model
      * @return LiveData containing success status
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -86,7 +97,7 @@ public class CycleRepository {
         syncError.setValue(null);
 
         // Get cycle history from API
-        LiveData<List<CycleHistory>> apiResult = cycleHistoryService.getAllCycleHistory(userId);
+        LiveData<List<CycleHistory>> apiResult = cycleHistoryService.getAllCycleHistory();
         
         result.addSource(apiResult, cycleHistories -> {
             result.removeSource(apiResult);
@@ -129,10 +140,74 @@ public class CycleRepository {
         
         return result;
     }
+    
+    /**
+     * Sync cycles from the API to local database for a specific date range
+     * @param userId User ID for local model
+     * @param startDate Start date
+     * @param endDate End date
+     * @return LiveData containing success status
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public LiveData<Boolean> syncCyclesByDateRange(int userId, LocalDate startDate, LocalDate endDate) {
+        MediatorLiveData<Boolean> result = new MediatorLiveData<>();
+        isSyncing.setValue(true);
+        syncError.setValue(null);
+
+        // Format dates for API
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String startDateStr = startDate.format(formatter);
+        String endDateStr = endDate.format(formatter);
+        
+        // Get cycle history from API for date range
+        LiveData<List<CycleHistory>> apiResult = 
+                cycleHistoryService.getCycleHistoriesByDateRange(startDateStr, endDateStr);
+        
+        result.addSource(apiResult, cycleHistories -> {
+            result.removeSource(apiResult);
+            
+            if (cycleHistories != null && !cycleHistories.isEmpty()) {
+                AppExecutors.getInstance().diskIO().execute(() -> {
+                    try {
+                        // Convert and save each cycle history to local database
+                        for (CycleHistory cycleHistory : cycleHistories) {
+                            CycleData cycleData = CycleHistoryMapper.toCycleData(cycleHistory, userId);
+                            long cycleId = cycleDao.insertCycle(cycleData);
+                            
+                            // Convert and save episodes for this cycle
+                            List<Episode> episodes = CycleHistoryMapper.toEpisodes(
+                                    cycleHistory, (int) cycleId);
+                            for (Episode episode : episodes) {
+                                episodeDao.insertEpisode(episode);
+                            }
+                        }
+                        
+                        AppExecutors.getInstance().mainThread().execute(() -> {
+                            isSyncing.setValue(false);
+                            result.setValue(true);
+                        });
+                    } catch (Exception e) {
+                        AppExecutors.getInstance().mainThread().execute(() -> {
+                            syncError.setValue("Error syncing data: " + e.getMessage());
+                            isSyncing.setValue(false);
+                            result.setValue(false);
+                        });
+                    }
+                });
+            } else {
+                // No data or error from API
+                syncError.setValue("No data available for date range");
+                isSyncing.setValue(false);
+                result.setValue(false);
+            }
+        });
+        
+        return result;
+    }
 
     /**
      * Sync cycles from local database to API
-     * @param userId User ID
+     * @param userId User ID (for API model only)
      * @return LiveData containing success status
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -166,8 +241,7 @@ public class CycleRepository {
                         cycleDataList, episodesByCycleId);
                 
                 // Send to API
-                LiveData<List<CycleHistory>> apiResult = cycleHistoryService.syncCycleHistory(
-                        userId, cycleHistories);
+                LiveData<List<CycleHistory>> apiResult = cycleHistoryService.syncCycleHistory(cycleHistories);
                 
                 AppExecutors.getInstance().mainThread().execute(() -> {
                     result.addSource(apiResult, syncedData -> {

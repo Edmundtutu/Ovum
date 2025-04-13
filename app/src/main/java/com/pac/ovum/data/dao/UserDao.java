@@ -23,8 +23,17 @@ public interface UserDao {
     @Query("SELECT * FROM User WHERE email = :email AND password = :password")
     LiveData<User> loginUser(String email, String password);
 
+    @Query("SELECT * FROM User WHERE email = :email AND password = :password")
+    User loginUserSync(String email, String password);
+
+    @Query("SELECT COUNT(*) FROM User WHERE email = :email")
+    int isEmailTaken(String email);
+
     @Query("SELECT * FROM User")
     LiveData<List<User>> getAllUsers();
+
+    @Query("SELECT * FROM User")
+    List<User> getAllUsersSync();
 
     @Update
     void updateUser(User user);

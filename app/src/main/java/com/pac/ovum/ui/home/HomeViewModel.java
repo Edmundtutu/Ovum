@@ -79,8 +79,13 @@ public class HomeViewModel extends ViewModel {
         return Transformations.map(episodesForCurrentCycle, episodes -> {
             List<Episode> symptomsForDate = new ArrayList<>();
             for (Episode episode : episodes) {
-                if (episode.getDate().equals(date)) {
-                    symptomsForDate.add(episode);
+                // first check if the episode's date is not null if null just skip it
+                if (episode.getDate() == null) {
+                    continue;
+                }else{
+                    if(episode.getDate().equals(date)){
+                        symptomsForDate.add(episode);
+                    }
                 }
             }
             return symptomsForDate;

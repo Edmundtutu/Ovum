@@ -82,7 +82,7 @@ public class EventRepository {
     /**
      * Insert an event and sync with API
      * @param event Event to insert
-     * @param userId User ID
+     * @param userId User ID (for API model only)
      * @return LiveData containing the inserted event ID
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -95,7 +95,7 @@ public class EventRepository {
                 long eventId = eventDao.insertEvent(event);
                 
                 // Now sync with API
-                EventData eventData = com.pac.ovum.data.services.mappers.EventDataMapper.toEventData(event, userId);
+                EventData eventData = EventDataMapper.toEventData(event, userId);
                 eventDetailsService.addEvent(eventData);
                 
                 AppExecutors.getInstance().mainThread().execute(() -> result.setValue(eventId));
@@ -110,7 +110,7 @@ public class EventRepository {
     /**
      * Update an event and sync with API
      * @param event Event to update
-     * @param userId User ID
+     * @param userId User ID (for API model only)
      * @return LiveData containing success status
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -162,17 +162,16 @@ public class EventRepository {
     
     /**
      * Sync events from API to local database
-     * @param userId User ID
      * @return LiveData containing success status
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public LiveData<Boolean> syncEventsFromApi(int userId) {
+    public LiveData<Boolean> syncEventsFromApi() {
         MediatorLiveData<Boolean> result = new MediatorLiveData<>();
         isSyncing.setValue(true);
         syncError.setValue(null);
         
         // Get events from API
-        LiveData<List<EventData>> apiResult = eventDetailsService.getAllEvents(userId);
+        LiveData<List<EventData>> apiResult = eventDetailsService.getAllEvents();
         
         result.addSource(apiResult, eventHistories -> {
             result.removeSource(apiResult);
@@ -181,7 +180,7 @@ public class EventRepository {
                 AppExecutors.getInstance().diskIO().execute(() -> {
                     try {
                         // Convert and save each event to local database
-                        List<Event> events = com.pac.ovum.data.services.mappers.EventDataMapper.toEventList(eventHistories);
+                        List<Event> events = EventDataMapper.toEventList(eventHistories);
                         for (Event event : events) {
                             eventDao.insertEvent(event);
                         }
@@ -210,13 +209,12 @@ public class EventRepository {
     
     /**
      * Sync events with API by date range
-     * @param userId User ID
      * @param startDate Start date
      * @param endDate End date
      * @return LiveData containing success status
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public LiveData<Boolean> syncEventsByDateRange(int userId, LocalDate startDate, LocalDate endDate) {
+    public LiveData<Boolean> syncEventsByDateRange(LocalDate startDate, LocalDate endDate) {
         MediatorLiveData<Boolean> result = new MediatorLiveData<>();
         isSyncing.setValue(true);
         syncError.setValue(null);
@@ -227,8 +225,7 @@ public class EventRepository {
         String endDateStr = endDate.format(formatter);
         
         // Get events from API
-        LiveData<List<EventData>> apiResult =
-                eventDetailsService.getEventsByDateRange(userId, startDateStr, endDateStr);
+        LiveData<List<EventData>> apiResult = eventDetailsService.getEventsByDateRange(startDateStr, endDateStr);
         
         result.addSource(apiResult, eventHistories -> {
             result.removeSource(apiResult);
@@ -237,7 +234,7 @@ public class EventRepository {
                 AppExecutors.getInstance().diskIO().execute(() -> {
                     try {
                         // Convert and save each event to local database
-                        List<Event> events = com.pac.ovum.data.services.mappers.EventDataMapper.toEventList(eventHistories);
+                        List<Event> events = EventDataMapper.toEventList(eventHistories);
                         for (Event event : events) {
                             eventDao.insertEvent(event);
                         }
@@ -266,7 +263,7 @@ public class EventRepository {
     
     /**
      * Sync local events to API
-     * @param userId User ID
+     * @param userId User ID (for API model only)
      * @return LiveData containing success status
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -290,10 +287,10 @@ public class EventRepository {
                 }
                 
                 // Convert to API model
-                List<EventData> eventHistories = com.pac.ovum.data.services.mappers.EventDataMapper.toEventDataList(events, userId);
+                List<EventData> eventHistories = EventDataMapper.toEventDataList(events, userId);
                 
                 // Send to API
-                LiveData<List<EventData>> apiResult = eventDetailsService.syncEvents(userId, eventHistories);
+                LiveData<List<EventData>> apiResult = eventDetailsService.syncEvents(eventHistories);
                 
                 AppExecutors.getInstance().mainThread().execute(() -> {
                     result.addSource(apiResult, syncedData -> {

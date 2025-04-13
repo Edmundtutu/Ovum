@@ -33,6 +33,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         viewBinding = true
@@ -43,26 +44,28 @@ dependencies {
     implementation(libs.fragment.testing)
     implementation(libs.activity)
     implementation(libs.swiperefreshlayout)
-//    implementation(libs.legacy.support.v4)
-//    implementation(libs.lifecycle.livedata.ktx)
-//    implementation(libs.lifecycle.viewmodel.ktx)
     androidTestImplementation(project(":app"))
     androidTestImplementation(project(":app"))
     val room_version = "2.6.1"
     val retrofit_version = "2.9.0"
     val okhttp_version = "4.11.0"
+    val security_version = "1.1.0-alpha06"
 
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
-//    implementation(libs.lifecycle.livedata.ktx)
-//    implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+//    implementation("com.google.android.material:material:1.11.0")
+    // custom ui dependencies
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     // Room components
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-paging:$room_version")
+
+    // Security - EncryptedSharedPreferences for secure session storage
+    implementation("androidx.security:security-crypto:$security_version")
 
     // RxJava (for reactive programming)
     implementation ("io.reactivex.rxjava3:rxjava:3.0.0")
@@ -91,6 +94,13 @@ dependencies {
     //  The Chart library
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+    // for Local date and time conflicts with java.time
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+
+    // for Material Calendar Components that require ThreeTenABP
+    implementation ("com.jakewharton.threetenabp:threetenabp:1.4.4")
+
+    // For Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -104,6 +114,8 @@ configurations.all {
         force ("androidx.core:core:1.13.0")
         force ("androidx.appcompat:appcompat:1.3.0")
         force ("androidx.recyclerview:recyclerview:1.2.1")
+        // whenever anyone asks for threetenbp, give them 1.6.8 (the main JAR)
+        force ("org.threeten:threetenbp:1.6.8")
     }
 }
 

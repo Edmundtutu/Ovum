@@ -1,5 +1,8 @@
 package com.pac.ovum.data.services;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,7 +19,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Service for managing event history data with the REST API.
+ * Service for managing event data with the API.
+ * This service handles CRUD operations via HTTP requests to the REST API for gynecological events.
+ * This class should be a singleton and thread-safe.
  */
 public class EventDetailsService {
     private static EventDetailsService instance;
@@ -34,15 +39,14 @@ public class EventDetailsService {
     }
 
     /**
-     * Get all events for a user.
-     * @param userId User ID
-     * @return LiveData containing list of events.
+     * Get all events for the user
+     * @return LiveData containing list of event data
      */
-    public LiveData<List<EventData>> getAllEvents(int userId) {
+    public LiveData<List<EventData>> getAllEvents() {
         MutableLiveData<List<EventData>> result = new MutableLiveData<>();
         
         AppExecutors.getInstance().networkIO().execute(() -> {
-            apiService.getAllEvents(userId).enqueue(new Callback<List<EventData>>() {
+            apiService.getAllEvents().enqueue(new Callback<List<EventData>>() {
                 @Override
                 public void onResponse(Call<List<EventData>> call, Response<List<EventData>> response) {
                     if (response.isSuccessful() && response.body() != null) {
@@ -63,18 +67,17 @@ public class EventDetailsService {
     }
 
     /**
-     * Get events for a user within a date range.
-     * @param userId User ID
-     * @param startDate Start date in format "yyyy-MM-dd"
-     * @param endDate End date in format "yyyy-MM-dd"
-     * @return LiveData containing list of events.
+     * Get events by date range
+     * @param startDate Start date (format: "yyyy-MM-dd")
+     * @param endDate End date (format: "yyyy-MM-dd")
+     * @return LiveData containing list of event data
      */
-    public LiveData<List<EventData>> getEventsByDateRange(int userId, String startDate, String endDate) {
+    public LiveData<List<EventData>> getEventsByDateRange(String startDate, String endDate) {
         MutableLiveData<List<EventData>> result = new MutableLiveData<>();
         
         AppExecutors.getInstance().networkIO().execute(() -> {
-            apiService.getEventsByDateRange((startDate+','+endDate))
-                    .enqueue(new Callback<List<EventData>>() {
+            String dateRange = startDate + "," + endDate;
+            apiService.getEventsByDateRange(dateRange).enqueue(new Callback<List<EventData>>() {
                 @Override
                 public void onResponse(Call<List<EventData>> call, Response<List<EventData>> response) {
                     if (response.isSuccessful() && response.body() != null) {
@@ -95,38 +98,9 @@ public class EventDetailsService {
     }
 
     /**
-     * Get events for a specific cycle.
-     * @param cycleId Cycle ID
-     * @return LiveData containing list of events.
-     */
-    public LiveData<List<EventData>> getEventsByCycleId(int cycleId) {
-        MutableLiveData<List<EventData>> result = new MutableLiveData<>();
-        
-        AppExecutors.getInstance().networkIO().execute(() -> {
-            apiService.getEventsByCycleId(cycleId).enqueue(new Callback<List<EventData>>() {
-                @Override
-                public void onResponse(Call<List<EventData>> call, Response<List<EventData>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        result.postValue(response.body());
-                    } else {
-                        result.postValue(new ArrayList<>());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<EventData>> call, Throwable t) {
-                    result.postValue(new ArrayList<>());
-                }
-            });
-        });
-        
-        return result;
-    }
-
-    /**
-     * Get event by ID.
+     * Get event by ID
      * @param id Event ID
-     * @return LiveData containing event.
+     * @return LiveData containing event data
      */
     public LiveData<EventData> getEventById(int id) {
         MutableLiveData<EventData> result = new MutableLiveData<>();
@@ -153,9 +127,9 @@ public class EventDetailsService {
     }
 
     /**
-     * Add a new event.
-     * @param eventData Event to add
-     * @return LiveData containing added event.
+     * Add new event
+     * @param eventData Event data
+     * @return LiveData containing the added event data
      */
     public LiveData<EventData> addEvent(EventData eventData) {
         MutableLiveData<EventData> result = new MutableLiveData<>();
@@ -182,10 +156,10 @@ public class EventDetailsService {
     }
 
     /**
-     * Update an event.
+     * Update event
      * @param id Event ID
-     * @param eventData Updated event
-     * @return LiveData containing updated event.
+     * @param eventData Updated event data
+     * @return LiveData containing the updated event data
      */
     public LiveData<EventData> updateEvent(int id, EventData eventData) {
         MutableLiveData<EventData> result = new MutableLiveData<>();
@@ -212,9 +186,9 @@ public class EventDetailsService {
     }
 
     /**
-     * Delete an event.
+     * Delete event
      * @param id Event ID
-     * @return LiveData containing success status.
+     * @return LiveData containing success status
      */
     public LiveData<Boolean> deleteEvent(int id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
@@ -235,18 +209,17 @@ public class EventDetailsService {
         
         return result;
     }
-
+    
     /**
-     * Sync events with server.
-     * @param userId User ID
+     * Sync events with server
      * @param eventDataList List of events to sync
-     * @return LiveData containing synced events.
+     * @return LiveData containing synced events data
      */
-    public LiveData<List<EventData>> syncEvents(int userId, List<EventData> eventDataList) {
+    public LiveData<List<EventData>> syncEvents(List<EventData> eventDataList) {
         MutableLiveData<List<EventData>> result = new MutableLiveData<>();
         
         AppExecutors.getInstance().networkIO().execute(() -> {
-            apiService.syncEvents(userId, eventDataList).enqueue(new Callback<List<EventData>>() {
+            apiService.syncEvents(eventDataList).enqueue(new Callback<List<EventData>>() {
                 @Override
                 public void onResponse(Call<List<EventData>> call, Response<List<EventData>> response) {
                     if (response.isSuccessful() && response.body() != null) {

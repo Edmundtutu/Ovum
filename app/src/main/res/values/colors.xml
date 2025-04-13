@@ -39,4 +39,14 @@
     <color name="symptom_blue">#91CAF1</color>
     <color name="symptom_pink">#FF14A9</color>
     <color name="symptom_green">#91F1C7</color>
+    
+    <!-- Auth Specific Colors -->
+    <color name="colorPrimary">#FF1493</color>
+    <color name="colorPrimaryDark">#C71585</color>
+    <color name="colorAccent">#FF69B4</color>
+    <color name="colorOrange">#FF9800</color>
+    <color name="colorOrangeLight">#FFDAB9</color>
+    <color name="background">#FFFFFF</color>
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
 </resources>

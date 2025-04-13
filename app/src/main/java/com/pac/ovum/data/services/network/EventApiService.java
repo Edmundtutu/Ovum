@@ -21,16 +21,15 @@ public interface EventApiService {
     
     /**
      * Get all events for the user
-     * @param userId User ID
      * @return List of events data
      */
     @GET("appointments")
-    Call<List<EventData>> getAllEvents(@Query("userId") int userId);
+    Call<List<EventData>> getAllEvents();
     
     /**
      * Get events by date range
      * @param dateRange like "2023-10-01,2023-10-31"
-     * @return List of appointments in the date range
+     * @r   eturn List of appointments in the date range
      */
     @GET("appointments")
     Call<List<EventData>> getEventsByDateRange(@Query("appointment_date[within]") String dateRange);
@@ -78,11 +77,9 @@ public interface EventApiService {
     
     /**
      * Sync events with server
-     * @param userId User ID
      * @param eventDataList List of events to sync
      * @return Synced events data
      */
-    @POST("appointments/sync") // Not yet Implemented in the REST Api
-    Call<List<EventData>> syncEvents(@Query("userId") int userId,
-                                     @Body List<EventData> eventDataList);
+    @POST("appointments/sync")
+    Call<List<EventData>> syncEvents(@Body List<EventData> eventDataList);
 } 

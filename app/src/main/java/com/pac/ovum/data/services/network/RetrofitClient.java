@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitClient {
     // Base URL for development environment, can be easily changed for production
-    private static final String BASE_URL = "https://d697-154-72-203-214.ngrok-free.app/api/";
+    private static final String BASE_URL = "https://52b8-41-75-174-139.ngrok-free.app/api/";
     private static RetrofitClient instance;
     private final Retrofit retrofit;
 

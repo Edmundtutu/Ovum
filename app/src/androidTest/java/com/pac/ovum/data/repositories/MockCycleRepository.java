@@ -13,7 +13,7 @@ public class MockCycleRepository extends CycleRepository {
     private final MutableLiveData<List<CycleData>> cycleData = new MutableLiveData<>();
 
     public MockCycleRepository() {
-        super(null);
+        super(null,null);
         // Simulate data loading on the main thread
         loadData(); 
     }

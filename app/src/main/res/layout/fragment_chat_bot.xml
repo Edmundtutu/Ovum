@@ -7,6 +7,15 @@
     android:background="@drawable/chat_background"
     tools:context=".ui.chatbot.ChatBotFragment">
 
+    <!-- Custom Toolbar -->
+    <include
+        layout="@layout/toolbar_chatbot"
+        android:id="@+id/custom_toolbar"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- RecyclerView for chat messages -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
@@ -16,7 +25,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/suggestedQuestionsScrollView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/custom_toolbar" />
 
     <!-- Horizontal ScrollView for suggested questions -->
     <HorizontalScrollView

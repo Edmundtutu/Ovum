@@ -40,6 +40,22 @@
         <item name="android:windowExitAnimation">@anim/slide_out</item>
     </style>
 
+    <!-- Calendar Header Style -->
+    <style name="CalendarHeader" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">#FF3366</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Calendar Date Style -->
+    <style name="CalendarDate" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">#6B273D</item>
+    </style>
+
+    <!-- Calendar Week Day Style -->
+    <style name="CalendarWeekDay" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">#FF3366</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <style name="CustomDialog" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsFloating">false</item>

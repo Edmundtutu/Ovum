@@ -17,7 +17,7 @@ import retrofit2.Response;
 
 /**
  * Service for managing cycle history data.
- * This service will be used to  make CRUD operations via HTTP requests to the REST API on cycle history data in the central Db.
+ * This service will be used to make CRUD operations via HTTP requests to the REST API on cycle history data in the central Db.
  * Object of this class should be a singleton instance and should be thread-safe.
  * Instance will be create at registration time of the user and and destroyed at user logout for secure data access.
  */
@@ -39,14 +39,44 @@ public class CycleHistoryService {
 
     /**
      * Get all cycle history data for the user.
-     * @param userId User ID
      * @return LiveData containing list of cycle history data.
      */
-    public LiveData<List<CycleHistory>> getAllCycleHistory(int userId) {
+    public LiveData<List<CycleHistory>> getAllCycleHistory() {
         MutableLiveData<List<CycleHistory>> result = new MutableLiveData<>();
         
         AppExecutors.getInstance().networkIO().execute(() -> {
-            apiService.getAllCycleHistory(userId).enqueue(new Callback<List<CycleHistory>>() {
+            apiService.getAllCycleHistory().enqueue(new Callback<List<CycleHistory>>() {
+                @Override
+                public void onResponse(Call<List<CycleHistory>> call, Response<List<CycleHistory>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        result.postValue(response.body());
+                    } else {
+                        result.postValue(new ArrayList<>());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<CycleHistory>> call, Throwable t) {
+                    result.postValue(new ArrayList<>());
+                }
+            });
+        });
+        
+        return result;
+    }
+    
+    /**
+     * Get cycle histories for a specific date range
+     * @param startDate Start date in format "yyyy-MM-dd"
+     * @param endDate End date in format "yyyy-MM-dd"
+     * @return LiveData containing list of cycle histories
+     */
+    public LiveData<List<CycleHistory>> getCycleHistoriesByDateRange(String startDate, String endDate) {
+        MutableLiveData<List<CycleHistory>> result = new MutableLiveData<>();
+        
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            String dateRange = startDate + "," + endDate;
+            apiService.getCycleHistoriesByDateRange(dateRange).enqueue(new Callback<List<CycleHistory>>() {
                 @Override
                 public void onResponse(Call<List<CycleHistory>> call, Response<List<CycleHistory>> response) {
                     if (response.isSuccessful() && response.body() != null) {
@@ -181,15 +211,14 @@ public class CycleHistoryService {
     
     /**
      * Sync cycle history data with server.
-     * @param userId User ID
      * @param cycleHistoryList List of cycle history data to sync
      * @return LiveData containing synced cycle history data
      */
-    public LiveData<List<CycleHistory>> syncCycleHistory(int userId, List<CycleHistory> cycleHistoryList) {
+    public LiveData<List<CycleHistory>> syncCycleHistory(List<CycleHistory> cycleHistoryList) {
         MutableLiveData<List<CycleHistory>> result = new MutableLiveData<>();
         
         AppExecutors.getInstance().networkIO().execute(() -> {
-            apiService.syncCycleHistory(userId, cycleHistoryList).enqueue(new Callback<List<CycleHistory>>() {
+            apiService.syncCycleHistory(cycleHistoryList).enqueue(new Callback<List<CycleHistory>>() {
                 @Override
                 public void onResponse(Call<List<CycleHistory>> call, Response<List<CycleHistory>> response) {
                     if (response.isSuccessful() && response.body() != null) {

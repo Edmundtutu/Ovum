@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Outer circle -->
+    <path
+        android:fillColor="@color/colorPrimary"
+        android:pathData="M60,60m-60,0a60,60 0,1 1,120 0a60,60 0,1 1,-120 0" />
+    
+    <!-- Inner circle -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M60,60m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0" />
+    
+    <!-- Stylized O for Ovum -->
+    <path
+        android:fillColor="@color/colorPrimary"
+        android:pathData="M60,40m-25,0a25,25 0,1 1,50 0a25,25 0,1 1,-50 0" />
+    
+    <!-- Stylized V shape -->
+    <path
+        android:fillColor="@color/colorPrimary"
+        android:pathData="M40,70l20,20l20,-20l-10,-10l-10,10l-10,-10z" />
+</vector> 

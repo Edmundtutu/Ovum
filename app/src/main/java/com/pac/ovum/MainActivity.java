@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,9 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,6 +44,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.navigation.NavigationView;
 import com.pac.ovum.databinding.ActivityMainBinding;
 import com.pac.ovum.databinding.DialogCalenderViewBinding;
+import com.pac.ovum.ui.auth.AuthViewModel;
+import com.pac.ovum.ui.interfaces.UiVisibilityController;
 import com.pac.ovum.utils.ui.DialogBuilder;
 
 import org.json.JSONException;
@@ -52,12 +57,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UiVisibilityController {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
+    // For auth and session Management initialise the AuthViewModel
+    AuthViewModel authViewModel;
     ProgressDialog progressDialog;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
         // setup the bottom navigation view
         NavigationUI.setupWithNavController(binding.appBarMain.bottomNavView, navController);
+
+        // initialize the authViewModel
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);;
     }
 
 
@@ -122,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
             // TODO: Handle the search action
             return true;
         } else if (item.getItemId() == R.id.logout_icon) {
-            // TODO: Handle the logout action
+            // log out the user with the logout method of the authViewModel
+            authViewModel.logout();
             finish();
             return true;
         } else {
@@ -265,4 +277,21 @@ public class MainActivity extends AppCompatActivity {
         void onDateSelected(String date);
     }
 
+    @Override
+    public void hideBottomNavAndFab() {
+        if (binding != null && binding.appBarMain != null) {
+            binding.appBarMain.bottomNavView.setVisibility(View.GONE);
+            binding.appBarMain.bottomAppBar.setVisibility(View.GONE);
+            binding.appBarMain.fab.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showBottomNavAndFab() {
+        if (binding != null && binding.appBarMain != null) {
+            binding.appBarMain.bottomNavView.setVisibility(View.VISIBLE);
+            binding.appBarMain.bottomAppBar.setVisibility(View.VISIBLE);
+            binding.appBarMain.fab.setVisibility(View.VISIBLE);
+        }
+    }
 }
