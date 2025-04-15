@@ -135,6 +135,15 @@ public class AuthService {
                     for (User u : users) {
                         Log.d(TAG, "  User ID=" + u.getUserId() + ", Name=" + u.getUserName() + ", Email=" + u.getEmail());
                     }
+                    
+                    // Double-check the cycle exists and is ongoing
+                    CycleData ongoingCycle = database.cycleDao().getOngoingCycleByUserIdSync(userId);
+                    if (ongoingCycle != null) {
+                        Log.d(TAG, "VERIFICATION: Found ongoing cycle with ID=" + ongoingCycle.getCycleId() + 
+                              " for user ID=" + userId);
+                    } else {
+                        Log.e(TAG, "VERIFICATION ERROR: No ongoing cycle found for user ID=" + userId);
+                    }
                 });
                 
                 // Switch to main thread for login

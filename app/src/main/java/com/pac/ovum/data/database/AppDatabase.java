@@ -3,7 +3,6 @@ package com.pac.ovum.data.database;
 import android.content.Context;
 import android.os.Build;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.AutoMigration;
 import androidx.room.Database;
@@ -101,10 +100,24 @@ public abstract class AppDatabase extends RoomDatabase {
             
             // Set user ID on cycle and insert it
             cycle.setUserId(userId);
-            android.util.Log.d("AppDatabase", "Inserting cycle with userId: " + userId + ", cycleLength: " + cycle.getCycleLength());
+            // Explicitly set isOngoing to true to ensure it's correctly recognized as an ongoing cycle
+            cycle.setOngoing(true);
+            android.util.Log.d("AppDatabase", "Inserting cycle with userId: " + userId + ", cycleLength: " + cycle.getCycleLength() + ", isOngoing: " + cycle.isOngoing());
             long cycleId = cycleDao().insertCycle(cycle);
             
             if (cycleId != -1) {
+                // CRITICAL FIX: Update the cycle object's ID with the generated ID from the database
+                // This ensures the calling code has the correct ID reference
+                cycle.setCycleId((int) cycleId);
+                
+                // Verify that we can find the ongoing cycle for this user
+                CycleData ongoingCycle = cycleDao().getOngoingCycleByUserIdSync(userId);
+                if (ongoingCycle != null) {
+                    android.util.Log.d("AppDatabase", "Verification successful - Found ongoing cycle with ID: " + ongoingCycle.getCycleId());
+                } else {
+                    android.util.Log.e("AppDatabase", "WARNING: Could not find ongoing cycle for user ID: " + userId + " after insertion!");
+                }
+                
                 android.util.Log.d("AppDatabase", "Transaction completed successfully. User ID: " + userId + ", Cycle ID: " + cycleId);
                 return userId;
             } else {
@@ -125,7 +138,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                             context.getApplicationContext(),
                             AppDatabase.class,
-                            "ovum_database")
+                            "ovum.db")
                             .addMigrations(MIGRATION_1_2)
                             .build();
                 }

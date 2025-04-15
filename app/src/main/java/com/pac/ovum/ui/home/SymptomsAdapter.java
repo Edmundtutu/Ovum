@@ -17,10 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.pac.ovum.R;
 import com.pac.ovum.data.models.Episode;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 // SymptomAdapter.java
 public class SymptomsAdapter extends RecyclerView.Adapter<SymptomsAdapter.SymptomViewHolder> {
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
     private List<Episode> symptoms;
     private Context context;
 
@@ -43,8 +45,7 @@ public class SymptomsAdapter extends RecyclerView.Adapter<SymptomsAdapter.Sympto
     public void onBindViewHolder(@NonNull SymptomViewHolder holder, int position) {
         Episode symptom = symptoms.get(position);
         holder.symptomName.setText(symptom.getNotes());
-        holder.symptomTime.setText(String.valueOf(symptom.getTime())); //.isBefore(MID_DAY) ? String.valueOf(symptom.getTime()) + "AM": String.valueOf(symptom.getTime())+ "PM"));
-
+        holder.symptomTime.setText(symptom.getTime().format(TIME_FORMATTER));
         // Set icon color based on severity
         int color;
         switch (symptom.getIntensity()) {

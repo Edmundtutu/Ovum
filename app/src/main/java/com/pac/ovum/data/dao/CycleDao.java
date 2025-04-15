@@ -32,6 +32,9 @@ public interface CycleDao {
     @Query("SELECT * FROM CycleData WHERE userId = :userId AND isOngoing = 1")
     LiveData<CycleData> getOngoingCycleByUserId(int userId);
 
+    @Query("SELECT * FROM CycleData WHERE userId = :userId AND isOngoing = 1")
+    CycleData getOngoingCycleByUserIdSync(int userId);
+
     @Update
     void updateCycle(CycleData cycleData);
 

@@ -8,6 +8,8 @@ import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Entity(
         foreignKeys = @ForeignKey(
@@ -63,7 +65,18 @@ public class Episode {
     }
 
     public String getNotes() {
-        return notes;
+        if (notes == null || notes.trim().isEmpty()) {
+            return notes;
+        }
+
+        // Split on one-or-more spaces or underscores
+        String[] words = notes.trim().split("[\\s_]+");
+
+        // Capitalize first letter + lowercase the rest, then join with a single space
+        return Arrays.stream(words)
+                .map(w -> w.substring(0, 1).toUpperCase()
+                        + w.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
 
     public void setNotes(String notes) {

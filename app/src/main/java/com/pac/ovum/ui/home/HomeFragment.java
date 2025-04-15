@@ -21,11 +21,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pac.ovum.R;
+import com.pac.ovum.data.repositories.CycleRepository;
 import com.pac.ovum.data.repositories.EpisodeRepository;
 import com.pac.ovum.data.repositories.EventRepository;
 import com.pac.ovum.databinding.FragmentHomeBinding;
 import com.pac.ovum.ui.dialogs.LogSymptomsDialogFragment;
 import com.pac.ovum.utils.AppModule;
+import com.pac.ovum.utils.SharedPrefManager;
 import com.pac.ovum.utils.ui.CircularPeriodProgressView;
 
 import java.time.LocalDate;
@@ -33,10 +35,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
-
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
-    
     private RecyclerView symptomsRecyclerView;
 
     private RecyclerView horizontalCalendarRecyclerView;
@@ -54,12 +54,18 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.d("HomeFragment", "onCreateView called");
+
+
         // Create repository and factory
-//        EventRepository eventsRepository = new MockCalendarEventsRepository(); //TODO: Get the Events Repository from the Real EventsRepository class
-//        EpisodeRepository episodesRepository = new MockEpisodesRepository();  //TODO: Get the Episodes Repository from the Real Data source
+       /*
+        * These are the mock repositories for testing purposes
+        * EventRepository eventsRepository = new MockCalendarEventsRepository();
+        * EpisodeRepository episodesRepository = new MockEpisodesRepository();
+        * */
         EventRepository eventsRepository = AppModule.provideEventRepository(getContext());
         EpisodeRepository episodeRepository = AppModule.provideEpisodeRepository(getContext());
-        HomeViewModelFactory factory = new HomeViewModelFactory(eventsRepository, episodeRepository);
+        CycleRepository cycleRepository = AppModule.provideCycleRepository(requireContext());
+        HomeViewModelFactory factory = new HomeViewModelFactory(eventsRepository, episodeRepository, cycleRepository);
         homeViewModel = new ViewModelProvider(this, factory).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -75,7 +81,7 @@ public class HomeFragment extends Fragment {
 
         binding.feelButton.leftEmoji.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.emoji_pulse));
         binding.feelButton.getRoot().setOnClickListener(v -> {
-            LogSymptomsDialogFragment dialogFragment = new LogSymptomsDialogFragment("00,00,00");
+            LogSymptomsDialogFragment dialogFragment = new LogSymptomsDialogFragment(homeViewModel.getDateToday());
             dialogFragment.show(getParentFragmentManager(), "CustomDialog");
         });
         return root;
@@ -136,25 +142,30 @@ public class HomeFragment extends Fragment {
     }
 
     private void setSymptomsRecyclerView(){
-        int cycleId = getCyleId(); // TODO: Implement the getCyleId method with the right logic
-        //  Get the symptoms from the view model using the CycleId
+        int userId = getUserId();
+        // Get the symptoms from the view model using the UserId of the logged in user
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            homeViewModel.getSymptoms(LocalDate.now(), cycleId).observe(getViewLifecycleOwner(), symptoms -> {
-                Log.d("HomeFragment", "Symptoms: " + symptoms);
-                // Set the layout manager and adapter for the recycler view
-                symptomsRecyclerView.setAdapter(new SymptomsAdapter(getContext(),symptoms));
-                // Set the layout manager to a horizontal LinearLayoutManager
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                symptomsRecyclerView.setLayoutManager(layoutManager);
-                // Update the adapter with the new symptoms
-                ((SymptomsAdapter) Objects.requireNonNull(symptomsRecyclerView.getAdapter())).updateSymptoms(symptoms);
+            homeViewModel.getSymptoms(LocalDate.now(), userId).observe(getViewLifecycleOwner(), symptoms -> {
+                if (symptoms != null && !symptoms.isEmpty()) {
+                    Log.d("HomeFragment", "Symptoms: " + symptoms);
+                    // Set the layout manager and adapter for the recycler view
+                    symptomsRecyclerView.setAdapter(new SymptomsAdapter(getContext(), symptoms));
+                    // Set the layout manager to a horizontal LinearLayoutManager
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    symptomsRecyclerView.setLayoutManager(layoutManager);
+                    // Update the adapter with the new symptoms
+                    ((SymptomsAdapter) Objects.requireNonNull(symptomsRecyclerView.getAdapter())).updateSymptoms(symptoms);
+                } else {
+                    Log.d("HomeFragment", "No symptoms available for today.");
+                    // Optionally, handle the UI for no symptoms (e.g., show a message)
+                }
             });
         }
-
     }
 
-    private int getCyleId() {
-        return 1; // Placeholder
+    private int getUserId() {
+        // Get the current logged in user's ID from the sharedPrefs
+        return SharedPrefManager.getInstance(requireContext()).getUserId();
     }
 
     @Override

@@ -80,7 +80,7 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        
         RecyclerView recyclerView = view.findViewById(R.id.events_recycler_view);
         eventAdapter = new EventAdapter();
         recyclerView.setAdapter(eventAdapter);
@@ -363,14 +363,14 @@ public class CalendarFragment extends Fragment {
     private void updateCalendarEvents(List<com.pac.ovum.data.models.Event> events) {
         // Clear previous events
         compactCalendarView.removeAllEvents();
-
+        
         // Add events to calendar
         for (com.pac.ovum.data.models.Event event : events) {
             long timeInMillis = event.getEventDate()
                     .atStartOfDay(ZoneId.systemDefault())
                     .toInstant()
                     .toEpochMilli();
-
+                    
             int color = getEventColor(event.getEventType());
             Event calEvent = new Event(color, timeInMillis, event);
             compactCalendarView.addEvent(calEvent);

@@ -21,6 +21,7 @@ import com.pac.ovum.data.repositories.UserRepository;
  */
 public class AppModule {
     private static AppDatabase appDatabase;
+    private static final String DB_NAME = "ovum.db";
 
     /**
      * Provides a singleton instance of the AppDatabase.
@@ -28,15 +29,29 @@ public class AppModule {
      * @param context The application context used to create the database instance.
      * @return An instance of AppDatabase.
      */
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static AppDatabase provideAppDatabase(Context context) {
+        // 1. Get the truly global application context
+        Context appCtx = context.getApplicationContext();
+
+        // 2. Double‑checked locking for thread safety
         if (appDatabase == null) {
-            appDatabase = Room.databaseBuilder(context, AppDatabase.class, "ovum.db")
-//                    .addMigrations(AppDatabase.MIGRATION_1_2)
-                    .build();
+            synchronized (AppModule.class) {
+                if (appDatabase == null) {
+                    appDatabase = Room.databaseBuilder(
+                                    appCtx,                // <-- application context only
+                                    AppDatabase.class,
+                                    DB_NAME                // <-- single source of truth
+                            )
+                            // .addMigrations(...)      // re‑enable when you have migrations
+                            .build();
+                }
+            }
         }
         return appDatabase;
     }
+
 
     /**
      * Provides an instance of UserRepository.

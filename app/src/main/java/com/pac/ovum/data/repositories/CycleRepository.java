@@ -61,6 +61,21 @@ public class CycleRepository {
         return cycleDao.getOngoingCycleByUserId(userId);
     }
 
+    /**
+     * Get the ongoing cycle for a user synchronously (for background operations)
+     * @param userId User ID to search for
+     * @return Ongoing cycle or null if none found
+     */
+    public CycleData getOngoingCycleByUserIdSync(int userId) {
+        try {
+            return cycleDao.getOngoingCycleByUserIdSync(userId);
+        } catch (Exception e) {
+            // Log error but don't crash
+            android.util.Log.e("CycleRepository", "Error getting ongoing cycle: " + e.getMessage(), e);
+            return null;
+        }
+    }
+
     public void updateCycle(CycleData cycleData) {
         AppExecutors.getInstance().diskIO().execute(() -> cycleDao.updateCycle(cycleData));
     }
@@ -310,5 +325,15 @@ public class CycleRepository {
         });
         
         return result;
+    }
+
+    public List<CycleData> getCyclesByUserIdSync(int userId) {
+        try {
+            return cycleDao.getCyclesByUserIdSync(userId);
+        } catch (Exception e) {
+            // Log error but don't crash
+            android.util.Log.e("CycleRepository", "Error getting cycles: " + e.getMessage(), e);
+            return new ArrayList<>();
+        }
     }
 }
