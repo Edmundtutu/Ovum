@@ -144,7 +144,7 @@ public class GynDataLogger {
         event.setCycleId(cycleId);
         event.setEventDate(dateRecorded);
         event.setEventTime(LocalTime.now());
-        event.setEventType("Gyn Event");
+        event.setEventType(mapEventDescriptionToEventCategory(translateEventType(eventType)));
         event.setDescription(translateEventType(eventType));
         return event;
     }
@@ -166,6 +166,29 @@ public class GynDataLogger {
             case CALL_DOC: return "Called Doctor";
             case PRESCRIBED: return "Received Prescription";
             default: return "Unknown Medical Event";
+        }
+    }
+    /**
+     * Maps event descriptions to event categories.
+     * Categories are Gyn Event, Appointment, Emergency and Medication.
+     *
+     * @return Event category string
+     */
+    private String mapEventDescriptionToEventCategory(String eventDescription){
+        switch (eventDescription) {
+            case "Talk to Doctor":
+            case "Logged a Symptom":
+            case "Sexual Intercourse":
+                return "Gyn Event";
+            case "Took Medication":
+                return "Medication";
+            case "Meet Doctor":
+            case "Called Doctor":
+                return "Appointment";
+            case "Received Prescription":
+                return "Emergency";
+            default:
+                return "Unknown Category";
         }
     }
 

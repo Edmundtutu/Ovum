@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
@@ -15,7 +16,6 @@ import com.pac.ovum.data.models.Event;
 import com.pac.ovum.data.repositories.CycleRepository;
 import com.pac.ovum.data.repositories.EpisodeRepository;
 import com.pac.ovum.data.repositories.EventRepository;
-import com.pac.ovum.utils.AppExecutors;
 import com.pac.ovum.utils.data.calendarutils.DateUtils;
 import com.pac.ovum.utils.data.calendarutils.DayInfo;
 
@@ -70,59 +70,60 @@ public class HomeViewModel extends ViewModel {
         return Transformations.map(eventsForSelectedDate, events -> {
             List<String> eventTitles = new ArrayList<>();
             for (Event event : events) {
-                eventTitles.add(event.getDescription()); // TODO: Review this fetch may not be appropriate to return event description. Event Title may be more appropriate
+                eventTitles.add(event.getDescription());
             }
             return eventTitles;
         });
     }
 
-    
-    public LiveData<List<Episode>> getSymptoms(LocalDate date, int userId) {
-        LiveData<CycleData> ongoingCycleData = getOngoingCycleData(userId);
-        if (ongoingCycleData.getValue() != null) {
-            int cycleId = ongoingCycleData.getValue().getCycleId();
-            // Fetch all episodes for the current cycle
-            LiveData<List<Episode>> episodesForCurrentCycle = symptomsRepository.getEpisodesByCycleId(cycleId);
 
-            // Use Transformations.map to filter episodes for the specified date
-            return Transformations.map(episodesForCurrentCycle, episodes -> {
-                List<Episode> symptomsForDate = new ArrayList<>();
-                for (Episode episode : episodes) {
-                    // first check if the episode's date is not null if null just skip it
-                    if (episode.getDate() == null) {
-                        continue;
-                    }else{
-                        if(episode.getDate().equals(date)){
+    public LiveData<List<Episode>> getSymptoms(LocalDate date, int userId) {
+        MediatorLiveData<List<Episode>> result = new MediatorLiveData<>();
+
+        LiveData<CycleData> ongoingCycleData = getOngoingCycleData(userId);
+
+        result.addSource(ongoingCycleData, cycleData -> {
+            if (cycleData != null) {
+                int cycleId = cycleData.getCycleId();
+                LiveData<List<Episode>> episodesForCurrentCycle = symptomsRepository.getEpisodesByCycleId(cycleId);
+
+                result.addSource(episodesForCurrentCycle, episodes -> {
+                    List<Episode> symptomsForDate = new ArrayList<>();
+                    for (Episode episode : episodes) {
+                        if (episode.getDate() != null && episode.getDate().equals(date)) {
                             symptomsForDate.add(episode);
                         }
                     }
-                }
-                return symptomsForDate;
-            });
-        } else {
-            // Handle the case where there is no ongoing cycle data
-            Log.e("HomeViewModel", "No ongoing cycle data for user ID: " + userId);
-            // Return an empty list or handle accordingly
-            return new MutableLiveData<>(Collections.emptyList());
-        }
-    }
-
-    public LiveData<CycleData> getOngoingCycleData(int userId) {
-        MutableLiveData<CycleData> cycleDataLiveData = new MutableLiveData<>();
-
-        AppExecutors.getInstance().diskIO().execute(() -> {
-            CycleData cycle = cycleRepository.getOngoingCycleByUserIdSync(userId);
-
-            if (cycle != null) {
-                cycleDataLiveData.postValue(cycle);
+                    result.setValue(symptomsForDate);
+                });
             } else {
-                Log.e("HomeViewModel", "No ongoing cycle data found for user ID: " + userId);
-                cycleDataLiveData.postValue(null);
+                Log.e("HomeViewModel", "No ongoing cycle data for user ID: " + userId);
+                result.setValue(Collections.emptyList());
             }
         });
 
-        return cycleDataLiveData;
+        return result;
     }
+
+
+    public LiveData<CycleData> getOngoingCycleData(int userId) {
+        LiveData<CycleData> liveData = cycleRepository.getOngoingCycleByUserId(userId);
+
+        liveData.observeForever(cycle -> {
+            if (cycle != null) {
+                Log.d("HomeViewModel", "Cycle data found: " +
+                        "ID: " + cycle.getCycleId() +
+                        ", UserID: " + cycle.getUserId() +
+                        ", StartDate: " + cycle.getStartDate() +
+                        ", IsOngoing: " + cycle.isOngoing());
+            } else {
+                Log.e("HomeViewModel", "No ongoing cycle data found for user ID: " + userId);
+            }
+        });
+
+        return liveData;
+    }
+
 
 
     public String getDateToday() {

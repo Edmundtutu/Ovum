@@ -7,7 +7,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.pac.ovum.data.models.CycleData;
 import com.pac.ovum.data.models.Event;
+import com.pac.ovum.data.repositories.CycleRepository;
 import com.pac.ovum.data.repositories.EventRepository;
 
 import java.time.LocalDate;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 public class CalendarViewModel extends ViewModel {
     private final EventRepository eventRepository;
+    private final CycleRepository cyclerepository;
     private LiveData<List<Event>> events;
     
     // LiveData for tracking sync state
@@ -24,8 +27,9 @@ public class CalendarViewModel extends ViewModel {
     private final MediatorLiveData<String> syncError = new MediatorLiveData<>();
     private final MediatorLiveData<Boolean> syncSuccess = new MediatorLiveData<>();
 
-    public CalendarViewModel(EventRepository eventRepository) {
+    public CalendarViewModel(EventRepository eventRepository, CycleRepository cyclerepository) {
         this.eventRepository = eventRepository;
+        this.cyclerepository = cyclerepository;
         
         // Initialize sync status observation
         isSyncing.addSource(eventRepository.getIsSyncing(), value -> {
@@ -69,6 +73,11 @@ public class CalendarViewModel extends ViewModel {
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    public LiveData<List<CycleData>> getAllCycles(int userId) {
+        LiveData<List<CycleData>> cycles = cyclerepository.getCyclesByUserId(userId);
+        return cycles;
     }
     
     /**

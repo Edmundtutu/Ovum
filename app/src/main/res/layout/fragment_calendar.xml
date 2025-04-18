@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.calendar.CalendarFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -17,131 +18,290 @@
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_height="wrap_content"
+                android:paddingBottom="24dp">
 
+                <!-- Header with month navigation and sync button -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/header_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    app:cardCornerRadius="0dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_due_date_theme"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/calendar_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Due"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/calendar_sync_button" />
+
+                        <ImageView
+                            android:id="@+id/calendar_sync_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_sync"
+                            android:contentDescription="Sync Calendar"
+                            android:padding="8dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/colorPrimary" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Calendar month/year header -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/month_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:background="#F5F5F5"
+                    app:layout_constraintTop_toBottomOf="@id/header_card">
+
+                    <Spinner
+                        android:id="@+id/month_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                    <Spinner
+                        android:id="@+id/year_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- Calendar Legend -->
                 <LinearLayout
+                    android:id="@+id/calendar_legend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:background="#FAFAFA"
+                    app:layout_constraintTop_toBottomOf="@id/month_header">
 
                     <TextView
-                        android:id="@+id/calendar_title"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Calendar"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
+                        android:text="Period"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:drawableStart="@drawable/dot_shape"
+                        android:drawablePadding="4dp"
+                        app:drawableTint="#FF4B55" />
 
-                    <Button
-                        android:id="@+id/calendar_sync_button"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:backgroundTint="@color/purple_500"
-                        android:text="@string/sync_to_server" />
+                        android:layout_weight="1"
+                        android:text="Ovulation"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:drawableStart="@drawable/dot_shape"
+                        android:drawablePadding="4dp"
+                        app:drawableTint="#2196F3" />
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Fertile"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:drawableStart="@drawable/dot_shape"
+                        android:drawablePadding="4dp"
+                        app:drawableTint="#4CAF50" />
                 </LinearLayout>
 
+                <!-- Calendar View -->
                 <com.github.sundeepk.compactcalendarview.CompactCalendarView
                     android:id="@+id/compactcalendar_view"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    app:compactCalendarTargetHeight="250dp"
-                    app:compactCalendarTextSize="12sp"
+                    android:layout_height="280dp"
+                    android:paddingHorizontal="8dp"
+                    android:layout_marginTop="4dp"
+                    app:compactCalendarTargetHeight="280dp"
+                    app:compactCalendarTextSize="14sp"
                     app:compactCalendarBackgroundColor="#FFFFFF"
-                    app:compactCalendarTextColor="#000000"
-                    app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
-                    app:compactCalendarCurrentSelectedDayBackgroundColor="#7B1FA2"
-                    app:compactCalendarMultiEventIndicatorColor="#456789" />
+                    app:compactCalendarTextColor="#333333"
+                    app:compactCalendarCurrentDayBackgroundColor="#fcfcfb"
+                    app:compactCalendarCurrentSelectedDayBackgroundColor="#54FCFCFB"
+                    app:compactCalendarCurrentSelectedDayTextColor="#FFFFFF"
+                    app:compactCalendarMultiEventIndicatorColor="#3F5"
+                    app:compactCalendarEventIndicatorStyle="fill_large_indicator"
+                    app:layout_constraintTop_toBottomOf="@id/calendar_legend" />
 
-                <TextView
-                    android:id="@+id/month_year_title"
+                <!-- Action buttons with material design -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/action_buttons_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="Month Year"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    app:strokeWidth="0dp"
+                    app:layout_constraintTop_toBottomOf="@id/compactcalendar_view">
 
-                <!-- Action buttons container with animation support -->
-                <LinearLayout
-                    android:id="@+id/action_buttons_container"
+                    <LinearLayout
+                        android:id="@+id/action_buttons_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/selected_date_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Selected Date"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_marginBottom="12dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/add_symptom_button"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="6dp"
+                                android:textAllCaps="false"
+                                app:icon="@drawable/ic_add_circle"
+                                app:iconGravity="textStart"
+                                app:cornerRadius="8dp"
+                                android:backgroundTint="#E91E63" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/add_event_button"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:backgroundTint="#3F5"
+                                android:textAllCaps="false"
+                                app:cornerRadius="8dp"
+                                app:icon="@drawable/ic_event_add"
+                                app:iconGravity="textStart" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Events section with material design card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/events_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    app:strokeWidth="0dp"
+                    app:layout_constraintTop_toBottomOf="@id/action_buttons_card">
 
-                    <Button
-                        android:id="@+id/add_symptom_button"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="4dp"
-                        android:backgroundTint="#E91E63"
-                        android:textColor="@android:color/white"
-                        android:elevation="2dp"
-                        android:visibility="gone"
-                        android:text="Log Symptom" />
+                        android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/add_event_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="4dp"
-                        android:backgroundTint="#3F51B5"
-                        android:textColor="@android:color/white"
-                        android:elevation="2dp"
-                        android:visibility="gone"
-                        android:text="Plan an Event" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp">
 
-                </LinearLayout>
+                            <TextView
+                                android:id="@+id/events_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Events"
+                                android:textSize="16sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                            <TextView
+                                android:id="@+id/select_date_hint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Select a date to view events"
+                                android:textStyle="italic"
+                                android:textSize="12sp"
+                                android:textColor="#757575"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Events"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#E0E0E0" />
 
-                    <TextView
-                        android:id="@+id/select_date_hint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Select a date to view events"
-                        android:textStyle="italic"
-                        android:textColor="#757575" />
-                </LinearLayout>
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="200dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/events_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:overScrollMode="never"
-                    android:scrollbars="vertical"
-                    android:paddingBottom="16dp" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/events_recycler_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clipToPadding="false"
+                                android:overScrollMode="never"
+                                android:paddingVertical="8dp" />
 
-            </LinearLayout>
+                            <TextView
+                                android:id="@+id/no_events_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="No events for selected date"
+                                android:textColor="#757575"
+                                android:textSize="14sp"
+                                android:gravity="center"
+                                android:padding="32dp"
+                                android:visibility="gone" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

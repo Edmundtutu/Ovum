@@ -31,6 +31,7 @@ import com.pac.ovum.utils.SharedPrefManager;
 import com.pac.ovum.utils.ui.CircularPeriodProgressView;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -74,7 +75,7 @@ public class HomeFragment extends Fragment {
         initViews();
         selectedDate = LocalDate.now(); // Initialize selected date to today
         setWeekView(); // Load the next 7 days
-        setBlinderView();
+        setBlinderAndProgressView();
 
         // setting the Symptoms RecyclerView
         setSymptomsRecyclerView();
@@ -120,26 +121,56 @@ public class HomeFragment extends Fragment {
         // Additional logic to handle the selected date can be added here
     }
 
-    public void setBlinderView() {
+    public void setBlinderAndProgressView() {
         homeViewModel.getCurrentDate().observe(getViewLifecycleOwner(), currentDay -> {
             String formattedDate = currentDay.getDate();
             dayOfWeekTextView.setText(currentDay.getDayOfWeek());
         });
-        setCircularProgressView(28, 10); // TODO: Get the cycle length  from cycle data and progress as days since cycle start in the ViewModel
-    }
+        homeViewModel.getOngoingCycleData(getUserId()).observe(getViewLifecycleOwner(), cycleData -> {
+                if (cycleData != null) {
+                    int cycleLength = cycleData.getCycleLength();
+                    int progress = calculateProgress(cycleData.getStartDate());
+                    int fertileWindowStartsIn = calculateDaysUntilFertile(cycleData.getFertileStart());
+                    int nextPeriodStartsIn = calculateDaysToPeriod(cycleData.getEndDate());
+                    setCircularProgressView(cycleLength, progress, fertileWindowStartsIn, nextPeriodStartsIn);
+                } else {
+                    Log.e("Dashboard", "CycleData is null — progress not set.");
+                }
+            });
+        }
 
-    private void setCircularProgressView(int cycleLength, int progress) {
+    private void setCircularProgressView(int cycleLength, int progress, int fertileWindowStartsIn, int nextPeriodStartsIn) {
         progressView.setCenterImageResource(R.drawable.icon_logo);
         progressView.setCycleLength(cycleLength);
         progressView.setProgress(progress);
-        progressView.setDaysUntilPeriod(1);
-        progressView.setDaysUntilFertile(14);
-
-        // apply the pulse effect
-//        Configure based on days left
+        progressView.setDaysUntilPeriod(nextPeriodStartsIn);
+        progressView.setDaysUntilFertile(fertileWindowStartsIn);
         int daysLeftCount = cycleLength - progress;
         progressView.configurePulseEffect(daysLeftCount);
     }
+
+    private int calculateProgress(LocalDate startDate) {
+        if (startDate == null) return 0;
+        LocalDate today = LocalDate.now();
+        return (int) ChronoUnit.DAYS.between(startDate, today);
+    }
+    private int calculateDaysUntilFertile(LocalDate fertileStart) {
+        if (fertileStart == null) return 0;
+
+        LocalDate today = LocalDate.now();
+        long days = ChronoUnit.DAYS.between(today, fertileStart);
+
+        return (int) Math.max(days, 0); // Prevent negative values
+    }
+    private int calculateDaysToPeriod(LocalDate endDate) {
+        if (endDate == null) return 0;
+
+        LocalDate today = LocalDate.now();
+        long days = ChronoUnit.DAYS.between(today, endDate);
+
+        return (int) Math.max(days, 0); // Prevent negative values
+    }
+
 
     private void setSymptomsRecyclerView(){
         int userId = getUserId();

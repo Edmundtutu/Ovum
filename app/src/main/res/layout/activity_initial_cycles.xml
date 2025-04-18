@@ -262,7 +262,8 @@
                             <View
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:background="@drawable/dot_shape_period" />
+                                android:background="@drawable/dot_shape"
+                                android:backgroundTint="#FF4B55" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -283,7 +284,8 @@
                             <View
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:background="@drawable/dot_shape_fertile" />
+                                android:background="@drawable/dot_shape"
+                                android:backgroundTint="#4CAF50"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -305,7 +307,8 @@
                             <View
                                 android:layout_width="24dp"
                                 android:layout_height="24dp"
-                                android:background="@drawable/dot_shape_ovulation" />
+                                android:background="@drawable/dot_shape"
+                                android:backgroundTint="#2196F3"/>
 
                             <TextView
                                 android:layout_width="wrap_content"

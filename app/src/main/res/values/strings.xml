@@ -6,7 +6,7 @@
     <string name="title_chat">Chat</string>
 
     <!-- Cycle Sync Strings -->
-    <string name="sync_to_server">Sync to Server</string>
+    <string name="sync_to_server">Sync</string>
     <string name="syncing">Syncing...</string>
     <string name="sync_error">Sync Error</string>
     <string name="sync_success">Sync Successful</string>

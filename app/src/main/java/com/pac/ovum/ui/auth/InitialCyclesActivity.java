@@ -143,11 +143,12 @@ public class InitialCyclesActivity extends AppCompatActivity {
             LocalDate ovulationDate = calculateOvulationDate(selectedDate, cycleLength);
             LocalDate fertileStartDate = ovulationDate.minusDays(5);
             LocalDate fertileEndDate = ovulationDate.plusDays(1);
+            LocalDate cycleEndDate = selectedDate.plusDays(cycleLength);
 
             // Create intent to pass data back to RegisterActivity
             Intent resultIntent = new Intent();
             resultIntent.putExtra("START_DATE", selectedDate.toString());
-            resultIntent.putExtra("END_DATE", periodEndDate.toString());
+            resultIntent.putExtra("END_DATE", cycleEndDate.toString());
             resultIntent.putExtra("CYCLE_LENGTH", cycleLength);
             resultIntent.putExtra("PERIOD_LENGTH", periodLength);
             resultIntent.putExtra("OVULATION_DATE", ovulationDate.toString());
